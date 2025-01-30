@@ -42,7 +42,7 @@ export default function CartDrawer() {
   }, [pathname]);
 
   // Calculate progress towards free shipping
-  const freeShippingThreshold = 300;
+  const freeShippingThreshold = 20;
   const progressPercentage = Math.min(
     (totalPrice / freeShippingThreshold) * 100,
     100

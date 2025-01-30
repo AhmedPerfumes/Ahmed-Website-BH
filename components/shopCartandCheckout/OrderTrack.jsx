@@ -197,7 +197,7 @@ export default function OrderTrack() {
                 </tr>
                 <tr>
                   <th>SHIPPING</th>
-                  <td>{orderDetails.sub_total >= 300 ? 'You Got Free Shipping' : `Shipping Cost: ${(orderDetails.shipping_amount * 1.05).toFixed(2)}${ currency.symbol }`}</td>
+                  <td>{orderDetails.sub_total >= 20 ? 'You Got Free Shipping' : `Shipping Cost: ${(orderDetails.shipping_amount * 1.05).toFixed(2)}${ currency.symbol }`}</td>
                 </tr>
                 <tr>
                   <th>SERVICE FEE</th>

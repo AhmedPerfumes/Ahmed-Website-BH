@@ -137,8 +137,8 @@ export default function Footer14() {
             {/* <!-- /.logo --> */}
             <p className="footer-address">
               {t("Ahmed Al Maghribi Perfume Manuf")} <br />
-              {t("Madinah Al Munawwarah")} <br />
-              {t("Kingdom Of Saudi Arabia")} <br />
+              {t("Manama")} <br />
+              {t("Bahrain")} <br />
           
             </p>
 
@@ -147,7 +147,7 @@ export default function Footer14() {
             </p>
             <p>
               <strong className="fw-medium">
-              +966 55 5073629 
+              +973 3542 8747 / +973 3978 1417 
               </strong>
             </p>
 

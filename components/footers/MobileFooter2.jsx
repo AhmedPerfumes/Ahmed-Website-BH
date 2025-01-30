@@ -76,9 +76,8 @@ export default function MobileFooter2() {
         {/* <!-- /.logo --> */}
         <p className="footer-address text-white text-center">
           Ahmed Al Maghribi Perfume Manuf L.L.C, <br />
-          Madinah Al Munawwarah <br />
-          Kingdom Of Saudi Arabia <br />
-          UAE
+          Manama <br />
+          Bahrain <br />
         </p>
 
         <p className="m-0 text-white text-center">
@@ -86,7 +85,7 @@ export default function MobileFooter2() {
         </p>
         <p className="text-center">
           <strong className="fw-medium text-white text-center">
-          +966 55 5073629 
+          +973 3542 8747 / +973 3978 1417
           </strong>
         </p>
 
