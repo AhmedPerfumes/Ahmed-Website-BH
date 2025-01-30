@@ -39,20 +39,20 @@ export default function Checkout() {
       last_name: '',
       mobile: '',
       email: '',
-      country: 'KSA',
+      country: 'BH',
       area: '',
       building: '',
-      province: ''
+      region: ''
     },
     billingAddress: {
       first_name: '',
       last_name: '',
       mobile: '',
       email: '',
-      country: 'KSA',
+      country: 'BH',
       area: '',
       building: '',
-      province: ''
+      region: ''
     },
     shippingAdd: false,
     note: '',
@@ -108,7 +108,7 @@ export default function Checkout() {
       return {
         ...prevData,
         shippingAdd: newSameAsShipping,
-        shippingAddress: { first_name: '', last_name: '', mobile: '', email: '', area: '', building: '', province: '' }
+        shippingAddress: { first_name: '', last_name: '', mobile: '', email: '', area: '', building: '', region: '' }
       }
     });
   };
@@ -195,7 +195,7 @@ export default function Checkout() {
             email: '',
             area: '',
             building: '',
-            province: ''
+            region: ''
           },
           billingAddress: {
             first_name: '',
@@ -204,7 +204,7 @@ export default function Checkout() {
             email: '',
             area: '',
             building: '',
-            province: ''
+            region: ''
           },
           shippingAdd: false,
         });
@@ -236,8 +236,8 @@ export default function Checkout() {
         if(data['billingAddress.building']) {
           setError(data['billingAddress.building']);
         }
-        if(data['billingAddress.province']) {
-          setError(data['billingAddress.province']);
+        if(data['billingAddress.region']) {
+          setError(data['billingAddress.region']);
         }
         setSuccess(null);
       }
@@ -540,9 +540,9 @@ export default function Checkout() {
                         className="form-control form-control-lg search-field__actor"
                         id="country"
                         name="billingAddress.country"
-                        value="Saudi Arabia"
+                        value="Bahrain"
                         readOnly
-                        placeholder="Saudi Arabia"
+                        placeholder="Bahrain"
                       />
                     </div>
                   </div>
@@ -589,7 +589,7 @@ export default function Checkout() {
                     }`}
                   >
                     <label htmlFor="search-dropdown" className="form-label">
-                      Province*
+                      Region*
                     </label>
                     <div className="js-hover__open">
                       <input
@@ -646,15 +646,15 @@ export default function Checkout() {
                   <input
                     type="text"
                     className="form-control"
-                    id="checkout_province"
-                    placeholder="Province *"
-                    name="billingAddress.province"
-                    value={formData.billingAddress.province}
+                    id="checkout_region"
+                    placeholder="Region *"
+                    name="billingAddress.region"
+                    value={formData.billingAddress.region}
                     onChange={handleChange}
                     required
                   />
-                  <label htmlFor="checkout_province">
-                    Province *
+                  <label htmlFor="checkout_region">
+                    Region *
                   </label>
                 </div>
                 {/* <div className="form-floating mt-3 mb-3">
@@ -1004,9 +1004,9 @@ export default function Checkout() {
                           className="form-control form-control-lg search-field__actor"
                           id="country"
                           name="shippingAddress.country"
-                          value="Saudi Arabia"
+                          value="Bahrain"
                           readOnly
-                          placeholder="Saudi Arabia"
+                          placeholder="Bahrain"
                         />
                       </div>
                     </div>
@@ -1110,15 +1110,15 @@ export default function Checkout() {
                     <input
                       type="text"
                       className="form-control"
-                      id="checkout_province"
-                      placeholder="Province *"
-                      name="shippingAddress.province"
-                      value={formData.shippingAddress.province}
+                      id="checkout_region"
+                      placeholder="Region *"
+                      name="shippingAddress.region"
+                      value={formData.shippingAddress.region}
                       onChange={handleChange}
                       required
                     />
-                    <label htmlFor="checkout_province">
-                      Province *
+                    <label htmlFor="checkout_region">
+                      Region *
                     </label>
                   </div>
                   {/* <div className="form-floating mt-3 mb-3">
