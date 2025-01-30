@@ -482,7 +482,7 @@ export const slideData1000 = [
     bgImage: "/assets/images/home/demo15/slider1_bg.jpg",
     title: "Natural Glow",
     description:
-      "Free Shipping on orders SAR 300 and above",
+      "Free Shipping on orders BHD 20 and above",
   },
   {
     id: 2,
@@ -503,7 +503,7 @@ export const slideData1000 = [
     bgImage: "/assets/images/home/demo15/slider2_bg.jpg",
     title: "Natural Glow",
     description:
-      "Welcome to Ahmed Perfumes KSA",
+      "Welcome to Ahmed Perfumes Bharaian",
   },
 ];
 
