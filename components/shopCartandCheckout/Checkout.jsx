@@ -693,17 +693,17 @@ export default function Checkout() {
                 <div className="form-floating my-3">
                   <input
                     type="text"
-                    pattern="^\d{10}$"
+                    pattern="^\d{8}$"
                     title="Only positive integers allowed"
                     className="form-control"
                     id="checkout_otp"
-                    placeholder="Eg. 0500000000 *"
+                    placeholder="Eg. 50000000 *"
                     name="billingAddress.mobile"
                     value={formData.billingAddress.mobile}
                     onChange={handleChange}
                     required
                   />
-                  <label htmlFor="checkout_phone">Mobile Number (Eg. 0500000000)*</label>
+                  <label htmlFor="checkout_phone">Mobile Number (Eg. 50000000)*</label>
                 </div>
                   {/* {OTPError ? <div style={{ color: 'red' }}>{OTPError}</div> : <div style={{ color: 'green' }}>{OTPSuccess}</div>}
                   {isOTPButton ? <button
@@ -1157,17 +1157,17 @@ export default function Checkout() {
                   <div className="form-floating my-3">
                     <input
                       type="text"
-                      pattern="^\d{10}$"
+                      pattern="^\d{8}$"
                       title="Only positive integers allowed"
                       className="form-control"
                       id="checkout_phone"
-                      placeholder="Eg. 0500000000 *"
+                      placeholder="Eg. 50000000 *"
                       name="shippingAddress.mobile"
                       value={formData.shippingAddress.mobile}
                       onChange={handleChange}
                       required
                     />
-                    <label htmlFor="checkout_phone">Phone (Eg. 0500000000)*</label>
+                    <label htmlFor="checkout_phone">Phone (Eg. 50000000)*</label>
                   </div>
                 </div>
               </div>
