@@ -7,12 +7,12 @@ const nextConfig = {
     images: {
         remotePatterns: [
           {
-            protocol: 'http',
+            protocol: 'https',
             hostname: 'phpstack-1404657-5219632.cloudwaysapps.com',
           },
           {
             protocol: 'https',
-            hostname: 'admin.ahmedalmaghribi.bh',
+            hostname: 'adminbh.ahmedalmaghribi.com',
           },
           {
             protocol: 'http',
