@@ -258,7 +258,7 @@ export const slidesData3 = [
   },
   {
     id: 3,
-    imageSrc: "/assets/images/banner/ramadan-sale.jpg",
+    imageSrc: "/assets/images/banner/ramadan-banner.jpg",
     season: "",
     objectPosition: "50% center",
     title: "",
