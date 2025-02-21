@@ -10,7 +10,7 @@ export const FacebookPixelEvents = () => {
     import("react-facebook-pixel")
       .then((x) => x.default)
       .then((ReactPixel) => {
-        ReactPixel.init("235034997951707"); // Replace with your Facebook Pixel ID
+        ReactPixel.init("909515767454411"); // Replace with your Facebook Pixel ID
         ReactPixel.pageView();
 
         // Example: Track a conversion event with a token
