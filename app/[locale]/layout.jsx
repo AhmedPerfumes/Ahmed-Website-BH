@@ -27,6 +27,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { FacebookPixelEvents } from "@/components/Metapixel";
 import Head from "next/head";
+import Script from "next/script";
 
 // Import English font
 const englishFont = localFont({
@@ -59,11 +60,29 @@ export default async function LocaleLayout({ children, params: { locale } }) {
 
     // Fetch translation messages
     const messages = await getMessages();
+    const GTM_ID = "GTM-5MW45MFQ";
 
     return (
         <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
            
             <body className={selectedFont.className}>
+            <Script id="gtm-script" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','${GTM_ID}');
+          `}
+        </Script>
+            <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
                 <NextIntlClientProvider messages={messages}>
                     <Svgs />
                     <Context>
