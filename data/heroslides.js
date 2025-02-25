@@ -256,16 +256,16 @@ export const slidesData3 = [
     href: "shop/perfumes/occidental-fragrance/zumar",
     color: "text-white"
   },
-  {
-    id: 3,
-    imageSrc: "/assets/images/banner/ramadan-banner.jpg",
-    season: "",
-    objectPosition: "50% center",
-    title: "",
-    subtitle: "",
-    href: "shop/",
-    color: "text-black"
-  },
+  // {
+  //   id: 3,
+  //   imageSrc: "/assets/images/banner/ramadan-banner.jpg",
+  //   season: "",
+  //   objectPosition: "50% center",
+  //   title: "",
+  //   subtitle: "",
+  //   href: "shop/",
+  //   color: "text-black"
+  // },
   
 ];
 export const slidesData33 = [
@@ -289,16 +289,16 @@ export const slidesData33 = [
     href: "shop/perfumes/occidental-fragrance/zumar",
     color: "text-white"
   },
-  {
-    id: 3,
-    imageSrc: "/assets/images/banner/mobile-ramzan-sale.jpg",
-    season: "",
-    objectPosition: "50% center",
-    title: "",
-    subtitle: "",
-    href: "shop/",
-    color: "text-black"
-  },
+  // {
+  //   id: 3,
+  //   imageSrc: "/assets/images/banner/mobile-ramzan-sale.jpg",
+  //   season: "",
+  //   objectPosition: "50% center",
+  //   title: "",
+  //   subtitle: "",
+  //   href: "shop/",
+  //   color: "text-black"
+  // },
 
 ];
 export const slidesData4 = [
