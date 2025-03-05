@@ -29,6 +29,14 @@ import { FacebookPixelEvents } from "@/components/Metapixel";
 import Head from "next/head";
 import Script from "next/script";
 
+export const metadata = {
+    title: "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
+    description: "Buy Best Perfumes Online Ahmed Al Maghribi Perfumes.",
+    icons: {
+        icon: "/assets/images/ahmed-favicons.png",
+    },
+  };
+
 // Import English font
 const englishFont = localFont({
     src: "../../public/assets/fonts/wulkan/WulkanDisplayRegular.ttf",

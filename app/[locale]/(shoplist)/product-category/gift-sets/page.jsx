@@ -16,7 +16,7 @@ export const metadata = {
   title: "Gift Sets | Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
   description: "Buy Best Perfumes Online Ahmed Al Maghribi Perfumes.",
   icons: {
-    icon: "/assets/images/ahmed-favicon.png",
+    icon: "/assets/images/ahmed-favicons.png",
   },
 };
 
