@@ -215,6 +215,9 @@ export default function Checkout() {
         // localStorage.setItem('orderData', btoa(JSON.stringify(data)));
         router.push(data.redirect_url);
       } else {
+        if(data.message) {
+          setError(data.message);
+        }
         if(data.products) {
           setError(data.products);
         }
@@ -466,23 +469,23 @@ export default function Checkout() {
     if(elm?.discount) {
       console.log('if');
       if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
-        return <td>{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.quantity).toFixed(2)}{ currency.symbol }</td>;
+        return <td>{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</td>;
       } else {
-        return <td>{(elm.price * elm.quantity).toFixed(2)}{ currency.symbol }</td>;
+        return <td>{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</td>;
       }
     } else if(elm?.coupon && couponData != null && couponCode != null) {
       console.log('else if');
       if(new Date(current_date_time) >= new Date(elm.coupon.start_date) && new Date(current_date_time) <= new Date(elm.coupon.end_date)) {
-        return <td><span className="money price price-old">{elm?.price}{ currency.symbol }</span><span className="money price price-sale">{((elm.price - (elm.price / 100 * elm.coupon.value)) * elm.quantity).toFixed(2)}{ currency.symbol }</span></td>;
+        return <td><span className="money price price-old">{elm?.price}{ currency.symbol }</span><span className="money price price-sale">{((elm.price - (elm.price / 100 * elm.coupon.value)) * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span></td>;
       } else {
-        return <td>{(elm.price * elm.quantity).toFixed(2)}{ currency.symbol }</td>;
+        return <td>{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</td>;
       }
     } else if(elm?.sale_price) {
       console.log('else if 2');
-      return <td>{((elm.price - (elm.price / 100 * elm.sale_price)) * elm.quantity).toFixed(2)}{ currency.symbol }</td>;
+      return <td>{((elm.price - (elm.price / 100 * elm.sale_price)) * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</td>;
     } else {
       console.log('else');
-      return <td>{(elm.price * elm.quantity).toFixed(2)}{ currency.symbol }</td>;
+      return <td>{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</td>;
     }
   };
 
@@ -821,7 +824,7 @@ export default function Checkout() {
                   <tbody>
                     <tr>
                       <th>SUBTOTAL</th>
-                      <td>{totalPrice.toFixed(2)}{ currency.symbol }</td>
+                      <td>{totalPrice.toFixed(currency.decimals)}{ currency.symbol }</td>
                     </tr>
                     <tr>
                       <th>SHIPPING</th>
@@ -833,18 +836,18 @@ export default function Checkout() {
                     </tr> */}
                     <tr>
                       <th>TOTAL</th>
-                      <td>{!freeShippingFlag ? (parseFloat(shippingServiceCharges[0].price) + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(2) :
-                          (0 + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(2)}{ currency.symbol } (includes { !freeShippingFlag ? (
+                      <td>{!freeShippingFlag ? (parseFloat(shippingServiceCharges[0].price) + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals) :
+                          (0 + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals)}{ currency.symbol } (includes { !freeShippingFlag ? (
                           (
                             (parseFloat(shippingServiceCharges[0].price) - parseFloat(shippingServiceCharges[0].price) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(totalPrice) - parseFloat(totalPrice) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(shippingServiceCharges[1].price) - parseFloat(shippingServiceCharges[1].price) / (1 + parseFloat(vatTax.percentage / 100)))
-                          ).toFixed(2)) : (
+                          ).toFixed(currency.decimals)) : (
                           (
                             0 +
                             (parseFloat(totalPrice) - parseFloat(totalPrice) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(shippingServiceCharges[1].price) - parseFloat(shippingServiceCharges[1].price) / (1 + parseFloat(vatTax.percentage / 100)))
-                          ).toFixed(2)) }{ currency.symbol } VAT)</td>
+                          ).toFixed(currency.decimals)) }{ currency.symbol } VAT)</td>
                     </tr>
                   </tbody>
                 </table>

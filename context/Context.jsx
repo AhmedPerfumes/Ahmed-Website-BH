@@ -23,22 +23,22 @@ export default function Context({ children }) {
     const subtotal = cartProducts.reduce((accumulator, product) => {
       if(product?.discount) {
         if(new Date(current_date_time) >= new Date(product.discount.start_date) && new Date(current_date_time) <= new Date(product.discount.end_date)) {
-          const discount_price = (product.price - (product.price / 100 * product.discount.value)).toFixed(2);
+          const discount_price = (product.price - (product.price / 100 * product.discount.value)).toFixed(currency.decimals);
           return accumulator + product.quantity * discount_price;
         }
       } else if(product?.coupon && couponDataContext != null) {
         if(new Date(current_date_time) >= new Date(product.coupon.start_date) && new Date(current_date_time) <= new Date(product.coupon.end_date)) {
-          const coupon_price = (product.price - (product.price / 100 * product.coupon.value)).toFixed(2);
+          const coupon_price = (product.price - (product.price / 100 * product.coupon.value)).toFixed(currency.decimals);
           return accumulator + product.quantity * coupon_price;
         }
       } else if(product?.sale_price) {
-        const sale_price = (product.price - (product.price / 100 * product.sale_price)).toFixed(2);
+        const sale_price = (product.price - (product.price / 100 * product.sale_price)).toFixed(currency.decimals);
         return accumulator + product.quantity * sale_price;
       }
       return accumulator + product.quantity * product.price;
     }, 0);
     setTotalPrice(subtotal);
-    setFreeShippingFlag((subtotal).toFixed(2) >= 20 ? true : false);
+    setFreeShippingFlag((subtotal).toFixed(3) >= 20 ? true : false);
   }, [cartProducts, couponDataContext]);
 
   const addProductToQuickView = (product) => {

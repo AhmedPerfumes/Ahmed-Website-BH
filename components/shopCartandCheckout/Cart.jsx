@@ -100,26 +100,26 @@ export default function Cart() {
   const subTotalPrice = (elm) => {
     if(elm?.discount) {
       if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
-        return <span className="shopping-cart__subtotal">{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+        return <span className="shopping-cart__subtotal">{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
       } else {
-        return <span className="shopping-cart__subtotal">{(elm.price * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+        return <span className="shopping-cart__subtotal">{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
       }
     } else if(elm?.sale_price) {
-      return <span className="shopping-cart__subtotal">{((elm.price - (elm.price / 100 * elm.sale_price)) * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+      return <span className="shopping-cart__subtotal">{((elm.price - (elm.price / 100 * elm.sale_price)) * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
     } else {
-      return <span className="shopping-cart__subtotal">{(elm.price * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+      return <span className="shopping-cart__subtotal">{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
     }
   };
 
   const price = (elm) => {
     if(elm?.discount) {
       if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
-        return <span className="shopping-cart__product-price">{(elm.price - (elm.price / 100 * elm.discount.value)).toFixed(2)}{ currency.symbol }</span>;
+        return <span className="shopping-cart__product-price">{(elm.price - (elm.price / 100 * elm.discount.value)).toFixed(currency.decimals)}{ currency.symbol }</span>;
       } else {
         return <span className="money price">{elm?.price}{ currency.symbol }</span>;
       }
     } else if(elm?.sale_price) {
-      return <span className="shopping-cart__product-price">{(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(2)}{ currency.symbol }</span>;
+      return <span className="shopping-cart__product-price">{(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(currency.decimals)}{ currency.symbol }</span>;
     } else {
       return <span className="shopping-cart__product-price">{elm.price}{ currency.symbol }</span>;
     }
@@ -266,7 +266,7 @@ export default function Cart() {
                 <tbody>
                   <tr>
                     <th>Subtotal</th>
-                    <td>{totalPrice.toFixed(2)}{ currency.symbol }</td>
+                    <td>{totalPrice.toFixed(currency.decimals)}{ currency.symbol }</td>
                   </tr>
                   <tr>
                     <th>Shipping</th>
@@ -330,18 +330,18 @@ export default function Cart() {
                     <th>Total</th>
                     <td>
                       {!freeShippingFlag ?
-                        (parseFloat(shippingServiceCharges[0].price) + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(2) :
-                        (0 + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(2)}{ currency.symbol } (includes { !freeShippingFlag ? (
+                        (parseFloat(shippingServiceCharges[0].price) + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals) :
+                        (0 + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals)}{ currency.symbol } (includes { !freeShippingFlag ? (
                           (
                             (parseFloat(shippingServiceCharges[0].price) - parseFloat(shippingServiceCharges[0].price) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(totalPrice) - parseFloat(totalPrice) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(shippingServiceCharges[1].price) - parseFloat(shippingServiceCharges[1].price) / (1 + parseFloat(vatTax.percentage / 100)))
-                          ).toFixed(2)) : (
+                          ).toFixed(currency.decimals)) : (
                           (
                             0 +
                             (parseFloat(totalPrice) - parseFloat(totalPrice) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(shippingServiceCharges[1].price) - parseFloat(shippingServiceCharges[1].price) / (1 + parseFloat(vatTax.percentage / 100)))
-                          ).toFixed(2)) }{ currency.symbol } VAT)
+                          ).toFixed(currency.decimals)) }{ currency.symbol } VAT)
                     </td>
                   </tr>
                 </tbody>

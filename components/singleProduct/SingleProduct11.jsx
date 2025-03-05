@@ -93,12 +93,12 @@ export default function SingleProduct11({ category, subcategory, product }) {
     const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
     if(elm?.discount) {
       if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
-        return <><span className="money price price-old">{ currency.symbol }{elm?.price}</span> <span className="money price price-sale"> { currency.symbol }{(elm.price - (elm.price / 100 * elm.discount.value)).toFixed(2)}</span></>;
+        return <><span className="money price price-old">{ currency.symbol }{elm?.price}</span> <span className="money price price-sale"> { currency.symbol }{(elm.price - (elm.price / 100 * elm.discount.value)).toFixed(currency.decimals)}</span></>;
       } else {
         return <span className="money price">{elm?.price}{ currency.symbol }</span>;
       }
     } else if(elm?.sale_price) {
-      return <><span className="money price price-sale">{ currency.symbol }{(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(2)}</span><span className="money price price-old">{ currency.symbol }{elm?.price}</span> </>;
+      return <><span className="money price price-sale">{ currency.symbol }{(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(currency.decimals)}</span><span className="money price price-old">{ currency.symbol }{elm?.price}</span> </>;
     } else {
       return <span className="money price">{elm?.price}{ currency.symbol }</span>;
     }

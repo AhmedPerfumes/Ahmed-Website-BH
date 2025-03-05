@@ -54,14 +54,14 @@ export default function CartDrawer() {
     const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
     if(elm?.discount) {
       if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
-        return <span className="cart-drawer-item__price money price">{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+        return <span className="cart-drawer-item__price money price">{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
       } else {
-        return <span className="cart-drawer-item__price money price">{(elm.price * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+        return <span className="cart-drawer-item__price money price">{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
       }
     } else if(elm?.sale_price) {
-      return <span className="cart-drawer-item__price money price">{((elm.price - (elm.price / 100 * elm.sale_price)) * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+      return <span className="cart-drawer-item__price money price">{((elm.price - (elm.price / 100 * elm.sale_price)) * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
     } else {
-      return <span className="cart-drawer-item__price money price">{(elm.price * elm.quantity).toFixed(2)}{ currency.symbol }</span>;
+      return <span className="cart-drawer-item__price money price">{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</span>;
     }
   };
 
@@ -180,7 +180,7 @@ export default function CartDrawer() {
               {totalPrice < freeShippingThreshold ? (
                 <div>
                   <p>
-                    Spend {(freeShippingThreshold - totalPrice).toFixed(2)}{ currency.symbol } more to get free
+                    Spend {(freeShippingThreshold - totalPrice).toFixed(currency.decimals)}{ currency.symbol } more to get free
                     shipping! ⛟
                   </p>
                   <div className="progress">
@@ -201,7 +201,7 @@ export default function CartDrawer() {
           <hr className="cart-drawer-divider" />
           <div className="d-flex justify-content-between">
             <h6 className="fs-base fw-medium">SUBTOTAL:</h6>
-            <span className="cart-subtotal fw-medium">{totalPrice.toFixed(2)}{ currency.symbol }</span>
+            <span className="cart-subtotal fw-medium">{totalPrice.toFixed(currency.decimals)}{ currency.symbol }</span>
           </div>
           {cartProducts.length ? (
             <>
