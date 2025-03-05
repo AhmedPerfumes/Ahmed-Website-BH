@@ -7,9 +7,11 @@ export function MenuProvider({ children }) {
   const [categoriesSubCategories, setCategoriesSubCategories] = useState([]);
   const [vatTax, setVatTax] = useState(0.00);
   const [shippingServiceCharges, setshippingServiceCharges] = useState([]);
-  const [currency, setCurrency] = useState('د.إ');
+  const [currency, setCurrency] = useState('.د.ب');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [homeSliders, setHomeSliders] = useState([]);
+  const [homeMobileSliders, setHomeMobileSliders] = useState([]);
 
   useEffect(() => {
     async function getCategoriesSubCategories() {
@@ -44,6 +46,21 @@ export function MenuProvider({ children }) {
             setVatTax(null);
             setError(data);
           }
+          if(data && data.home_sliders) {
+            setError(null);
+            setHomeSliders(data.home_sliders);
+          } else {
+            setHomeSliders(null);
+            setError(data);
+          }
+
+          if(data && data.home_mobile_sliders) {
+            setError(null);
+            setHomeMobileSliders(data.home_mobile_sliders);
+          } else {
+            setHomeMobileSliders(null);
+            setError(data);
+          }
 
           if(data && data.shipping_service_charges) {
             setError(null);
@@ -76,7 +93,7 @@ export function MenuProvider({ children }) {
   }, []);
 
   return (
-    <MenuContext.Provider value={{ categoriesSubCategories, isLoading, error, vatTax, shippingServiceCharges, currency }}>
+    <MenuContext.Provider value={{ categoriesSubCategories, isLoading, error, vatTax, shippingServiceCharges, currency, homeSliders, homeMobileSliders }}>
       {children}
     </MenuContext.Provider>
   );
