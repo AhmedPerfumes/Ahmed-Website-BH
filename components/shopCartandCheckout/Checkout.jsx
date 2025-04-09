@@ -26,7 +26,7 @@ export default function Checkout() {
   const router = useRouter();
   const locale = useLocale();
 
-  const { cartProducts, totalPrice, freeShippingFlag, setOrderDetails, setCouponDataContext } = useContextElement();
+  const { cartProducts, totalPrice, freeShippingFlag, setOrderDetails, setCouponDataContext, setCartProducts } = useContextElement();
   const { isLoggedIn } = useUser();
   // const [selectedRegion, setSelectedRegion] = useState("");
   const [idDDActive, setIdDDActive] = useState(false);
@@ -214,6 +214,20 @@ export default function Checkout() {
         setError(null);
         // localStorage.setItem('orderData', btoa(JSON.stringify(data)));
         router.push(data.redirect_url);
+      } else if (data.qtyMessage) {
+        // setSuccess();
+        setError(data.qtyMessage);
+        // localStorage.setItem('orderData', btoa(JSON.stringify(data)));
+        // router.push(data.redirect_url);
+      } else if (data.discountMessage) {
+        // setSuccess();
+        setError(data.discountMessage);
+        setTimeout(() => {
+          localStorage.setItem("cartList", JSON.stringify([])); // store an empty array in localStorage
+          setCartProducts([]); // update the cartProducts state to an empty array
+        }, 2000); // time in milliseconds (e.g., 1000ms = 1 second)
+        // localStorage.setItem('orderData', btoa(JSON.stringify(data)));
+        // router.push(data.redirect_url);
       } else {
         if(data.message) {
           setError(data.message);
