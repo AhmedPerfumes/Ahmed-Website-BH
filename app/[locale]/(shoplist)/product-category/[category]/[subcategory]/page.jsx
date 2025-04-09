@@ -82,7 +82,7 @@ export async function generateMetadata({ params }) {
         const data = await getProductCategorySEO(category, subcategory);
         console.log(JSON.parse(data.meta_value)[0]);
         return {
-            title: JSON.parse(data.meta_value)[0]?.seo_title ? `${JSON.parse(data.meta_value)[0]?.seo_title} | Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes` : "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
+            title: JSON.parse(data.meta_value)[0]?.seo_title ? `${JSON.parse(data.meta_value)[0]?.seo_title}` : "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
             description: JSON.parse(data.meta_value)[0]?.seo_description ? JSON.parse(data.meta_value)[0]?.seo_description?.replace(/<\/?[^>]+(>|$)/g, "").trim() : "Buy Best Perfumes Online Ahmed Al Maghribi Perfumes."
             // openGraph: {
             //     // title: data.product_name,
@@ -113,7 +113,7 @@ const ShopPage8 = async ({ params }) => {
       <>
         <QuickView />
         <Header14 />
-        <Banner5 image={ data.image }/>
+        <Banner5 image={ data.image } mobile_image={data.mobile_image}/>
         <main className="page-wrapper pt-0">
           <Categories description={ data.description }/>
           <div className="mb-4 pb-lg-3"></div>
