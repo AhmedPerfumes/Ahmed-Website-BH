@@ -258,6 +258,7 @@
 "Bakhoor Ahmed (40 Tabs)": "Bakhoor Ahmed (40 Tabs)",
 "Bakhoor Ahmed (20 Tabs)": "Bakhoor Ahmed (20 Tabs)",
 "Bakhoor Rasiyat": "Bakhoor Rasiyaat",
+"Bakhoor Mumassak 10Tabs": "Bakhoor Mumassak 10 Tabs",
 
 "-------------Oud Ma'attar Category":"This is category for Oud Ma'attar-----------",
 "Oud al Amber 3TL": "OUD AMBER 3TL",
@@ -406,6 +407,7 @@
 "Bidun Esam Hair Mist":"Bidun Esam Hair Mist",
 "Oud & Roses Hair Mist":"Oud & Roses Hair Mist",
 "Rose Noir Hair Mist":"Rose Noir Hair Mist",
+"Marj Hair Mist":"Marj Hair Mist",
 
 "----------Checkout Pages--------":"----------Checkout Pages--------",
 "Shipping and Checkout":"Shipping and Checkout",
@@ -808,6 +810,7 @@
 "Bakhoor Ahmed 20 Tabs Description": "<p>20 Tablets infused with woody &amp; Exotic flower notes</p>",
 "Bakhoor Hind Description":"Bakhoor Hind, an oriental fragrance, ensures that your surrounding is perfumed with delightful aromas, creating a mood that warmly welcomes fresh woody scent.",
 "Bakhoor Rasiyat Description":"Bakhoor Rasiyat is a rich, oriental-musky blend designed to infuse your space with elegance and tranquility.",
+"Bakhoor Mumassak 10Tabs Description":"Bakhoor Mumassak is a luxurious blend of 10 fragrant tablets that epitomize the essence of the Orient.",
 
 
 "Marrah Content": "<p>Marrah Bakhoor is a premium home fragrance product that exudes luxury and warmth.</p>",
@@ -828,6 +831,7 @@
 "Bakhoor Ahmed 40 Tabs Content": "<p>Bakhoor Ahmed brings the garden's ethereal beauty closer to your soul, Giving in to the bliss of Oriental, White Musk-scented florals.<br>The smoky woodiness of the scent, the warm amber, incense, and sandalwood towards the end are enough to make anyone fall into the overwhelming desire to relish the moment.</p><p>One small touch of this bakhoor on a woodchip is all it takes to transform any environment into a pleasant oasis.</p><p> </p>",
 "Bakhoor Ahmed 20 Tabs Content": "<p>Bakhoor Ahmed brings the garden’s ethereal beauty closer to your soul, Giving in to the bliss of Oriental,White Musk-scented florals.<br>The smoky woodiness of the scent, the warm amber, incense, and sandalwood towards the end are enough to make anyone fall into the overwhelming desire to relish the moment.</p><p>One small touch of this bakhoor on a woodchip is all it takes to transform any environment into a pleasant oasis.</p><p>The most popular amongst our Bakhoors, Bakhoor Ahmed, is available in a 20-tablet container</p>",
 "Bakhoor Rasiyat Content":"Bakhoor Rasiyat is a rich, oriental-musky blend designed to infuse your space with elegance and tranquility.It opens with the zesty brightness of mandarin, gracefully transitioning into the opulent aroma of Indian roses. The heart unveils the profound woody richness of Dehnal Oud, adding depth and refinement.The base is a captivating harmony of amber, white musk, white flowers, and black musk, delivering a warm, lingering scent that balances floral softness with musky allure.Perfect for creating an inviting ambiance, Bakhoor Rasiyat transforms any setting into a sanctuary of timeless luxury.",
+"Bakhoor Mumassak 10Tabs Content":"Bakhoor Mumassak is a luxurious blend that embodies the essence of oriental sophistication. It opens with a vibrant burst of fruity citrus, apple, and black currant, offering a refreshing and uplifting aroma. The heart reveals a delicate floral bouquet of rose and white flowers, adding elegance and charm. This rich composition is anchored by a deep, long-lasting base of musk, oakmoss, and oud, creating a warm and captivating olfactory experience.",
 
 "Marrah Notes": "<p>Marrah Bakhoor is a premium home fragrance product that exudes luxury and warmth.</p>",
 "Bakhoor Ghars 40 Tabs Notes": "<p>TOP : Aldhydes, Bergamot, Tuberose.</p><p>HEART : Rose, Jasmine, Ylang-Ylang, Violet </p><p>BOTTOM : Ambroxan, Oakmoss, Vetluer, Sandalwood, Musk, Resins, Amber and Patchouli  </p>",
@@ -999,19 +1003,21 @@
 "Bidun Esam Hair Mist Description": "<p>Experience hydrated, shiny hair with the luxurious, floral-spiced scent of Bidun Esam Hair Mist.</p>",
 "Oud Roses Hair Mist Description": "<p>Experience healthy, nourished hair with a radiant shine and the elegant scent of Oud &amp; Roses Hair Mist.</p>",
 "Rose Noir Hair Mist Description": "<p>Indulge your hair with the luxurious Rose Noir Hair Mist, blending care and captivating fragrance for a perfect finish</p>",
+"Marj Hair Mist Description": "<p>Marj Hair Mist is a luxurious hair mist that combines the refreshing scent of citrus and floral notes with a hint of spice, leaving your hair feeling soft, nourished, and beautifully fragrant.</p>",
 
 "Supreme Hair Mist Content": "<p>Introducing Supreme Hair Mist: a refreshing blend of nourishment and fragrance for your hair. Crafted with care and enriched with premium ingredients, it revitalizes your locks with every spritz, leaving them subtly scented and vibrant. Embrace the elegance of Supreme Hair Mist and elevate your hair care routine today.</p><p>E 50ml.</p>",
 "Shaikha Hind Hair Mist Content": "<p>Introducing Shaikha Hind Hair Mist in a convenient 50ml size. Elevate your haircare routine to new heights with this exquisite blend of fragrances designed to leave an enchanting trail wherever you go.</p>",
 "Bidun Esam Hair Mist Content": "<p>Elevate your hair care routine with our new Bidun Esam Hair Mist, a perfect blend of hydration and fragrance that nourishes each strand for a natural, healthy shine. Made with hair-safe ingredients, this 50ml essence envelops you in a delicate, lasting scent that captivates.</p>",
 "Oud Roses Hair Mist Content": "<p>Transform your hair care routine with the luxurious Oud &amp; Roses Hair Mist, crafted to hydrate and nourish your hair while bestowing a radiant shine and a lingering, delicate scent. Formulated with hair-safe ingredients, this 50ml mist brings elegance to every application.</p>",
 "Rose Noir Hair Mist Content": "<p>Elevate your hair care routine with Rose Noir Hair Mist, where the art of fragrance meets the science of nourishment. This 50ml mist infuses your hair with a delicate blend of citrusy rose top notes, complemented by a heart of warm vanilla and a touch of salt. The scent deepens into a rich, woody base of ambergris, sandalwood, and cashmere wood, leaving your hair irresistibly soft and radiant. Crafted with hair-safe ingredients, Rose Noir not only perfumes but also hydrates and enhances your hair’s natural shine, embodying luxury with every spritz.</p>",
+"Marj Hair Mist Content":"Marj Hair Mist is a luxurious hair mist that combines the refreshing scent of citrus and floral notes with a hint of spice, leaving your hair feeling soft, nourished, and beautifully fragrant. This 50ml mist is designed to hydrate and enhance the natural shine of your hair while providing a long-lasting, captivating fragrance. Perfect for daily use, Marj Hair Mist transforms your hair care routine into a delightful experience, enveloping you in a refreshing aroma that lingers throughout the day.",
 
 "Supreme Hair Mist Notes": "",
 "Shaikha Hind Hair Mist Notes": "<p><span style=\"color:hsl(0,0%,100%);\"><strong>Top Notes: Black currant , cassia , grapes, red berries</strong></span>  <br><span style=\"color:hsl(0,0%,100%);\"><strong>Heart Notes: Peony, violet,lily of the valley, jasmine</strong></span>  <br><span style=\"color:hsl(0,0%,100%);\"><strong>Base Notes: Agarwood.</strong></span></p>",
 "Bidun Esam Hair Mist Notes": "<p>Top - Spicy Floral (Saffron, Roses) <br>Heart - Floral (White flowers) <br>Base - Musky Woody (Notes: Top – Spicy Floral (Saffron, Roses) Heart – Floral (White flowers) Base – Musky Woody (Cambodian oud, Musk, ambeCambodian oud, Musk, amber)</p>",
 "Oud Roses Hair Mist Notes": "<div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://phpstack-667016-4904984.cloudwaysapps.com/public/storage/product-notes-images/top-notes-oud-roses.jpg\" alt=\"Top Notes oud &amp; roses\" loading=\"lazy\"><br> </p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Top Notes</h3><p>Floral (Turkish rose, lavender, lemon, peony)</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5 flex-column-reverse flex-lg-row\"><p class=\"order-1 order-lg-2\"><img class=\"img-fluid\" src=\"https://phpstack-667016-4904984.cloudwaysapps.com/public/storage/product-notes-images/heart-images-oud-roses.jpg\" alt=\"first-notes-3.jpg\"></p><div class=\"content-wrapper col-lg-7 px-lg-5 order-2 order-lg-1\"><h3 class=\"mb-3 text-white\">Heart Notes</h3><p>Sweet (sandalwood, white flowers, frankincense)</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://phpstack-667016-4904984.cloudwaysapps.com/public/storage/product-notes-images/bottom-notes-oud-roses.jpg\" alt=\"Bottom Notes oud &amp; roses\" loading=\"lazy\"><br> </p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Bottom Notes</h3><p>Musky( agarwood, guaiac wood, oak moss, Musk, amber)</p></div></div>",
 "Rose Noir Hair Mist Notes": "<p>Top Notes: Citrus Rosy (Mandarin, Rose)</p><p>Heart Notes: Vanilla (Vanilla, Salt)</p><p>Base Notes: Woody (Ambergris, Sandalwood, Cashmere Wood)</p>",
-
+"Marj Hair Mist Notes":"",
 "----------Collections Single Product Page Collections":"----------Collections Single Product Page Collections",
 "Bidun Esam Collection Description": "<p>The Collection Contains Bidun Esam EDP 50 ML, Bidun Esam Air Freshener 180 ML, Bidun Esam Oil 12 ML &amp; Bidun Esam Hair Mist 50 ML plus get <strong>15% off.</strong></p>",
 
