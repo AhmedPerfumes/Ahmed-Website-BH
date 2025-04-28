@@ -259,6 +259,7 @@
 "Bakhoor Ahmed (20 Tabs)": "Bakhoor Ahmed (20 Tabs)",
 "Bakhoor Rasiyat": "Bakhoor Rasiyaat",
 "Bakhoor Mumassak 10Tabs": "Bakhoor Mumassak 10 Tabs",
+"Bakhoor Marj": "Bakhoor Marj (20 Tabs)",
 
 "-------------Oud Ma'attar Category":"This is category for Oud Ma'attar-----------",
 "Oud al Amber 3TL": "OUD AMBER 3TL",
@@ -379,6 +380,7 @@
   "Zumar": "Zumar",
   "La Rosee": "La Rosee",
   "Duha": "Duha",
+  "Kawkab":"Kawkab",
   
 
   "----------Gel Category---------":"----------Gel Category---------",
@@ -451,6 +453,7 @@
 "AHL Description":"Ahl is more than just a fragrance, it's a feeling of home, a scent that lingers like the embrace of loved ones, exuding warmth and refinement in every drop.",
 "Mystique Pink Description":"Mystique Pink exudes an aura of mystery in every 100ml.",
 "Duha Description":"Duha is a fragrance that captures the essence of elegance and sophistication, making it a perfect choice for those who appreciate the finer things in life.",
+"Kawkab Description":"Kawkab is a sophisticated fragrance that blends radiant florals with rich, woody depths.Kawkab is a statement of elegance and timeless charm,EDP 75ml.",
 
 
 "Shay Jadeed Content": "<p>Besiege in with tickling prefusions of shay jadeed. Let go the scents beyond the Middle East. Just a trifling amount of splash, fills your essence with liveliness; as juicy citruses sums the top the note with thier zesty flavors. </p>",
@@ -488,6 +491,7 @@
 "AHL Content":"Ahl is a name that signifies family, kinship, and a deep sense of belonging. This fragrance is a tribute to the warmth of cherished connections, enveloping you in a captivating blend of luxurious notes that evoke comfort, elegance, and sophistication.Ahl is more than just a fragrance, it's a feeling of home, a scent that lingers like the embrace of loved ones, exuding warmth and refinement in every drop.",
 "Mystique Pink Content":"At the outset, delicate peony merges with zesty mandarin and refreshing citrus, initiating a mesmerizing journey. Unveiling its heart, osmanthus and rose intertwine, adding an air of floral sophistication. Anchored by base notes of pink pepper, patchouli, and sandalwood, its enigmatic charm persists, leaving a lasting impression. Mystique Pink transcends ordinary fragrances—it's an invitation to explore the enigmatic, a voyage into the unknown with every spritz.",
 "Duha Content":"<p>Duha is a fragrance that captures the essence of elegance and sophistication, making it a perfect choice for those who appreciate the finer things in life. The scent opens with a burst of fresh citrus notes, creating an invigorating and uplifting experience. As it develops, the heart reveals a delicate blend of floral and fruity accords, adding depth and complexity to the fragrance. Finally, the base notes of warm woods and soft musk create a sensual and lasting impression. Duha is a versatile fragrance that can be worn for any occasion, leaving a trail of elegance wherever you go.</p>",
+"Kawkab Content":"Kawkab is a luxurious fragrance that blends radiant florals with deep, woody notes. It opens with vibrant rose, peony, saffron, and citrus, leading to a warm heart of Isparta rose, black tea, and amber. The scent settles into a rich base of musk, oud Ahmed Kinam, cedarwood, and patchouli, leaving a lasting impression of elegance and sophistication.",
 
 "Shay Jadeed Notes": "<p>Top – citrus (Lemon) <br>heart – Flower (lavender vanilla) <br>base - woody (agarwood, frankincense)</p>",
 "Saba Horoof Notes": "<p>Top - Citrus </p><p>Heart - White floral -rosy </p><p>Base - Musky - woody </p>",
@@ -523,6 +527,7 @@
 "AHL Notes":"<div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/ingridient-1.jpg\" alt=\"second-notes.jpg\"></p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Top Notes</h3><p>A vibrant and refreshing opening with the citrusy brightness of bergamot, Brazilian orange, and lavender, harmonized with the exotic warmth of cardamom, pink pepper, and angelica root. A unique touch of coconut, melon, banana, and raspberry adds a fruity, tropical twist, making the first impression both inviting and exhilarating.</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5 flex-column-reverse flex-lg-row\"><p class=\"order-1 order-lg-2\"><img class=\"img-fluid\" src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/heart-notes.jpg\" alt=\"first-notes-3.jpg\"></p><div class=\"content-wrapper col-lg-7 px-lg-5 order-2 order-lg-1\"><h3 class=\"mb-3 text-white\">Heart Notes</h3><p>A rich floral bouquet unfolds at the heart, combining the airy freshness of marine notes, cyclamen, lily of the valley, rose, and tulip, with the opulence of cashmere wood, iris, jasmine, orange blossom, and magnolia. A subtle hint of patchouli adds depth and mystery, creating a beautifully balanced core.</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/ingridient-2.jpg\" alt=\"third-notes-2.jpg\"></p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Bottom Notes</h3><p>A sensual and long-lasting dry-down of sandalwood, white musk, tonka, and moss, enriched with the warmth of amber, Thai oud, and caramel. The final touch of vanilla leaves an irresistibly smooth and creamy finish, ensuring an unforgettable presence.<br> </p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5\"><p> </p><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/ahl-artwork-2.jpg\" alt=\"artboard-1-min.jpg\"></p><p> </p><div class=\"content-wrapper col-lg-4 px-lg-4\"><h4 style=\"text-align:center;\"><span style=\"color:hsl(342,28%,69%);font-size:18px;\">Ahl – The Essence of Belonging</span></h4><p style=\"text-align:center;\">Ahl is a name that signifies family, kinship, and a deep sense of belonging. This fragrance is a tribute to the warmth of cherished connections, enveloping you in a captivating blend of luxurious notes that evoke comfort, elegance, and sophistication.<br> </p></div><p> </p><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/ahl-artwork-1.jpg\" alt=\"artboard-3-min.jpg\"></p></div>",
 "Mystique Pink Notes":"<p>Top Notes: PEONY, MANDARIN, CITRUS. </p><p>Heart Notes: OSMANTHUS, ROSE. </p><p>Base - PINK PEPPER, PATCHOULI, SANDALWOOD.</p>",
 "Duha Notes": "<p>Top - pomegranate, sicilian bergamot, floral (white rose, peony), pink pepper.</p><p>Heart - white flower blossoms rose, lily, jasmine,agarwood, rosemary.</p><p>Base - Musk, amber, vanilla,leather& haitian vetiver.</p>",
+"Kawkab Notes": "<div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/kawkab-first-notes.jpg\" alt=\"Top Notes oud &amp; roses\" loading=\"lazy\"><br> </p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Top Notes</h3><p>It opens with a vibrant rose bouquet, complemented by peony, saffron, mango, and citrus notes, creating a fresh yet luxurious introduction.</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5 flex-column-reverse flex-lg-row\"><p class=\"order-1 order-lg-2\"><img class=\"img-fluid\" src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/kawkab-heart-notes.jpg\" alt=\"first-notes-3.jpg\"></p><div class=\"content-wrapper col-lg-7 px-lg-5 order-2 order-lg-1\"><h3 class=\"mb-3 text-white\">Heart Notes</h3><p>The heart reveals the richness of Isparta rose, black tea, iris, and amber, adding warmth and depth.</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/kawkab-base-notes.jpg\" alt=\"Bottom Notes oud &amp; roses\" loading=\"lazy\"><br> </p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Bottom Notes</h3><p>The fragrance settles into an elegant base of musk, oud Ahmed Kinam, cypriol, cedarwood, and patchouli, leaving a lasting and distinguished impression</p></div></div>",
 
 "----------EAU DE Parfum Single Product Page Occidental Fragrance":"----------EAU DE Parfum Single Product Page Occidental Fragrance",
 "Instance 60ML Description": "<p><span>Instance Perfume is a timeless and versatile fragrance that suits every occasion.</span></p>",
@@ -820,6 +825,7 @@
 "Bakhoor Hind Description":"Bakhoor Hind, an oriental fragrance, ensures that your surrounding is perfumed with delightful aromas, creating a mood that warmly welcomes fresh woody scent.",
 "Bakhoor Rasiyat Description":"Bakhoor Rasiyat is a rich, oriental-musky blend designed to infuse your space with elegance and tranquility.",
 "Bakhoor Mumassak 10Tabs Description":"Bakhoor Mumassak is a luxurious blend of 10 fragrant tablets that epitomize the essence of the Orient.",
+"Bakhoor Marj Description":"Bakhoor Marjan is a luxurious bakhoor that combines the richness of oud with the freshness of floral notes.",
 
 
 "Marrah Content": "<p>Marrah Bakhoor is a premium home fragrance product that exudes luxury and warmth.</p>",
@@ -841,6 +847,8 @@
 "Bakhoor Ahmed 20 Tabs Content": "<p>Bakhoor Ahmed brings the garden’s ethereal beauty closer to your soul, Giving in to the bliss of Oriental,White Musk-scented florals.<br>The smoky woodiness of the scent, the warm amber, incense, and sandalwood towards the end are enough to make anyone fall into the overwhelming desire to relish the moment.</p><p>One small touch of this bakhoor on a woodchip is all it takes to transform any environment into a pleasant oasis.</p><p>The most popular amongst our Bakhoors, Bakhoor Ahmed, is available in a 20-tablet container</p>",
 "Bakhoor Rasiyat Content":"Bakhoor Rasiyat is a rich, oriental-musky blend designed to infuse your space with elegance and tranquility.It opens with the zesty brightness of mandarin, gracefully transitioning into the opulent aroma of Indian roses. The heart unveils the profound woody richness of Dehnal Oud, adding depth and refinement.The base is a captivating harmony of amber, white musk, white flowers, and black musk, delivering a warm, lingering scent that balances floral softness with musky allure.Perfect for creating an inviting ambiance, Bakhoor Rasiyat transforms any setting into a sanctuary of timeless luxury.",
 "Bakhoor Mumassak 10Tabs Content":"Bakhoor Mumassak is a luxurious blend that embodies the essence of oriental sophistication. It opens with a vibrant burst of fruity citrus, apple, and black currant, offering a refreshing and uplifting aroma. The heart reveals a delicate floral bouquet of rose and white flowers, adding elegance and charm. This rich composition is anchored by a deep, long-lasting base of musk, oakmoss, and oud, creating a warm and captivating olfactory experience.",
+"Bakhoor Marj Content":"<p>Bakhoor Marj is a luxurious bakhoor that combines the richness of oud with the freshness of floral notes. The top notes feature a delightful blend of citrus and fruity accords, creating an uplifting and vibrant opening. As it unfolds, the heart reveals a bouquet of delicate flowers, adding a touch of elegance and sophistication. The base notes are anchored by warm and earthy oud, providing depth and longevity to the fragrance. Bakhoor Marjan is perfect for creating a serene and inviting atmosphere in any space.</p>",
+
 
 "Marrah Notes": "<p>Marrah Bakhoor is a premium home fragrance product that exudes luxury and warmth.</p>",
 "Bakhoor Ghars 40 Tabs Notes": "<p>TOP : Aldhydes, Bergamot, Tuberose.</p><p>HEART : Rose, Jasmine, Ylang-Ylang, Violet </p><p>BOTTOM : Ambroxan, Oakmoss, Vetluer, Sandalwood, Musk, Resins, Amber and Patchouli  </p>",
@@ -859,6 +867,7 @@
 "Bakhoor Ahmed 10 Tabs Notes": "<p>Notes - Fresh woody ( Citrus fruits, bulgarian roses, white exotic flowers, saffron, musk amber)</p>",
 "Bakhoor Ahmed 40 Tabs Notes": "<p>Notes - Fresh woody ( Citrus fruits, bulgarian roses, white exotic flowers, saffron, musk amber) </p>",
 "Bakhoor Ahmed 20 Tabs Notes": "<p>Notes - Fresh woody ( Citrus fruits, bulgarian roses, white exotic flowers, saffron, musk amber)</p>",
+"Bakhoor Marj Notes":"",
 
 "----------Dakhoon Single Product Page Oud Maattar":"----------Dakhoon Single Product Page Oud Maattar",
 "Oud al Amber 3TL Description": "<p>The pairing of oud with amber often results in a scent that lingers on the skin for hours, leaving a sensual trail.</p>",
