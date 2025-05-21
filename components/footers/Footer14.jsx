@@ -125,13 +125,13 @@ export default function Footer14() {
           <div className="footer-column footer-store-info col-12 mb-4 mb-lg-0">
             <div className="logo">
               <a href="/">
-              <Image
-                  src="/assets/images/about/ahmed-logo.png"
-                  width={100}
-                  height={100}
-                  alt="Ahmed"
-                  className="logo__image d-block"
-                />
+                <Image
+                    src="/assets/images/about/ahmed-logo.png"
+                    width={100}
+                    height={100}
+                    alt="Ahmed"
+                    className="logo__image d-block"
+                  />
               </a>
             </div>
             {/* <!-- /.logo --> */}
