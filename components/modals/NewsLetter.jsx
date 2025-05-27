@@ -73,13 +73,13 @@ export default function NewsLetter() {
           <div className="row p-0 m-0">
             <div className="col-md-8 p-0">
               <div className="newsletter-popup__bg h-100 w-100">
-              <a href={`/${locale}/shop/perfumes/oriental-fragrance/zumar`}>
+              <a href={`/${locale}/shop/perfumes/oriental-fragrance/kawkab`}>
                 <Image
                   width={550}
                   height={650}
                   style={{ height: "fit-content" }}
                   loading="lazy"
-                  src="/assets/images/home/demo8/zumar.jpg"
+                  src="/assets/images/home/demo8/Kawkab-Web-banner.jpg"
                   className="h-100 w-100 object-fit-cover d-block"
                   alt="image"                
                   />
@@ -90,16 +90,16 @@ export default function NewsLetter() {
             <div className="col-md-4 p-0 d-flex align-items-center text-center">
               <div className="block-newsletter w-100">
               <h3 className="section-title fw-normal mb-3 pb-2" style={{ color: '#cfa91a' }}>
-                  Zumar
+                  Kawkab
                 </h3>
                 <p>
-                Zumar is a truly luxurious scent crafted for those who embrace elegance and sophistication, making it an essential addition to the collection of any perfume connoisseur.
+                Kawkab is a captivating oriental fragrance that embodies the essence of the stars. With its rich and warm notes, it transports you to a celestial realm, evoking a sense of mystery and allure. Perfect for those who seek to leave a lasting impression, Kawkab is a fragrance that shines brightly in any collection.
                   {/* <b className="sub-title">Don't miss out.</b> */}
 
                 </p>
                 <a
                   className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                  href={`/${locale}/shop/perfumes/oriental-fragrance/zumar`}
+                  href={`/${locale}/shop/perfumes/oriental-fragrance/Kawkab`}
                 >
                   Shop Now
                 </a>
