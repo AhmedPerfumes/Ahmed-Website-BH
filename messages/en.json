@@ -382,6 +382,7 @@
   "La Rosee": "La Rosee",
   "Duha": "Duha",
   "Kawkab":"Kawkab",
+  "Rasaan":"Rasaan",
   
 
   "----------Gel Category---------":"----------Gel Category---------",
@@ -456,6 +457,7 @@
 "Mystique Pink Description":"Mystique Pink exudes an aura of mystery in every 100ml.",
 "Duha Description":"Duha is a fragrance that captures the essence of elegance and sophistication, making it a perfect choice for those who appreciate the finer things in life.",
 "Kawkab Description":"Kawkab is a sophisticated fragrance that blends radiant florals with rich, woody depths.Kawkab is a statement of elegance and timeless charm,EDP 75ml.",
+"Rasaan Description":"Rasaan is a captivating fragrance that embodies the essence of elegance and sophistication, crafted for those who appreciate the finer things in life.",
 
 
 "Shay Jadeed Content": "<p>Besiege in with tickling prefusions of shay jadeed. Let go the scents beyond the Middle East. Just a trifling amount of splash, fills your essence with liveliness; as juicy citruses sums the top the note with thier zesty flavors. </p>",
@@ -494,6 +496,7 @@
 "Mystique Pink Content":"At the outset, delicate peony merges with zesty mandarin and refreshing citrus, initiating a mesmerizing journey. Unveiling its heart, osmanthus and rose intertwine, adding an air of floral sophistication. Anchored by base notes of pink pepper, patchouli, and sandalwood, its enigmatic charm persists, leaving a lasting impression. Mystique Pink transcends ordinary fragrances—it's an invitation to explore the enigmatic, a voyage into the unknown with every spritz.",
 "Duha Content":"<p>Duha is a fragrance that captures the essence of elegance and sophistication, making it a perfect choice for those who appreciate the finer things in life. The scent opens with a burst of fresh citrus notes, creating an invigorating and uplifting experience. As it develops, the heart reveals a delicate blend of floral and fruity accords, adding depth and complexity to the fragrance. Finally, the base notes of warm woods and soft musk create a sensual and lasting impression. Duha is a versatile fragrance that can be worn for any occasion, leaving a trail of elegance wherever you go.</p>",
 "Kawkab Content":"Kawkab is a luxurious fragrance that blends radiant florals with deep, woody notes. It opens with vibrant rose, peony, saffron, and citrus, leading to a warm heart of Isparta rose, black tea, and amber. The scent settles into a rich base of musk, oud Ahmed Kinam, cedarwood, and patchouli, leaving a lasting impression of elegance and sophistication.",
+"Rasaan Content":"Rasaan is a captivating fragrance that embodies the essence of elegance and sophistication, crafted for those who appreciate the finer things in life. Its exquisite blend of notes creates a harmonious symphony that lingers on the skin, leaving a trail of allure and charm. Rasaan is perfect for special occasions or as an everyday indulgence, making it a must-have addition to any fragrance collection.",
 
 "Shay Jadeed Notes": "<p>Top – citrus (Lemon) <br>heart – Flower (lavender vanilla) <br>base - woody (agarwood, frankincense)</p>",
 "Saba Horoof Notes": "<p>Top - Citrus </p><p>Heart - White floral -rosy </p><p>Base - Musky - woody </p>",
@@ -530,6 +533,7 @@
 "Mystique Pink Notes":"<p>Top Notes: PEONY, MANDARIN, CITRUS. </p><p>Heart Notes: OSMANTHUS, ROSE. </p><p>Base - PINK PEPPER, PATCHOULI, SANDALWOOD.</p>",
 "Duha Notes": "<p>Top - pomegranate, sicilian bergamot, floral (white rose, peony), pink pepper.</p><p>Heart - white flower blossoms rose, lily, jasmine,agarwood, rosemary.</p><p>Base - Musk, amber, vanilla,leather& haitian vetiver.</p>",
 "Kawkab Notes": "<div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/kawkab-first-notes.jpg\" alt=\"Top Notes oud &amp; roses\" loading=\"lazy\"><br> </p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Top Notes</h3><p>It opens with a vibrant rose bouquet, complemented by peony, saffron, mango, and citrus notes, creating a fresh yet luxurious introduction.</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5 flex-column-reverse flex-lg-row\"><p class=\"order-1 order-lg-2\"><img class=\"img-fluid\" src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/kawkab-heart-notes.jpg\" alt=\"first-notes-3.jpg\"></p><div class=\"content-wrapper col-lg-7 px-lg-5 order-2 order-lg-1\"><h3 class=\"mb-3 text-white\">Heart Notes</h3><p>The heart reveals the richness of Isparta rose, black tea, iris, and amber, adding warmth and depth.</p></div></div><div class=\"d-lg-flex align-items-lg-center mb-5\"><p><img src=\"https://admin.ahmedalmaghribi.com/public/storage/notes/kawkab-base-notes.jpg\" alt=\"Bottom Notes oud &amp; roses\" loading=\"lazy\"><br> </p><div class=\"content-wrapper col-lg-7 px-lg-5\"><h3 class=\"mb-3 text-white\">Bottom Notes</h3><p>The fragrance settles into an elegant base of musk, oud Ahmed Kinam, cypriol, cedarwood, and patchouli, leaving a lasting and distinguished impression</p></div></div>",
+"Rasaan Notes":"",
 
 "----------EAU DE Parfum Single Product Page Occidental Fragrance":"----------EAU DE Parfum Single Product Page Occidental Fragrance",
 "Instance 60ML Description": "<p><span>Instance Perfume is a timeless and versatile fragrance that suits every occasion.</span></p>",
