@@ -4,6 +4,8 @@ import {
     categories8,
     categories88,
     categoriesInfluencers,
+    categoriesTop,
+    
 } from "@/data/categories";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -122,7 +124,29 @@ export default function Categories({ section }) {
                 </Swiper>
             </>
         );
-    } else {
+    } 
+    else if (section === "sectionTop") {
+        categoryRend = (
+            <>
+                <h2 className="section-head section-title text-uppercase fs-25 fw-medium text-center mb-2">
+                    {t("Cherished by All")}
+                </h2>
+                <p className="fs-15 mb-4 pb-xl-2 mb-xl-4 text-secondary text-center section-paragraph">
+                    {t(
+                        "Long-lasting fragrance in every drop"
+                    )}
+                </p>
+                <Swiper className="swiper-container" {...swiperOptions}>
+                    {renderSlides(categoriesTop)}
+                    <div className="swiper-pagination"></div>
+                    <div className="swiper-button-next"></div>
+                    <div className="swiper-button-prev"></div>
+                </Swiper>
+            </>
+        );
+    }
+    
+    else {
         categoryRend = (
             <>
                 <h2 className="section-title text-uppercase fs-25 fw-medium text-center mb-2">
