@@ -20,6 +20,7 @@ import { products1 } from "@/data/products/fashion";
 import { useRouter } from 'next/navigation';
 import { useLocale } from "next-intl";
 import Pagination1 from "../common/Pagination1";
+import FreeGiftFeature from '@/components/FreeGiftFeature';
 
 export default function Checkout() {
   const { shippingServiceCharges, vatTax, isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
@@ -477,6 +478,9 @@ export default function Checkout() {
   }
 
   const subTotalPrice = (elm) => {
+    if (elm.is_gift) {
+      return <td>0.00{currency.symbol} (Free Gift)</td>;
+    }
     const currentUTC = new Date(); // Current UTC time
     const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
     const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
@@ -505,6 +509,7 @@ export default function Checkout() {
 
   return (
     <>
+    <FreeGiftFeature couponData={couponData}/>
     {cartProducts.length ? (
       <form onSubmit={onOrder}>
         <div className="checkout-form">

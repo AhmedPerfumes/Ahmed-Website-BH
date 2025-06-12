@@ -97,6 +97,11 @@ export default function Context({ children }) {
   useEffect(() => {
     localStorage.setItem("wishlist", JSON.stringify(wishList));
   }, [wishList]);
+  const removeGiftFromCart = () => {
+    const updatedCart = cartProducts.filter((item) => !item.is_gift);
+    setCartProducts(updatedCart);
+    localStorage.setItem('cartList', JSON.stringify(updatedCart));
+  };
 
   const contextElement = {
     cartProducts,
@@ -113,7 +118,8 @@ export default function Context({ children }) {
     freeShippingFlag,
     setOrderDetails,
     orderDetails,
-    setCouponDataContext
+    setCouponDataContext,
+    removeGiftFromCart
   };
   return (
     <dataContext.Provider value={contextElement}>
