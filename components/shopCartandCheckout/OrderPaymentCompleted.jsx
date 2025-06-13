@@ -19,7 +19,7 @@ export default function OrderPaymentCompleted({ orderDetails }) {
 
   const subTotalPrice = (elm) => {
     if (elm.is_gift) {
-      return <td>0.00{currency.symbol} (Free Gift)</td>;
+      return <td>0.000{currency.symbol} (Free Gift)</td>;
     }
     const currentUTC = new Date(); // Current UTC time
     const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
