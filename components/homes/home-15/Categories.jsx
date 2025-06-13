@@ -75,7 +75,7 @@ export default function Categories({ section }) {
                 </video>
                 <div className="text-center">
                     <Link
-                        href={`${locale}${elm.link}`}
+                        href={`/${locale}${elm.link}`}
                         className="menu-link h6 fw-medium"
                     >
                         {t(elm.altText)}
