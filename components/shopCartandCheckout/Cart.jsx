@@ -197,7 +197,7 @@ export default function Cart() {
                         </div>
                       </div> : 1}
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="qty-control position-relative">
                         <input
                           type="number"
@@ -223,7 +223,7 @@ export default function Cart() {
                           +
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                     <td>
                       
                         { subTotalPrice(elm) }
