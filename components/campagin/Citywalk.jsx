@@ -23,7 +23,7 @@ function CityWalk() {
                     <Image
                         loading="lazy"
                         className="w-100 h-auto d-none d-lg-block"
-                        src="/assets/images/campaigns/Web-banner.jpg"
+                        src="/assets/images/campaigns/Bakhoor-desktop.jpg"
                         alt="Father's Day Web"
                         width={1500}
                         height={550}
@@ -35,7 +35,7 @@ function CityWalk() {
                     <Image
                         loading="lazy"
                         className="w-100 h-auto d-lg-none"
-                        src="/assets/images/campaigns/mobile-banner.jpg"
+                        src="/assets/images/campaigns/bakhoor-mobile.jpg"
                         alt="Father's Day Mobile"
                         width={1500}
                         height={550}
