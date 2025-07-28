@@ -1,8 +1,5 @@
 "use client";
-const filterCategories3 = ["Featured", "Popular", "Best Rated"];
 import { useContextElement } from "@/context/Context";
-import { products9 } from "@/data/products/fashion";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,16 +8,15 @@ import he from 'he';
 import Pagination1 from "../../common/Pagination1";
 import { useLocale } from "next-intl";
 import { useMenu } from '@/context/MenuContext';
-// import Pagination1 from "../../common/Pagination1";
+import Link from "next/link";
 
-export default function TopCollections() {
+export default function TopCollections({ categoryId,title,category,sub_category}) {
   const { isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
   const locale = useLocale();
-  const { toggleWishlist, isAddedtoWishlist } = useContextElement();
-  const { setQuickViewItem } = useContextElement();
-  const { addProductToCart, isAddedToCartProducts } = useContextElement();
+  const { toggleWishlist, isAddedtoWishlist, setQuickViewItem, addProductToCart, isAddedToCartProducts } = useContextElement();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
+
   const swiperOptions = {
     autoplay: {
       delay: 5000,
@@ -64,17 +60,6 @@ export default function TopCollections() {
       },
     },
   };
-  const [currentCategory, setCurrentCategory] = useState(filterCategories3[0]);
-  const [filtered, setFiltered] = useState(products9);
-  useEffect(() => {
-    if (currentCategory == "All") {
-      setFiltered(products9);
-    } else {
-      setFiltered([
-        ...products9.filter((elm) => elm.filterCategory == currentCategory),
-      ]);
-    }
-  }, [currentCategory]);
 
   useEffect(() => {
     const getExportProducts = async () => {
@@ -84,9 +69,7 @@ export default function TopCollections() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            category_id: 19,
-          }),
+          body: JSON.stringify({ category_id: categoryId }),
         });
 
         if (!response.ok) {
@@ -103,211 +86,144 @@ export default function TopCollections() {
     };
 
     getExportProducts();
-  }, []);
+  }, [categoryId]);
 
-  function removeSpecialCharactersAndAmp(str) {
-    // Remove the specific word "&amp;"
+  const removeSpecialCharactersAndAmp = (str) => {
     let cleanedStr = str?.replace(/&amp;/g, '');
-
-    // Remove all special characters
     cleanedStr = cleanedStr?.replace(/[^\w\s-]/g, '');
+    return cleanedStr?.replace(/\s+/g, ' ').trim();
+  };
 
-    // Replace multiple spaces with a single space and trim
-    cleanedStr = cleanedStr?.replace(/\s+/g, ' ').trim();
+  const price = (elm) => {
+    const currentUTC = new Date();
+    const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000));
+    const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
 
-    return cleanedStr;
-  }
+    if (elm?.discount) {
+      const start = new Date(elm.discount.start_date);
+      const end = new Date(elm.discount.end_date);
+      if (currentGST >= start && currentGST <= end) {
+        const discountedPrice = (elm.price - (elm.price * elm.discount.value / 100)).toFixed(2);
+        return (
+          <>
+            <span className="money price price-old">{elm.price}{currency.symbol}</span>
+            <span className="money price price-sale">{discountedPrice}{currency.symbol}</span>
+          </>
+        );
+      }
+    } else if (elm?.sale_price) {
+      const discountedPrice = (elm.price - (elm.price * elm.sale_price / 100)).toFixed(2);
+      return (
+        <>
+          <span className="money price price-old">{elm.price}{currency.symbol}</span>
+          <span className="money price price-sale">{discountedPrice}{currency.symbol}</span>
+        </>
+      );
+    }
 
-  if (isMenuLoading) {
-      return <div><Pagination1 /></div>;
-  }
-  if (isMenuError) {
-    return <div>{ isMenuError }</div>;
-  }
+    return <span className="money price">{elm?.price}{currency.symbol}</span>;
+  };
+
+  if (isMenuLoading) return <Pagination1 />;
+  if (isMenuError) return <div>{isMenuError}</div>;
 
   return loading ? <Pagination1 /> : (
-    <div className="">
-      <div className="mb-4 mb-xl-5 pt-1 pb-5"></div>
-
+    <div>
+      <div className="mb-4 mb-xl-5 pt-1 pb-5" />
       <section className="products-carousel container">
         <h2 className="section-title fw-normal text-center mb-3 pb-xl-3 mb-xl-3">
-          Our Top Collection
+          {title}
         </h2>
 
-        {/* <ul
-          className="nav nav-tabs mb-3 mb-xl-5 justify-content-center"
-          id="collections-tab"
-          role="tablist"
-        >
-          {filterCategories3.map((elm, i) => (
-            <li
-              onClick={() => setCurrentCategory(elm)}
-              key={i}
-              className="nav-item"
-              role="presentation"
-            >
-              <a
-                className={`nav-link nav-link_underscore ${
-                  currentCategory == elm ? "active" : ""
-                }`}
-              >
-                {elm}
-              </a>
-            </li>
-          ))}
-        </ul> */}
-
         <div className="tab-content" id="collections-tab-content">
-          <div
-            className="tab-pane fade show active"
-            id="collections-tab-1"
-            role="tabpanel"
-            aria-labelledby="collections-tab-1-trigger"
-          >
+          <div className="tab-pane fade show active" id="collections-tab-1">
             <div className="position-relative">
-              <Swiper
-                className="swiper-container js-swiper-slider"
-                {...swiperOptions}
-              >
-                {products.map((elm, i) => (
+              <Swiper className="swiper-container js-swiper-slider" {...swiperOptions}>
+                {products.filter(elm => elm.product_qty > 0).map((elm, i) => (
                   <SwiperSlide key={i} className="swiper-slide product-card">
                     <div className="pc__img-wrapper">
-                      {/* {elm?.images && JSON.parse(elm.images).map((image, ind) => ( */}
-                        <Link href={`/${locale}/shop/online-exclusive/online-exclusive/${removeSpecialCharactersAndAmp(elm?.product_name)?.split(' ').join('-').toLowerCase()}`}>
-                        {JSON.parse(elm.images)[0] && <Image
+                      <Link href={`/${locale}/shop/${category}/${sub_category}/${removeSpecialCharactersAndAmp(elm?.product_name)?.split(' ').join('-').toLowerCase()}`}>
+                        {JSON.parse(elm.images)[0] && (
+                          <Image
                             loading="lazy"
                             src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(elm.images)[0]}`}
                             width="260"
                             height="315"
-                            alt="Cropped Faux leather Jacket"
+                            alt={elm?.product_name}
                             className="pc__img"
                           />
-                        }
-                        {JSON.parse(elm.images)[1] && <Image
+                        )}
+                        {JSON.parse(elm.images)[1] && (
+                          <Image
                             loading="lazy"
                             src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(elm.images)[1]}`}
                             width="260"
                             height="315"
-                            alt="Cropped Faux leather Jacket"
+                            alt={elm?.product_name}
                             className="pc__img pc__img-second"
                           />
-                        }
-                        </Link>
-                      {/* ))} */}
-                      <button
-                        className="pc__atc btn btn-lg anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                        onClick={() => addProductToCart({...elm, category_name: 'Collections', subcategory_name: 'Online Exclusive'})}
-                        title={
-                          isAddedToCartProducts(elm.product_id)
-                            ? "Already Added"
-                            : "Add to Cart"
-                        }
-                      >
-                        {isAddedToCartProducts(elm.product_id)
-                          ? "Already Added"
-                          : "Add To Cart"}
-                      </button>
-                      {/* <div className="anim_appear-right position-absolute top-0 mt-2 me-2">
+                        )}
+                      </Link>
+
+                      {elm?.label_name && (
+                        <div style={{ backgroundColor: elm.label_color }} className="product-label text-white right-0 top-0 left-auto mt-2 mx-2">
+                          {elm.label_name}
+                        </div>
+                      )}
+
+                      {elm.product_qty <= 0 ? (
+                        <div style={{ backgroundColor: '#dc3545' }} className="product-label text-uppercase text-white top-0 left-0 mt-2 mx-2">
+                          Out Of Stock
+                        </div>
+                      ) : (
+                        elm.discount && (
+                          <div style={{ backgroundColor: '#198754' }} className="product-label text-uppercase text-white top-0 left-0 mt-2 mx-2">
+                            Sale {elm.discount.value}%
+                          </div>
+                        )
+                      )}
+
+                      {elm.product_qty > 0 && (
                         <button
-                          className="btn btn-round-sm btn-hover-red d-block border-0 text-uppercase mb-2 js-quick-view"
-                          data-bs-toggle="modal"
-                          data-bs-target="#quickView"
-                          onClick={() => setQuickViewItem(elm)}
-                          title="Quick view"
+                          className="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
+                          onClick={() => !isAddedToCartProducts(elm.product_id) && addProductToCart({
+                            ...elm,
+                            category_name: 'Collections',
+                            subcategory_name: 'Online Exclusive'
+                          })}
+                          title={isAddedToCartProducts(elm.product_id) ? "Already Added" : "Add to Cart"}
                         >
-                          <svg
-                            className="d-inline-block"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 18 18"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <use href="#icon_view" />
-                          </svg>
+                          {isAddedToCartProducts(elm.product_id) ? "Already Added" : "Add To Cart"}
                         </button>
-                        <button
-                          className={`btn btn-round-sm btn-hover-red d-block border-0 text-uppercase js-add-wishlist ${
-                            isAddedtoWishlist(elm.product_id) ? "active" : ""
-                          }`}
-                          onClick={() => toggleWishlist(elm.product_id)}
-                          title="Add To Wishlist"
-                        >
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <use href="#icon_heart" />
-                          </svg>
-                        </button>
-                      </div> */}
+                      )}
                     </div>
 
                     <div className="pc__info position-relative">
-                      {/* <p className="pc__category">{elm.category}</p> */}
                       <h6 className="pc__title">
-                      <Link href={`/${locale}/shop//online-exclusive/online-exclusive/${removeSpecialCharactersAndAmp(elm?.product_name)?.split(' ').join('-').toLowerCase()}`}>{elm?.product_name && he.decode(elm?.product_name)}</Link>
+                        <Link href={`/${locale}/shop/online-exclusive/online-exclusive/${removeSpecialCharactersAndAmp(elm?.product_name)?.split(' ').join('-').toLowerCase()}`}>
+                          {elm?.product_name && he.decode(elm.product_name)}
+                        </Link>
                       </h6>
                       <div className="product-card__price d-flex">
-                        {elm.priceOld && (
-                          <>
-                            <span className="money price price-old">
-                              {elm.priceOld}{ currency.symbol }
-                            </span>
-                            <span className="money price price-sale">
-                              {elm.price}{ currency.symbol }
-                            </span>
-                          </>
-                        )}
-                        {!elm.priceOld && (
-                          <span className="money price">{elm.price}{ currency.symbol }</span>
-                        )}
+                        {price(elm)}
                       </div>
                     </div>
                   </SwiperSlide>
                 ))}
-
-                {/* <!-- /.swiper-wrapper --> */}
               </Swiper>
-              {/* <!-- /.swiper-container js-swiper-slider --> */}
 
               <div className="cursor-pointer products-carousel__prev type2 position-absolute top-50 d-flex align-items-center justify-content-center">
-                <svg
-                  width="25"
-                  height="25"
-                  viewBox="0 0 25 25"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <use href="#icon_prev_md" />
-                </svg>
+                <svg width="25" height="25" viewBox="0 0 25 25"><use href="#icon_prev_md" /></svg>
               </div>
-              {/* <!-- /.products-carousel__prev --> */}
               <div className="cursor-pointer products-carousel__next type2 position-absolute top-50 d-flex align-items-center justify-content-center">
-                <svg
-                  width="25"
-                  height="25"
-                  viewBox="0 0 25 25"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <use href="#icon_next_md" />
-                </svg>
+                <svg width="25" height="25" viewBox="0 0 25 25"><use href="#icon_next_md" /></svg>
               </div>
-              {/* <!-- /.products-carousel__next --> */}
 
               <div className="products-pagination mt-4 mb-5 d-flex align-items-center justify-content-center"></div>
-              {/* <!-- /.products-pagination --> */}
             </div>
-            {/* <!-- /.position-relative --> */}
           </div>
-
-          {/* <!-- /.tab-pane fade show--> */}
         </div>
-        {/* <!-- /.tab-content pt-2 --> */}
       </section>
-      {/* <!-- /.products-grid --> */}
-
       <div className="pt-1 pb-5"></div>
     </div>
   );

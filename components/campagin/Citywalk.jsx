@@ -8,6 +8,8 @@ import { useLocale, useTranslations } from "use-intl";
 import Categories from "@/components/homes/home-15/Categories";
 import VideoPanel from "../VideoPanel";
 import Contact_campaign from "../otherPages/Contact/Contact_campaign";
+import Products from "../homes/home-2/Products";
+import TopCollections from "../homes/home-5/TopCollections";
 
 function CityWalk() {
     const locale = useLocale();
@@ -16,75 +18,65 @@ function CityWalk() {
         <>
             {/* Hero Section */}
             <div>
-                <div className="container-fluid p-0 pt-2">
-                <Link href={`/${locale}/shop`}>
+            <div className="container-fluid p-0 pt-2">
+                <Link href={`/${locale}/product-category/dakhoon`}>
                     <Image
                         loading="lazy"
                         className="w-100 h-auto d-none d-lg-block"
-                        src="/assets/images/campaigns/fathers-day-web-lp.jpg"
+                        src="/assets/images/campaigns/Web-banner.jpg"
                         alt="Father's Day Web"
                         width={1500}
                         height={550}
                     />
                 </Link>
-                </div>
-                <div className="container-fluid p-0 pt-2">
-                <Link href={`/${locale}/shop`}>
+            </div>
+            <div className="container-fluid p-0 pt-2">
+                <Link href={`/${locale}/product-category/dakhoon`}>
                     <Image
                         loading="lazy"
                         className="w-100 h-auto d-lg-none"
-                        src="/assets/images/campaigns/fathers-day-mob.jpg"
+                        src="/assets/images/campaigns/mobile-banner.jpg"
                         alt="Father's Day Mobile"
                         width={1500}
                         height={550}
                     />
                 </Link>
-                </div>
             </div>
-            <section className="d-flex section-3 justify-content-center">
+        </div>
+        <section className="section-3">
   <div className="w-100">
     <div className="section-content">
-      <div className="d-flex flex-column align-items-center justify-content-around">
-      <div className="section-head pt-5 pb-5">
-                                <h2 className="text-center">
-                                    {"A Gift as Majestic as Your Love"}
-                                    <br />
-                                    <span className="text-uppercase">
-                                        {"Happy Father's Day"}
-                                    </span>
-                                </h2>
-                            </div>
+      <div className="d-flex flex-column justify-content-around align-items-center text-center px-3">
+        <div className="section-head pt-5 pb-3 text-uppercase w-100">
+          <h2 className="text-center">
+            <span className="d-block h3 h3-sm h2-md">Essence of Bakhoor</span>
+            <span className="d-block text-uppercase h3 h3-sm h3-md">Experience its timeless aroma.</span>
+          </h2>
+        </div>
 
         {/* Desktop Video */}
-        {/* <div className="d-none d-md-block pb-3 w-100 text-center">
-          <div className="videoarea d-flex justify-content-center align-items-center">
-            <VideoPanel src="/assets/videos/multi-product.mp4" section="" />
+        <div className="d-none d-md-block pb-3 w-100">
+          <div className="videoarea d-flex justify-content-center">
+            <VideoPanel src="/assets/videos/Dakhoon.mp4" section="" />
           </div>
-          <div className="mt-3">
-          <a
-                            className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                            href={`/${locale}/shop/gift-sets/gift-sets/aazz-o-azeez`}
-                        >
-                            Shop Now
-                        </a>
-          </div>
-        </div> */}
+        </div>
 
         {/* Mobile Video */}
-        {/* <div className="d-block d-md-none pb-3 w-100 text-center">
-          <div className="videoarea d-flex justify-content-center align-items-center">
-            <VideoPanel
-              src="/assets/videos/multi-product-mobile.mp4"
-              section="hundred"
-            />
+        <div className="d-block d-sm-none pb-3 w-100">
+          <div className="videoarea d-flex justify-content-center">
+            <VideoPanel src="/assets/videos/mobile video.mp4" section="hundred" />
           </div>
-          <a
-                            className="btn-link btn-link_lg default-underline text-uppercase fw-medium mt-3 mb-3"
-                            href={`/${locale}/shop/gift-sets/gift-sets/aazz-o-azeez`}
-                        >
-                            Shop Now
-                        </a>
-        </div> */}
+        </div>
+
+        {/* Button */}
+        <div className="pt-3">
+          <Link
+            href={`/${locale}/product-category/dakhoon/oud-maattar`}
+            className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
+          >
+            Shop Now
+          </Link>
+        </div>
       </div>
     </div>
   </div>
@@ -126,7 +118,7 @@ function CityWalk() {
           </div>
         </div>
       </div> */}
-            <div className="container">
+            <div className="container pt-4 mt-4">
                 <div className="row align-items-center">
                     {/* Image column - shown first on mobile/tablet, second on desktop */}
                     <div className="col-md-6 order-1 order-md-2 mb-4 mb-md-0">
@@ -135,7 +127,7 @@ function CityWalk() {
                             height={0}
                             sizes="100%"
                             className="img-fluid"
-                            src="/assets/images/campaigns/bin-shaikh.jpg"
+                            src="/assets/images/campaigns/oud-amber.jpg"
                             alt="Wedding products display"
                             loading="lazy"
                             style={{ width: "100%", height: "auto" }}
@@ -146,14 +138,14 @@ function CityWalk() {
                     {/* Text column - shown second on mobile/tablet, first on desktop */}
                     <div className="col-md-6 text-center px-md-5 mb-2 order-2 order-md-1">
                         <p className="fs-2 text-uppercase font-weight-bold mb-3">
-                            Bin Shaikh
+                           Oud Amber
                         </p>
                         <p className="fs-6 mb-3">
-                            Like priceless wisdom passed down over the ages, the Bin Shaikh was passed down from our forefathers, making this vintage scent a truly priceless work of art. An exotic blend of distinct aromas.
+                        The combination of oud and amber creates a fragrance that is both opulent and balanced. The oud brings a smoky, leathery edge, while the amber adds a smooth, golden warmth. This balance of darkness and light gives Oud Amber its richness and depth.
                         </p>
                         <a
                             className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                            href={`/${locale}/shop/perfumes/oriental-fragrance/bin-shaikh`}
+                            href={`/${locale}/shop/dakhoon/oud-maattar/oud-al-amber-3tl`}
                         >
                             Shop Now
                         </a>
@@ -170,7 +162,7 @@ function CityWalk() {
                             height={0}
                             sizes="100%"
                             className="img-fluid"
-                            src="/assets/images/zumar 2.jpg"
+                            src="/assets/images/campaigns/rasiyaat.jpg"
                             alt="Aazz-O-Azeez Gift Set"
                             loading="lazy"
                             style={{ width: "100%", height: "auto" }}
@@ -181,19 +173,14 @@ function CityWalk() {
                     {/* Text column - shown second on desktop, first on mobile/tablet */}
                     <div className="col-md-6 text-center px-md-5 mb-2 order-2 order-md-2">
                         <p className="fs-2 text-uppercase font-weight-bold mb-3">
-                            Zumar
+                        Bakhoor Rasiyat
                         </p>
                         <p className="fs-6 mb-3">
-                            Show Dad how much he means to you with Zumar Eau de
-                            Parfum. A rich, aromatic fragrance that blends bold
-                            saffron, fresh pear, and red berries with a
-                            captivating floral heart. The warm, earthy base of
-                            patchouli and cacao creates a sensual finish —
-                            perfect for the man who leaves a lasting impression.
+                        Bakhoor Rasiyat is a rich, earthy blend that fills your space with deep, woody notes and a hint of spice, creating a warm and inviting atmosphere rooted in traditional Arabian luxury.
                         </p>
                         <a
                             className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                            href={`/${locale}/shop/perfumes/oriental-fragrance/zumar`}
+                            href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-rasiyat`}
                         >
                             Shop Now
                         </a>
@@ -201,18 +188,106 @@ function CityWalk() {
                 </div>
             </div>
 
-            <section className="d-flex flex-direction-column bg-white mt-5 ">
-                <div className="panel2 mb-4">
-                    <div className="inner2 mt-5 d-flex align-items-center">
-                        {/* Limited Quantity */}
-                        <Categories section="fathersDay" />
-                    </div>
-                </div>
-            </section>
-           
+            <TopCollections categoryId={12} category={"dakhoon"} sub_category={"bakhoor"} title={"Indulge in the Rich Aroma of Bakhoor"}/>
+            <section className="d-flex flex-column align-items-center pt-5">
+                            <span className="t-subtitle text-uppercase fs-4 text-center">
+                                {"Unveil the Charm of Traditional Bakhoor"}
+                            </span>
+                            <div className="d-flex flex-row align-items-center ">
+                                <div className="mt-4 mb-5 d-none d-md-block">
+                                    <a
+                                        href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-marj`}
+                                    >
+                                        <Image
+                                            loading="lazy"
+                                            src="/assets/images/campaigns/Bakhoor-Marj.jpg"
+                                            width="600"
+                                            height="600"
+                                            alt="Aazz-o-Azzeez"
+                                            className="px-1"
+                                            style={{ objectFit: "contain" }}
+                                        />
+                                    </a>
+                                    <div className="d-flex justify-content-center pt-3">
+                                        <Link
+                                            href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-marj`}
+                                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                                        >
+                                            {t("Shop Now")}
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="mt-4 mb-5 d-none d-md-block">
+                                    <a
+                                        href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-oud-roses`}
+                                    >
+                                        <Image
+                                            className="px-1"
+                                            src="/assets/images/campaigns/bakhoor-oud-roses.jpg"
+                                            width="600"
+                                            height="600"
+                                            alt="Antee"
+                                            style={{ objectFit: "contain" }}
+                                        />
+                                    </a>
+                                    <div className="d-flex justify-content-center pt-3">
+                                        <Link
+                                            href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-oud-roses`}
+                                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                                        >
+                                            {t("Shop Now")}
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <div className="mt-4 mb-5 d-block d-sm-none d-flex flex-column">
+                            <a
+                                        href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-marj`}
+                                    >
+                                        <Image
+                                            loading="lazy"
+                                            src="/assets/images/campaigns/Bakhoor-Marj.jpg"
+                                            width="600"
+                                            height="600"
+                                            alt="Aazz-o-Azzeez"
+                                            className="px-1"
+                                            style={{ objectFit: "contain" }}
+                                        />
+                                    </a>
+                                <div className="d-flex justify-content-center pt-3">
+                                    
+                                <Link
+                                            href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-marj`}
+                                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                                        >
+                                            {t("Shop Now")}
+                                        </Link>
+                                </div>
+                                <a href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-oud-roses`}>
+                                    <Image
+                                        className="w-100 h-100 px-1"
+                                        src="/assets/images/campaigns/bakhoor-oud-roses.jpg"
+                                        width="600"
+                                        height="600"
+                                        alt="Oud-Asateen"
+                                        style={{ paddingTop: "1rem", objectFit: "contain" }}
+                                    />
+                                </a>
+                                <div className="d-flex justify-content-center pt-3">
+                                    <Link
+                                        href={`/${locale}/shop/dakhoon/bakhoor/bakhoor-oud-roses`}
+                                        className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                                    >
+                                        {t("Shop Now")}
+                                    </Link>
+                                </div>
+                            </div>
+                        </section>
+                        <TopCollections categoryId={14} category={"dakhoon"} sub_category={"oud-maattar"} title={"The Essence of Oud Ma'Attar"}/>
                         
 
-            <Contact_campaign/>
+            {/* <Contact_campaign/> */}
         </>
     );
 }
