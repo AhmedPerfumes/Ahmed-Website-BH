@@ -25,7 +25,7 @@ function CityWalk() {
                     <Image
                         loading="lazy"
                         className="w-100 h-auto d-none d-lg-block"
-                        src="/assets/images/campaigns/landing-page.jpg"
+                        src="/assets/images/campaigns/bh_desktop.jpg"
                         alt="Father's Day Web"
                         width={1500}
                         height={550}
@@ -37,7 +37,7 @@ function CityWalk() {
                     <Image
                         loading="lazy"
                         className="w-100 h-auto d-lg-none"
-                        src="/assets/images/campaigns/SummerMobile.jpg"
+                        src="/assets/images/campaigns/bh_mobile.jpg"
                         alt="Father's Day Mobile"
                         width={1500}
                         height={550}
@@ -47,7 +47,7 @@ function CityWalk() {
         </div>
         <div className="pt-5 mt-5">
 
-        <DiscountedProductsSlider title="Summer Vibes, Cooler Prices!" onlyDiscounted={true}/>
+        <DiscountedProductsSlider title="Season End, Cooler Prices!" onlyDiscounted={true}/>
         </div>
            <section className="d-flex section-3 justify-content-center">
   <div className="section-content text-center w-100">
