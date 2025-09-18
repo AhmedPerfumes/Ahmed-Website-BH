@@ -11,7 +11,7 @@ import Contact_campaign from "../otherPages/Contact/Contact_campaign";
 import Products from "../homes/home-2/Products";
 import TopCollections from "../homes/home-5/TopCollections";
 import DiscountedProductsSlider from "../common/features/DiscountedProductsSlider";
-
+import DiscountGrid from "../common/features/DiscountGrid";
 
 function CityWalk() {
     const locale = useLocale();
@@ -20,73 +20,79 @@ function CityWalk() {
         <>
             {/* Hero Section */}
             <div>
-            <div className="container-fluid p-0 pt-2">
-                <Link href={`/${locale}/shop`}>
-                    <Image
-                        loading="lazy"
-                        className="w-100 h-auto d-none d-lg-block"
-                        src="/assets/images/campaigns/bh_desktop.jpg"
-                        alt="Father's Day Web"
-                        width={1500}
-                        height={550}
-                    />
-                </Link>
+                <div className="container-fluid p-0 pt-2">
+                    <Link href={`/${locale}/shop`}>
+                        <Image
+                            loading="lazy"
+                            className="w-100 h-auto d-none d-lg-block"
+                            src="/assets/images/campaigns/Bharain_Desk.jpg"
+                            alt="Father's Day Web"
+                            width={1500}
+                            height={550}
+                        />
+                    </Link>
+                </div>
+                <div className="container-fluid p-0 pt-2">
+                    <Link href={`/${locale}/shop`}>
+                        <Image
+                            loading="lazy"
+                            className="w-100 h-auto d-lg-none"
+                            src="/assets/images/campaigns/Bharain_Mob.jpg"
+                            alt="Father's Day Mobile"
+                            width={1500}
+                            height={550}
+                        />
+                    </Link>
+                </div>
             </div>
-            <div className="container-fluid p-0 pt-2">
-                <Link href={`/${locale}/shop`}>
-                    <Image
-                        loading="lazy"
-                        className="w-100 h-auto d-lg-none"
-                        src="/assets/images/campaigns/bh_mobile.jpg"
-                        alt="Father's Day Mobile"
-                        width={1500}
-                        height={550}
-                    />
-                </Link>
+            <div className="pt-5 mt-5">
+                {/* <DiscountedProductsSlider title="Season End, Cooler Prices!" onlyDiscounted={true}/> */}
+                <DiscountGrid
+                    title="Saudi National Day, Cooler Prices!"
+                    onlyDiscounted={true}
+                />
             </div>
-        </div>
-        <div className="pt-5 mt-5">
+            {/* <section className="d-flex section-3 justify-content-center">
+                <div className="section-content text-center w-100">
+                    <div className="section-head pt-5 pb-5 text-uppercase">
+                        <h2 className="text-center">
+                            <span className="d-block h3 h3-sm h2-md">
+                                Capture Summer’s Essence:
+                            </span>
+                            <span className="d-block text-uppercase h3 h3-sm h3-md">
+                                Perfumes That Shine
+                            </span>
+                        </h2>
+                    </div>
 
-        <DiscountedProductsSlider title="Season End, Cooler Prices!" onlyDiscounted={true}/>
-        </div>
-           <section className="d-flex section-3 justify-content-center">
-  <div className="section-content text-center w-100">
-    <div className="section-head pt-5 pb-5 text-uppercase">
-      <h2 className="text-center">
-        <span className="d-block h3 h3-sm h2-md">
-          Capture Summer’s Essence:
-        </span>
-        <span className="d-block text-uppercase h3 h3-sm h3-md">
-          Perfumes That Shine
-        </span>
-      </h2>
-    </div>
+                    <div className="d-flex flex-column align-items-center">
+                        <div className="d-none d-md-block pb-3 w-100 d-flex justify-content-center">
+                            <div className="videoarea">
+                                <VideoPanel
+                                    src="/assets/videos/SummerVideo.mp4"
+                                    section=""
+                                />
+                            </div>
+                        </div>
 
-    <div className="d-flex flex-column align-items-center">
-      {/* Desktop Video */}
-      <div className="d-none d-md-block pb-3 w-100 d-flex justify-content-center">
-        <div className="videoarea">
-          <VideoPanel src="/assets/videos/SummerVideo.mp4" section="" />
-        </div>
-      </div>
+                        <div className="d-block d-sm-none pb-3 w-100 d-flex justify-content-center">
+                            <div className="videoarea">
+                                <VideoPanel
+                                    src="/assets/videos/SummerMob.mp4"
+                                    section="hundred"
+                                />
+                            </div>
+                        </div>
 
-      {/* Mobile Video */}
-      <div className="d-block d-sm-none pb-3 w-100 d-flex justify-content-center">
-        <div className="videoarea">
-          <VideoPanel src="/assets/videos/SummerMob.mp4" section="hundred" />
-        </div>
-      </div>
-
-      {/* Shop Button */}
-      <a
-        className="btn-link btn-link_lg default-underline text-uppercase fw-medium mt-3"
-        href={`/${locale}/product-category/dakhoon/oud-maattar`}
-      >
-        Shop Now
-      </a>
-    </div>
-  </div>
-</section>
+                        <a
+                            className="btn-link btn-link_lg default-underline text-uppercase fw-medium mt-3"
+                            href={`/${locale}/product-category/dakhoon/oud-maattar`}
+                        >
+                            Shop Now
+                        </a>
+                    </div>
+                </div>
+            </section> */}
             {/* <DiscountedProductsGrid onlyDiscounted={true} /> */}
 
             {/* <div className="container pt-2 mt-3">
@@ -125,9 +131,9 @@ function CityWalk() {
           </div>
         </div>
       </div> */}
-            <div className="container pt-5 mt-5">
+            {/* <div className="container pt-5 mt-5">
                 <div className="row align-items-center">
-                    {/* Image column - shown first on mobile/tablet, second on desktop */}
+                  
                     <div className="col-md-6 order-1 order-md-2 mb-4 mb-md-0">
                         <Image
                             width={0}
@@ -142,14 +148,20 @@ function CityWalk() {
                         />
                     </div>
 
-                    {/* Text column - shown second on mobile/tablet, first on desktop */}
+                   
                     <div className="col-md-6 text-center px-md-5 mb-2 order-2 order-md-1">
                         <p className="fs-2 text-uppercase font-weight-bold mb-3">
-                        Oud & Roses
+                            Oud & Roses
                         </p>
                         <p className="fs-6 mb-3">
-                        A timeless fusion of elegance and depth, Oud & Roses opens with a luminous bouquet of Turkish rose, lavender, and peony kissed by fresh lemon. At its heart, soft sandalwood and white florals entwine with a whisper of frankincense, leading to a rich, musky base of agarwood, amber, and oak moss. A truly captivating scent that lingers with sensual warmth.
-                            </p>
+                            A timeless fusion of elegance and depth, Oud & Roses
+                            opens with a luminous bouquet of Turkish rose,
+                            lavender, and peony kissed by fresh lemon. At its
+                            heart, soft sandalwood and white florals entwine
+                            with a whisper of frankincense, leading to a rich,
+                            musky base of agarwood, amber, and oak moss. A truly
+                            captivating scent that lingers with sensual warmth.
+                        </p>
                         <a
                             className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
                             href={`/${locale}/shop/perfumes/occidental-fragrance/oud-roses`}
@@ -158,11 +170,10 @@ function CityWalk() {
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
-            <div className="container">
+            {/* <div className="container">
                 <div className="row align-items-center">
-                    {/* Image column - shown first on desktop, second on mobile/tablet */}
                     <div className="col-md-6 order-1 order-md-1 mb-4 mb-md-0">
                         <Image
                             width={0}
@@ -177,13 +188,16 @@ function CityWalk() {
                         />
                     </div>
 
-                    {/* Text column - shown second on desktop, first on mobile/tablet */}
+                 
                     <div className="col-md-6 text-center px-md-5 mb-2 order-2 order-md-2">
                         <p className="fs-2 text-uppercase font-weight-bold mb-3">
-                        Ignite Rose
+                            Ignite Rose
                         </p>
                         <p className="fs-6 mb-3">
-                        Ignite Rose is more than a fragrance; it’s an invitation to experience a moment of pure indulgence, where every spray transports you to a world of luxury and timeless beauty
+                            Ignite Rose is more than a fragrance; it’s an
+                            invitation to experience a moment of pure
+                            indulgence, where every spray transports you to a
+                            world of luxury and timeless beauty
                         </p>
                         <a
                             className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
@@ -193,113 +207,111 @@ function CityWalk() {
                         </a>
                     </div>
                 </div>
-            </div>
-            
-           
+            </div> */}
 
-            <section className="d-flex flex-column align-items-center pt-5">
-                            <span className="t-subtitle text-uppercase fs-4 text-center">
-                                {"Scent of Summer: Fresh & Vibrant Perfumes"}
-                            </span>
-                            <div className="d-flex flex-row align-items-center ">
-                                <div className="mt-4 mb-5 d-none d-md-block">
-                                    <a
-                                        href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
-                                    >
-                                        <Image
-                                            loading="lazy"
-                                            src="/assets/images/campaigns/marj.jpg"
-                                            width="600"
-                                            height="600"
-                                            alt="Aazz-o-Azzeez"
-                                            className="px-1"
-                                            style={{ objectFit: "contain" }}
-                                        />
-                                    </a>
-                                    <div className="d-flex justify-content-center pt-3">
-                                        <Link
-                                            href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
-                                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
-                                        >
-                                            {t("Shop Now")}
-                                        </Link>
-                                    </div>
-                                </div>
-                                <div className="mt-4 mb-5 d-none d-md-block">
-                                    <a
-                                        href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}
-                                    >
-                                        <Image
-                                            className="px-1"
-                                            src="/assets/images/campaigns/lavender.jpg"
-                                            width="600"
-                                            height="600"
-                                            alt="Antee"
-                                            style={{ objectFit: "contain" }}
-                                        />
-                                    </a>
-                                    <div className="d-flex justify-content-center pt-3">
-                                        <Link
-                                            href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}
-                                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
-                                        >
-                                            {t("Shop Now")}
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-            
-                            <div className="mt-4 mb-5 d-block d-sm-none d-flex flex-column">
-                            <a
-                                        href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
-                                    >
-                                        <Image
-                                            loading="lazy"
-                                            src="/assets/images/campaigns/marj.jpg"
-                                            width="600"
-                                            height="600"
-                                            alt="Aazz-o-Azzeez"
-                                            className="px-1"
-                                            style={{ objectFit: "contain" }}
-                                        />
-                                    </a>
-                                <div className="d-flex justify-content-center pt-3">
-                                    
-                                <Link
-                                            href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
-                                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
-                                        >
-                                            {t("Shop Now")}
-                                        </Link>
-                                </div>
-                                <a href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}>
-                                    <Image
-                                        className="w-100 h-100 px-1"
-                                        src="/assets/images/campaigns/lavender.jpg"
-                                        width="600"
-                                        height="600"
-                                        alt="Oud-Asateen"
-                                        style={{ paddingTop: "1rem", objectFit: "contain" }}
-                                    />
-                                </a>
-                                <div className="d-flex justify-content-center pt-3">
-                                    <Link
-                                        href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}
-                                        className="btn-rounded btn-link_lg text-uppercase fw-medium "
-                                    >
-                                        {t("Shop Now")}
-                                    </Link>
-                                </div>
-                            </div>
-                        </section>
-                        {/* <TopCollections
+            {/* <section className="d-flex flex-column align-items-center pt-5">
+                <span className="t-subtitle text-uppercase fs-4 text-center">
+                    {"Scent of Summer: Fresh & Vibrant Perfumes"}
+                </span>
+                <div className="d-flex flex-row align-items-center ">
+                    <div className="mt-4 mb-5 d-none d-md-block">
+                        <a
+                            href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
+                        >
+                            <Image
+                                loading="lazy"
+                                src="/assets/images/campaigns/marj.jpg"
+                                width="600"
+                                height="600"
+                                alt="Aazz-o-Azzeez"
+                                className="px-1"
+                                style={{ objectFit: "contain" }}
+                            />
+                        </a>
+                        <div className="d-flex justify-content-center pt-3">
+                            <Link
+                                href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
+                                className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                            >
+                                {t("Shop Now")}
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="mt-4 mb-5 d-none d-md-block">
+                        <a
+                            href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}
+                        >
+                            <Image
+                                className="px-1"
+                                src="/assets/images/campaigns/lavender.jpg"
+                                width="600"
+                                height="600"
+                                alt="Antee"
+                                style={{ objectFit: "contain" }}
+                            />
+                        </a>
+                        <div className="d-flex justify-content-center pt-3">
+                            <Link
+                                href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}
+                                className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                            >
+                                {t("Shop Now")}
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-4 mb-5 d-block d-sm-none d-flex flex-column">
+                    <a
+                        href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
+                    >
+                        <Image
+                            loading="lazy"
+                            src="/assets/images/campaigns/marj.jpg"
+                            width="600"
+                            height="600"
+                            alt="Aazz-o-Azzeez"
+                            className="px-1"
+                            style={{ objectFit: "contain" }}
+                        />
+                    </a>
+                    <div className="d-flex justify-content-center pt-3">
+                        <Link
+                            href={`/${locale}/shop/perfumes/oriental-fragrance/marj`}
+                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                        >
+                            {t("Shop Now")}
+                        </Link>
+                    </div>
+                    <a
+                        href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}
+                    >
+                        <Image
+                            className="w-100 h-100 px-1"
+                            src="/assets/images/campaigns/lavender.jpg"
+                            width="600"
+                            height="600"
+                            alt="Oud-Asateen"
+                            style={{ paddingTop: "1rem", objectFit: "contain" }}
+                        />
+                    </a>
+                    <div className="d-flex justify-content-center pt-3">
+                        <Link
+                            href={`/${locale}/shop/perfumes/occidental-fragrance/oud-lavender`}
+                            className="btn-rounded btn-link_lg text-uppercase fw-medium "
+                        >
+                            {t("Shop Now")}
+                        </Link>
+                    </div>
+                </div>
+            </section> */}
+            {/* <TopCollections
   categoryId={8}
   category={"perfumes"}
   sub_category={"occidental"}
   title={"Indulge in the Rich Aroma of Bakhoor"}
   onlyDiscounted={true}
 /> */}
-                        
 
             {/* <Contact_campaign/> */}
         </>
