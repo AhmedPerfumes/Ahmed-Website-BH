@@ -31,7 +31,7 @@ export default function OrderCompleted() {
           transaction_id: orderDetails.order_id, // unique order ID
           affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
           value: parseFloat(orderDetails.total), // order total (after discounts, including shipping/tax)
-          currency: currency?.code || "د.ب",
+          currency: currency?.code || "BHD",
           items: orderDetails.products.map((item) => ({
             item_id: item.product_id?.toString(), // or SKU if available
             item_name: he.decode(item.name),
@@ -41,15 +41,15 @@ export default function OrderCompleted() {
         },
       }); 
       // ---- TikTok Pixel ----
-      window.ttq?.track("CompletePayment", {
-        contents: orderDetails.products.map((item) => ({
-          content_id: item.product_id?.toString(),
-          content_type: "product",
-          content_name: he.decode(item.name),
-            })),
-            value: parseFloat(orderDetails.total),
-            currency: currency?.code || "د.ب",
-          });
+        window.ttq?.track("Purchase", {
+          contents: orderDetails.products.map((item) => ({
+            content_id: item.product_id?.toString(),   // Product ID
+            content_type: "product",                   // Always "product"
+            content_name: he.decode(item.name),        // Decoded product name
+          })),
+          value: parseFloat(orderDetails.total),       // Total order value
+          currency: currency?.code || "BHD",           
+        });
         }
       }, [orderDetails]);
 
