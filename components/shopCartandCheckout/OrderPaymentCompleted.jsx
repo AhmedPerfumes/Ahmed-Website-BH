@@ -19,8 +19,7 @@ export default function OrderPaymentCompleted({ orderDetails }) {
   useEffect(() => {
     if (orderDetails?.payment_status === "completed") {
       // Clear cart only after payment success
-      localStorage.removeItem("cartList");
-      setCartProducts([]);
+      
 
       if (orderDetails && orderDetails.id) {
         // ---- GA4 Purchase ----
@@ -53,6 +52,8 @@ export default function OrderPaymentCompleted({ orderDetails }) {
         });
       }
     }
+    localStorage.removeItem("cartList");
+    setCartProducts([]);
   }, [orderDetails]);
 
   const subTotalPrice = (elm) => {
