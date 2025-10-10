@@ -86,7 +86,7 @@ export default function MobileHeader() {
   return (
     <div
       className={`header-mobile header_sticky ${
-        scrollDirection == "up" ? "header_sticky-active" : "position-absolute"
+        scrollDirection == "up" ? "header_sticky-active" : "position-relative"
       } `}
     >
       <div className="container d-flex align-items-center h-100">

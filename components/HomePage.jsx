@@ -152,7 +152,7 @@ const ScrollSnapHorizontalBootstrap = () => {
             <section className="vh-100 hero-banner d-none d-lg-block">
                 <Hero />
             </section>
-            <div className="d-block d-lg-none mt-4">
+            <div className="d-block d-lg-none">
                 <Hero2 />
             </div>
 
