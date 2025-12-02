@@ -90,10 +90,10 @@ export default function NewsLetter() {
             <div className="col-md-4 p-0 d-flex align-items-center text-center">
               <div className="block-newsletter w-100">
               <h3 className="section-title fw-normal mb-3 pb-2" style={{ color: '#cfa91a' }}>
-                  Kawkab
+                  We’re Experiencing High Traffic!
                 </h3>
                 <p>
-                Kawkab is a captivating oriental fragrance that embodies the essence of the stars. With its rich and warm notes, it transports you to a celestial realm, evoking a sense of mystery and allure. Perfect for those who seek to leave a lasting impression, Kawkab is a fragrance that shines brightly in any collection.
+                Due to overwhelming demand, order processing and delivery times may be slightly delayed. Thank you for your patience!
                   {/* <b className="sub-title">Don't miss out.</b> */}
 
                 </p>

@@ -502,12 +502,18 @@ export const slideData1000 = [
   {
     id: 1,
     bgImage: "/assets/images/home/demo15/slider1_bg.jpg",
+    title: "We're Experiencing High Traffic!",
+    description: "Due to overwhelming demand, order processing and delivery times may be slightly delayed. Thank you for your patience!", 
+  },
+  {
+    id: 2,
+    bgImage: "/assets/images/home/demo15/slider1_bg.jpg",
     title: "Natural Glow",
     description:
       "Free Shipping on orders BHD 20 and above",
   },
   {
-    id: 2,
+    id: 3,
     bgImage: "/assets/images/home/demo15/slider2_bg.jpg",
     title: "Natural Glow",
     description:
