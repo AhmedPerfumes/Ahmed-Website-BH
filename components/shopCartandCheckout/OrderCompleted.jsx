@@ -17,12 +17,39 @@ export default function OrderCompleted() {
     setShowDate(true);
     localStorage.setItem('cartList', []);
     setCartProducts([]);
-    // if(localStorage.getItem('orderData').length > 0) {
-    //   setOrderDetails(JSON.parse(atob(localStorage.getItem('orderData'))));
-    //   // localStorage.setItem('orderData', '');
-    // }
-    // console.log('...', localStorage.getItem('orderData').length);
-  }, []);
+
+    // ✅ Fire GA4 + TikTok purchase event only when COD order is confirmed
+    if (orderDetails && orderDetails.order_id && orderDetails.payment_method === "cod") {
+      // ---- GA4 Purchase ----
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "purchase",
+        ecommerce: {
+          transaction_id: orderDetails.order_id,
+          affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
+          value: parseFloat(orderDetails.total), // final total (with VAT, shipping)
+          currency: currency?.code || "BHD",
+          items: orderDetails.products.map((item) => ({
+            item_id: item.product_id?.toString(),
+            item_name: he.decode(item.product_name || item.name),
+            price: parseFloat(item.price),
+            quantity: item.qty,
+          })),
+        },
+      });
+
+      // ---- TikTok Purchase ----
+      window.ttq?.track("Purchase", {
+        contents: orderDetails.products.map((item) => ({
+          content_id: item.product_id?.toString(),
+          content_type: "product",
+          content_name: he.decode(item.product_name || item.name),
+        })),
+        value: parseFloat(orderDetails.total),
+        currency: currency?.code || "BHD",
+      });
+    }
+  }, [orderDetails]);
 
   if (isMenuLoading) {
     return <div><Pagination1 /></div>;
