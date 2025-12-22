@@ -39,7 +39,10 @@ async function getproduct(categoryName, subCategoryName, product) {
       subCategory: subCategoryName.split("-").join(" ").toUpperCase(),
       product: product.split("-").join(" ").toUpperCase(),
     }),
-    cache: 'no-store',
+    next: {
+      tags: ["products"],
+      revalidate: 604800 // 7 days
+    },
   });
   if (!response.ok) {
     throw new Error('Network response was not ok');
@@ -70,7 +73,10 @@ async function getProductSEO(categoryName, subCategoryName, product) {
               subCategory: subCategoryName.split("-").join(" ").toUpperCase(),
               product: product.split("-").join(" ").toUpperCase(),
           }),
-          cache: "no-store",
+          next: {
+            tags: ["productSEO"],
+            revalidate: 604800 // 7 days
+          },
       }
   );
   
