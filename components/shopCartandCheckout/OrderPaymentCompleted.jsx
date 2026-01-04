@@ -11,50 +11,48 @@ export default function OrderPaymentCompleted({ orderDetails }) {
   const { setCartProducts } = useContextElement();
   const [showDate, setShowDate] = useState(false);
 
-  // useEffect(() => {
-  //   setShowDate(true);
-  //   localStorage.setItem('cartList', []);
-  //   setCartProducts([]);
-  // }, []);
   useEffect(() => {
-    if (orderDetails?.payment_status === "completed") {
-      // Clear cart only after payment success
-      
+  if (orderDetails?.payment_status === "completed" && orderDetails?.order_id) {
 
-      if (orderDetails && orderDetails.id) {
-        // ---- GA4 Purchase ----
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: "purchase",
-          ecommerce: {
-            transaction_id: orderDetails.order_id,
-            affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
-            value: parseFloat(orderDetails.total),
-            currency: currency?.code || "BHD",
-            items: orderDetails.products.map((item) => ({
-              item_id: item.product_id?.toString(),
-              item_name: he.decode(item.product_name || item.name),
-              price: parseFloat(item.price),
-              quantity: item.qty,
-            })),
-          },
-        });
+    // 1️⃣ Calculate GA-safe value from items
+    const gaValue = orderDetails.products.reduce((sum, item) => {
+      return sum + (parseFloat(item.price) * item.qty);
+    }, 0);
 
-        // ---- TikTok Purchase ----
-        window.ttq?.track("Purchase", {
-          contents: orderDetails.products.map((item) => ({
-            content_id: item.product_id?.toString(),
-            content_type: "product",
-            content_name: he.decode(item.product_name || item.name),
-          })),
-          value: parseFloat(orderDetails.total),
-          currency: currency?.code || "BHD",
-        });
-      }
-    }
+    // ---- GA4 Purchase ----
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "purchase",
+      ecommerce: {
+        transaction_id: orderDetails.order_id,
+        affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
+        value: Number(gaValue.toFixed(2)), // ✅ FIX
+        currency: currency?.code || "BHD",
+        items: orderDetails.products.map((item) => ({
+          item_id: item.product_id?.toString(),
+          item_name: he.decode(item.product_name || item.name),
+          price: parseFloat(item.price),
+          quantity: item.qty,
+        })),
+      },
+    });
+
+    // ---- TikTok Purchase (TikTok is fine with total) ----
+    window.ttq?.track("Purchase", {
+      contents: orderDetails.products.map((item) => ({
+        content_id: item.product_id?.toString(),
+        content_type: "product",
+        content_name: he.decode(item.product_name || item.name),
+      })),
+      value: parseFloat(orderDetails.total),
+      currency: currency?.code || "BHD",
+    });
+
+    // Clear cart AFTER tracking
     localStorage.removeItem("cartList");
     setCartProducts([]);
-  }, [orderDetails]);
+  }
+}, [orderDetails]);
 
   const subTotalPrice = (elm) => {
     if (elm.is_gift) {

@@ -675,12 +675,12 @@ const ScrollSnapHorizontalBootstrap = () => {
                     <div className="col-lg-7 p-3 text-center order-3 order-md-1">
                         <h3 className="section-head section-title text-uppercase fs-25 fw-medium text-center mb-2">
                             {t(
-                                "Quality Crafted Through Expertise 20 plus Years of Mastery"
+                                "Quality Crafted Through Expertise 25 plus Years of Mastery"
                             )}
                         </h3>
                         <p className="section-paragraph">
                             {t(
-                                "For over 20 years Ahmed Al Maghribi Perfumes has been dedicated to creating luxurious timeless scents Using only the finest natural ingredients we ensure every fragrance is crafted with precision and excellence offering lasting quality"
+                                "For over 25 years Ahmed Al Maghribi Perfumes has been dedicated to creating luxurious timeless scents Using only the finest natural ingredients we ensure every fragrance is crafted with precision and excellence offering lasting quality"
                             )}
                         </p>
                     </div>
