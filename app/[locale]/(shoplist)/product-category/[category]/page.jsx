@@ -95,7 +95,7 @@ export async function generateMetadata({ params }) {
 
     try {
         const data = await getProductCategorySEO(category);
-        console.log(JSON.parse(data.meta_value)[0]);
+        // console.log(JSON.parse(data.meta_value)[0]);
         return {
             title: JSON.parse(data.meta_value)[0]?.seo_title ? `${JSON.parse(data.meta_value)[0]?.seo_title}` : "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
             description: JSON.parse(data.meta_value)[0]?.seo_description ? JSON.parse(data.meta_value)[0]?.seo_description?.replace(/<\/?[^>]+(>|$)/g, "").trim() : "Buy Best Perfumes Online Ahmed Al Maghribi Perfumes."
@@ -120,11 +120,11 @@ export async function generateMetadata({ params }) {
 }
 const ShopPage8 = async ({ params }) => {
   const { category } = params;
-  console.log(category);
+  // console.log(category);
   
   try {
     const data = await getCategorySubCategory(category);
-    console.log(data);
+    // console.log(data);
     
     
     return data && (
