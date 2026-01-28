@@ -45,10 +45,10 @@ async function getCategorySubCategory(categoryName) {
 // export default function ShopPage5() {
   const ShopPage5 = async () => {
     const category = 'gift-sets';
-    console.log(category);
+    // console.log(category);
     try {
       const data = await getCategorySubCategory(category);
-      console.log(data);
+      // console.log(data);
       return data && (
       <>
         <QuickView />
