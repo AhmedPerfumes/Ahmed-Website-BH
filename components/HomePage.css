@@ -256,7 +256,7 @@
 
 .section-paragraph {
 	margin-top: 20px;
-	font-family: Lato, 'SofiaProRegular';
+	font-family: Lato, 'Kanit-Regular';
 }
 
 @media (min-width: 1024px) {
@@ -327,7 +327,7 @@
 }
 
 .t-subtitle {
-	font-family: Lato, 'SofiaProRegular';
+	font-family: Lato, 'Kanit-Regular';
 	border-top: 2px solid;
 	border-bottom: 2px solid;
 	padding: .3125rem 0;
@@ -675,7 +675,7 @@
 }
 
 .btn-rounded {
-	font-family: 'SofiaProRegular';
+	font-family: 'Kanit-Regular';
 	min-width: 156px;
 	min-height: 50px;
 	font-size: .813rem;
@@ -696,7 +696,7 @@
 }
 
 .btn-videos {
-	font-family: 'SofiaProRegular';
+	font-family: 'Kanit-Regular';
 	min-width: 125px;
 	min-height: 40px;
 	font-size: .813rem;
@@ -714,11 +714,11 @@
 }
 
 .checkout__totals-wrapper {
-	font-family: 'SofiaProRegular' !important;
+	font-family: 'Kanit-Regular' !important;
 }
 
 .checkout__totals {
-	font-family: 'SofiaProRegular' !important;
+	font-family: 'Kanit-Regular' !important;
 }
 
 .slider-artist .container-desktop .col-right .btn-classic[data-v-8967c2b9] {
@@ -794,7 +794,7 @@ button[data-v-7aa9e1a2] {
 	transition: background-color .3s ease-in-out, color .3s ease-in-out;
 	z-index: 10 */
 
-	font-family: 'SofiaProRegular';
+	font-family: 'Kanit-Regular';
 	min-width: 156px;
 	min-height: 50px;
 	font-size: .813rem;
