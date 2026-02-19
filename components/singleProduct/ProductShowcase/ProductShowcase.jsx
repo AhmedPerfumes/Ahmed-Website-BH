@@ -38,7 +38,7 @@ export default function FamilySection({ data = {} }) {
       imgRight: "/assets/images/kseries/bottle/past_right.png",
       nameImg: "/assets/images/2000.svg",
       link: `${baseUrl}2000`,
-      bgImg: "https://adminbh.ahmedalmaghribi.com/public/storage/banners/the-roots-background.jpg"
+      bgImg: "https://adminbh.ahmedalmaghribi.com/public/storage/banner/the-roots-background.jpg"
     },
     { 
       label: "K 2025",
@@ -47,7 +47,7 @@ export default function FamilySection({ data = {} }) {
       imgRight: "/assets/images/kseries/bottle/present_right.png",
       nameImg: "/assets/images/2025.svg",
       link: `${baseUrl}2025`,
-      bgImg: "https://adminbh.ahmedalmaghribi.com/public/storage/banners/the-alchemy-lab-background.jpg"
+      bgImg: "https://adminbh.ahmedalmaghribi.com/public/storage/banner/the-alchemy-lab-background.jpg"
     },
     { 
       label: "K 2050",
@@ -56,7 +56,7 @@ export default function FamilySection({ data = {} }) {
       imgRight: "/assets/images/kseries/bottle/future_right.png",
       nameImg: "/assets/images/2050.svg",
       link: `${baseUrl}2050`,
-      bgImg: "https://adminbh.ahmedalmaghribi.com/public/storage/banners/the-beyond-background.jpg"
+      bgImg: "https://adminbh.ahmedalmaghribi.com/public/storage/banner/the-beyond-background.jpg"
     }
   ];
 

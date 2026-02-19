@@ -157,7 +157,7 @@ const ScrollSnapHorizontalBootstrap = () => {
                 <Hero2 />
             </div>
 
-            {/* <ProductShowcase /> */}
+            <ProductShowcase />
 
             <section className="scroll-section d-flex flex-direction-column bg-white">
                 <div className="panel2 mb-4">
