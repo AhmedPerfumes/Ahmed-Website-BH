@@ -40,7 +40,7 @@ async function getproduct(categoryName, subCategoryName, product) {
       product: product.split("-").join(" ").toUpperCase(),
     }),
     next: {
-      tags: ["products"],
+      tags: ["products", `product-${product}`],
       revalidate: 604800 // 7 days
     },
   });
@@ -134,7 +134,7 @@ export async function generateMetadata({ params }) {
 
   try {
       const data = await getProductSEO(categoryName, subCategoryName, product);
-      console.log(JSON.parse(data.meta_value)[0]);
+      // console.log(JSON.parse(data.meta_value)[0]);
       return {
           title: JSON.parse(data.meta_value)[0]?.seo_title ? `${JSON.parse(data.meta_value)[0]?.seo_title}` : "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
           description: JSON.parse(data.meta_value)[0]?.seo_description ? JSON.parse(data.meta_value)[0]?.seo_description?.replace(/<\/?[^>]+(>|$)/g, "").trim() : "Buy Best Perfumes Online Ahmed Al Maghribi Perfumes."
@@ -159,10 +159,10 @@ export async function generateMetadata({ params }) {
 }
 const ProductDetailsPage16 = async({ params }) => {
   const [ categoryName, subCategoryName, product ] = params.product;
-  console.log(categoryName, subCategoryName, product);
+  // console.log(categoryName, subCategoryName, product);
   try {
     const data = await getproduct(categoryName, subCategoryName, product);
-    console.log(data);
+    // console.log(data);
     return (
       <>
       <Head>

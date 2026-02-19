@@ -21,6 +21,8 @@ import CollapsibleDescription from "@/components/shoplist/CollapsibleDescription
 // };
 
 async function getCategorySubCategory(categoryName, subCategoryName) {
+  const catSlug = categoryName.toLowerCase();
+  const subSlug = subCategoryName.toLowerCase();
   // console.log(`${process.env.NEXT_PUBLIC_API_URL}api/products?category=${categoryName.split("-").join(" ").toUpperCase()}&subCategory=${subCategoryName.split("-").join(" ").toUpperCase()}`);
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products`, {
     method: 'POST',
@@ -32,7 +34,7 @@ async function getCategorySubCategory(categoryName, subCategoryName) {
       subCategory: subCategoryName.split("-").join(" ").toUpperCase(),
     }),
     next: {
-      tags: ["subcategories"],
+      tags: ["subCategories", `category-${catSlug}`, `subcategory-${subSlug}`],
       revalidate: 604800 // 7 days
     },
   });
@@ -87,7 +89,7 @@ export async function generateMetadata({ params }) {
 
     try {
         const data = await getProductCategorySEO(category, subcategory);
-        console.log(JSON.parse(data.meta_value)[0]);
+        // console.log(JSON.parse(data.meta_value)[0]);
         return {
             title: JSON.parse(data.meta_value)[0]?.seo_title ? `${JSON.parse(data.meta_value)[0]?.seo_title}` : "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
             description: JSON.parse(data.meta_value)[0]?.seo_description ? JSON.parse(data.meta_value)[0]?.seo_description?.replace(/<\/?[^>]+(>|$)/g, "").trim() : "Buy Best Perfumes Online Ahmed Al Maghribi Perfumes."
@@ -115,7 +117,7 @@ const ShopPage8 = async ({ params }) => {
 
   try {
     const data = await getCategorySubCategory(category, subcategory);
-    console.log(data);
+    // console.log(data);
     return (
       <>
         <QuickView />

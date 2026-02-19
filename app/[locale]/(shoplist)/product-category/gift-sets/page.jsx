@@ -22,6 +22,7 @@ export const metadata = {
 };
 
 async function getCategorySubCategory(categoryName) {
+  const slug = categoryName.toLowerCase();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products`, { 
     method: 'POST',
     headers: {
@@ -31,7 +32,7 @@ async function getCategorySubCategory(categoryName) {
       category: categoryName.split("-").join(" ").toUpperCase(),
     }),
     next: {
-      tags: ["giftSets"],
+      tags: ["categories", `category-${slug}`],
       revalidate: 604800 // 7 days
     },
   });
@@ -44,10 +45,10 @@ async function getCategorySubCategory(categoryName) {
 // export default function ShopPage5() {
   const ShopPage5 = async () => {
     const category = 'gift-sets';
-    console.log(category);
+    // console.log(category);
     try {
       const data = await getCategorySubCategory(category);
-      console.log(data);
+      // console.log(data);
       return data && (
       <>
         <QuickView />

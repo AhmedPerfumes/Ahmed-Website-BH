@@ -52,12 +52,17 @@ export default function MobileFooter2() {
             className="form-control border-white"
             type="email"
             name="email"
-            placeholder="Your email address"
+            placeholder={locale === 'ar' ? "عنوان البريد الإلكتروني" : "Your email address"}
+            style={{
+              // Adds padding to the side where the button sits to prevent text overlap
+              paddingRight: locale === 'ar' ? '0.75rem' : '5rem', 
+              paddingLeft: locale === 'ar' ? '5rem' : '0.75rem' 
+            }}
           />
           <input
-            className="btn-link fw-medium bg-white position-absolute top-0 end-0 h-100"
+            className="btn btn-link fw-medium bg-white position-absolute top-0 end-0 h-100 px-4 text-decoration-none text-dark"
             type="submit"
-            defaultValue="JOIN"
+            value={locale === 'ar' ? "اشترك" : "JOIN"}
           />
         </form>
       </div>
@@ -139,17 +144,17 @@ export default function MobileFooter2() {
         </div>
         {/* <!-- /.logo --> */}
         <p className="footer-address text-white text-center">
-          Ahmed Al Maghribi Perfume Manuf L.L.C, <br />
-          Manama <br />
-          Bahrain <br />
+          {t("Ahmed Al Maghribi Perfume Manuf")} <br />
+          {t("Manama")} <br />
+          {t("Bahrain")} <br />
         </p>
 
         <p className="m-0 text-white text-center">
           <strong className="fw-medium">info@ahmedalmaghribi.com</strong>
         </p>
         <p className="text-center">
-          <strong className="fw-medium text-white text-center">
-          +973 3542 8747 / +973 3978 1417
+          <strong dir="ltr"  className="fw-medium text-white text-center">
+            {t("+973 3542 8747 / +973 3978 1417")} 
           </strong>
         </p>
 
@@ -177,20 +182,22 @@ export default function MobileFooter2() {
       </div>
 
       
-      <div className="footer-bottom container text-white text-center">
-        <div className="d-block d-md-flex align-items-center flex-nowrap">
-          <span className="footer-copyright me-auto d-flex flex-nowrap">
-            © {new Date().getFullYear()} AHMED AL MAGHRIBI PERFUMES. All rights
-            reserved
-          </span>
-          <div className="footer-settings d-block d-md-flex align-items-center text-white">
-            <div className="d-flex align-items-center text-white">
-              <a className="text-white" href={`/${locale}/order-tracking`}>Track Order</a>
-            </div>
+      <div className="footer-bottom container text-white py-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <div className="d-flex flex-column flex-md-row align-items-center justify-content-between">
+          
+          {/* Settings / Link Section */}
+          <div className="footer-settings d-flex align-items-center">
+            <a className="text-white text-decoration-none fw-medium" href={`/${locale}/order-tracking`} style={{ fontSize: '0.9rem' }}>
+              {locale === 'ar' ? "تتبّع طلبك" : "Track Order"}
+            </a>
           </div>
-          {/* <!-- /.footer-settings --> */}
+
+          {/* Copyright Section */}
+          <span className="footer-copyright small text-white-50 mb-2 mb-md-0">
+            {locale === 'ar' ? `© ${new Date().getFullYear().toLocaleString('ar-EG', { useGrouping: false })} عطور أحمد المغربي. جميع الحقوق محفوظة` : `© ${new Date().getFullYear()} AHMED AL MAGHRIBI PERFUMES. All rights reserved` }
+          </span>
+
         </div>
-        {/* <!-- /.d-flex --> */}
       </div>
     </div>
   );
