@@ -19,6 +19,7 @@ import Lookbook from "@/components/homes/home-9/Lookbook";
 import Image from "next/image";
 import Link from "next/link";
 import "swiper/css/pagination";
+import ProductShowcase from "./singleProduct/ProductShowcase/ProductShowcase";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import ProductSlider from "./ProductSlider";
 
@@ -155,6 +156,8 @@ const ScrollSnapHorizontalBootstrap = () => {
             <div className="d-block d-lg-none">
                 <Hero2 />
             </div>
+
+            {/* <ProductShowcase /> */}
 
             <section className="scroll-section d-flex flex-direction-column bg-white">
                 <div className="panel2 mb-4">
@@ -528,14 +531,28 @@ const ScrollSnapHorizontalBootstrap = () => {
                     </div>
                 </div>
 
-                <div className="panel2 mt-5">
+                {/* <div className="panel2 mt-5">
                     <div className="inner2">
                         <VideoPanel
                             src="/assets/videos/zumar-video.mp4"
                             section="hundred"
                         />
                     </div>
-                </div>
+                </div> */}
+
+                <div className="panel2 mt-5">
+                                    <div className="inner2">
+                                        <div className="youtube-wrapper">
+                                        <iframe
+                                            src="https://www.youtube.com/embed/gf0kYWgy-58?autoplay=1&mute=1&controls=0&disablekb=1&fs=0&loop=1&playlist=gf0kYWgy-58&modestbranding=1&rel=0"
+                                            title="K - Series"
+                                            frameBorder="0"
+                                            allow="autoplay; fullscreen; picture-in-picture"
+                                            allowFullScreen
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
                 <div className="panel2 mt-5">
                     <div className="inner2 d-flex flex-column align-items-center">
