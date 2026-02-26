@@ -219,13 +219,21 @@ export default function SingleProduct11({ category, subcategory, product: initia
                     readOnly
                   />
                   <div
-                    onClick={() =>
+                    // onClick={() =>
+                    //   setQuantityCartItem(
+                    //     product.product_id,
+                    //     isIncludeCard()?.quantity - 1 || quantity - 1,
+                    //     product?.maximum_order_quantity
+                    //   )
+                    // }
+                    onClick={() => {
+                      const currentQty=isIncludeCard()?.quantity ?? quantity;
                       setQuantityCartItem(
                         product.product_id,
-                        isIncludeCard()?.quantity - 1 || quantity - 1,
+                        Math.max(1, currentQty - 1),
                         product?.maximum_order_quantity
-                      )
-                    }
+                      );
+                    }}
                     className="qty-control__reduce"
                   >
                     -
