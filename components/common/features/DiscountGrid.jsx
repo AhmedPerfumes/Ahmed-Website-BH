@@ -93,7 +93,7 @@ function DiscountGrid({ title, onlyDiscounted = false }) {
             {elm.price}{currency.symbol}
           </span>
           <span className="money price price-sale">
-            {elm.sale_price.toFixed(2)}{currency.symbol}
+            {Number(elm.sale_price).toFixed(2)}{currency.symbol}
           </span>
         </>
       );

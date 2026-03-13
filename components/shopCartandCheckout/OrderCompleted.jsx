@@ -18,34 +18,39 @@ export default function OrderCompleted() {
     localStorage.setItem('cartList', []);
     setCartProducts([]);
 
-    // ✅ Fire GA4 + TikTok purchase event only when COD order is confirmed
-    if (orderDetails && orderDetails.order_id && orderDetails.payment_method === "cod") {
-      // ---- GA4 Purchase ----
+    if (orderDetails && orderDetails.order_id) {
+
+      const gaItems = orderDetails.products.map((item) => ({
+        item_id: item.product_id?.toString(),
+        item_name: he.decode(item.product_name || item.name),
+        price: Number(item.price),
+        quantity: Number(item.qty),
+      }));
+
+      const gaValue = gaItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: "purchase",
         ecommerce: {
           transaction_id: orderDetails.order_id,
           affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
-          value: parseFloat(orderDetails.total), // final total (with VAT, shipping)
+          value: gaValue,          // 🔥 FIX
           currency: currency?.code || "BHD",
-          items: orderDetails.products.map((item) => ({
-            item_id: item.product_id?.toString(),
-            item_name: he.decode(item.product_name || item.name),
-            price: parseFloat(item.price),
-            quantity: item.qty,
-          })),
+          items: gaItems,          // 🔥 FIX
         },
       });
 
-      // ---- TikTok Purchase ----
       window.ttq?.track("Purchase", {
-        contents: orderDetails.products.map((item) => ({
-          content_id: item.product_id?.toString(),
+        contents: gaItems.map(i => ({
+          content_id: i.item_id,
           content_type: "product",
-          content_name: he.decode(item.product_name || item.name),
+          content_name: i.item_name,
         })),
-        value: parseFloat(orderDetails.total),
+        value: gaValue,
         currency: currency?.code || "BHD",
       });
     }

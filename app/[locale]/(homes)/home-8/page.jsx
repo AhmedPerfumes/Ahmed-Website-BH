@@ -28,7 +28,7 @@ export default function HomePage8() {
                 backgroundImage: `url(/assets/background-ivory.webp)`,
             }}
         >
-            <NewsLetter />
+            {/* <NewsLetter /> */}
             <Header14 />
             <div className="d-none d-lg-block">
                 {/* CanvasAnimation will render first for large screens */}

@@ -18,6 +18,24 @@ import { useUser } from "../../context/UserContext";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "../../i18n/routing";
 
+const headerStyles = `
+.header { transition: transform 0.3s ease-in-out; }
+.header-hidden { transform: translateY(-100%); }
+.header-visible { transform: translateY(0); }
+.header_sticky { position: sticky; top: 0; z-index: 1000; background-color: white; }
+.search-popup { opacity: 0; transform: translateY(-10px); pointer-events: none; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 1200; }
+.js-content_visible .search-popup { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.js-content_hidden .search-popup { opacity: 0; transform: translateY(-50px); pointer-events: none; }
+.search-minimal { margin-left: auto; }
+.search-minimal form { width: 220px; }
+.search-minimal .form-control { border: 1px solid #e3e3e3; border-bottom: 1px solid #111; border-radius: 0; padding: 8px 40px 8px 12px; font-size: 14px; letter-spacing: 0.04em; box-shadow: none; outline: none; }
+.search-minimal .form-control::placeholder { color: #6b7280; font-weight: 500; }
+.search-minimal .form-control:focus { border-color: #cfcfcf; border-bottom-color: #a67b30; box-shadow: none; }
+.search-minimal .search-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #111; pointer-events: none; }
+.search-popup__close { position: absolute; top: 10px; right: 12px; background: transparent; border: none; font-size: 20px; cursor: pointer; color: #333; z-index: 5; }
+.search-popup__close:hover { color: #000; }
+`;
+
 export default function Header14() {
     const [scrollDirection, setScrollDirection] = useState("down");
     const locale = useLocale();
@@ -138,19 +156,8 @@ export default function Header14() {
 
     return (
         <>
-            <header
-                id="header"
-                className={
-                    pathname == "/"
-                        ? `header header_sticky bg-white ${
-                              scrollDirection == "up"
-                                  ? "header_sticky-active"
-                                  : ""
-                          } `
-                        : "header header_sticky position-sticky w-100 bg-white"
-                }
-                style={pathname == "/" ? {} : {}}
-            >
+        {/* <style>{headerStyles}</style> */}
+            <header id="header" className={ pathname == "/" ? `header header_sticky bg-white ${ scrollDirection == "up" ? "header_sticky-active" : "" } ` : "header header_sticky position-sticky w-100 bg-white"} style={pathname == "/" ? {} : {}}>
                 <Swiper
                     className="swiper-container js-swiper-slider slideshow type4 slideshow-navigation-white-sm swiper-container-fade swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events bg-black"
                     {...swiperOptions}
@@ -292,17 +299,7 @@ export default function Header14() {
                                             )
                                         }
                                     >
-                                        {currencyOptions.map(
-                                            (option, index) => (
-                                                <option
-                                                    key={index}
-                                                    className="footer-select__option"
-                                                    value={option.link}
-                                                >
-                                                    {option.text}
-                                                </option>
-                                            )
-                                        )}
+                                        {currencyOptions.map((option, index) => <option key={index} value={option.link}>{t(option.text)}</option>)}
                                     </select>
 
                                     <select

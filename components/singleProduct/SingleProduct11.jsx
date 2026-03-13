@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider4 from "./sliders/Slider4";
 import BreadCumb from "./BreadCumb";
 import Star from "../common/Star";
@@ -14,13 +14,55 @@ import he from 'he';
 import { useLocale, useTranslations } from "next-intl";
 import { useMenu } from '@/context/MenuContext';
 
-export default function SingleProduct11({ category, subcategory, product }) {
+export default function SingleProduct11({ category, subcategory, product: initialProduct, }) {
   const { isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
   const { cartProducts, setCartProducts } = useContextElement();
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState(null);
   const locale = useLocale();
   const t = useTranslations();
+  const [product, setProduct] = useState(initialProduct);
+
+  useEffect(() => {
+        if (initialProduct?.product_id !== product?.product_id) {
+            setProduct(initialProduct);
+        }
+
+        const fetchLiveStatus = async () => {
+            if (!initialProduct?.product_id) return;
+
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/live-status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ product_ids: [initialProduct.product_id] }),
+                });
+
+                if (!response.ok) return;
+
+                const liveData = await response.json();
+                
+                // If we got data back for this ID
+                if (Array.isArray(liveData) && liveData.length > 0) {
+                    const liveItem = liveData[0];
+                    setProduct(prev => ({
+                        ...prev,
+                        product_qty: liveItem.product_qty,
+                        price: liveItem.price,
+                        sale_price: liveItem.sale_price,
+                        discount: liveItem.discount,
+                        maximum_order_quantity: liveItem.maximum_order_quantity
+                    }));
+                }
+            } catch (err) {
+                console.error("Live product hydration failed", err);
+            }
+        };
+
+        fetchLiveStatus();
+    }, [initialProduct?.product_id]);
 
   const isIncludeCard = () => {
     const item = cartProducts.filter((elm) => elm.product_id == product.product_id)[0];
@@ -51,53 +93,47 @@ export default function SingleProduct11({ category, subcategory, product }) {
   // };
 
   const setQuantityCartItem = (id, quantity, maxOrderQty) => {
-    // Prevent decrement below 1
-    if (quantity < 1) {
-      setError(null); // or keep previous error
-      return;
-    }
-    // Determine dynamic max allowed per product
-    const MAX_LIMIT =
-      maxOrderQty && maxOrderQty > 0
-        ? maxOrderQty
-        : product.product_qty; // fallback to stock
+    const qty = Number(quantity);
+    const stock = Number(product.product_qty);
+    const maxOrder = Number(maxOrderQty);
 
-    if (quantity > product.product_qty) {
-      setError("Quantity is more than available quantity");
-      return;
-    }
-
-    if (quantity > MAX_LIMIT) {
-      setError(`Maximum allowed quantity is ${MAX_LIMIT}`);
-      return;
-    }
-
-    setError(null);
+    const limit = (maxOrder && maxOrder > 0) ? maxOrder : stock;
+    const isValid = qty <= stock && qty <= limit;
 
     if (isIncludeCard()) {
-      const items = [...cartProducts];
-      const itemIndex = items.findIndex(elm => elm.product_id == id);
+      if (isValid) {
+        setError(null);
+        const items = [...cartProducts];
+        const itemIndex = items.findIndex((elm) => elm.product_id == id);
 
-      if (itemIndex !== -1) {
-        items[itemIndex] = {
-          ...items[itemIndex],
-          quantity
-        };
+        if (itemIndex !== -1) {
+          items[itemIndex] = { ...items[itemIndex], quantity, };
+        }
+        
+        setCartProducts(items);
+      } else {
+        // FAILURE: Show specific error
+        const errorMsg = qty > stock ? "Quantity is more than available quantity" : `Maximum allowed quantity is ${limit}`;
+        setError(errorMsg);
       }
-
-      setCartProducts(items);
     } else {
-      setQuantity(quantity);
+      if (isValid) {
+        setQuantity(qty);
+        setError(null); // Clear error if valid
+      } else {
+        // Cap the value to the max allowed so user doesn't get stuck
+        const errorMsg = qty > stock ? "Quantity is more than available quantity" : `Maximum allowed quantity is ${limit}`;
+        setError(errorMsg);
+      }
     }
-  };
+  }
+
   const addToCart = () => {
     if (!isIncludeCard()) {
       const item = {...product, category_name: capitalizeEachWord(category.split('-').join(' ')), subcategory_name: capitalizeEachWord(subcategory.split('-').join(' '))};
       item.quantity = quantity;
       setCartProducts((pre) => [...pre, item]);
-      document
-      .getElementById("cartDrawerOverlay")
-      .classList.add("page-overlay_visible");
+      document.getElementById("cartDrawerOverlay").classList.add("page-overlay_visible");
       document.getElementById("cartDrawer").classList.add("aside_visible");
     }
   };
@@ -123,9 +159,7 @@ export default function SingleProduct11({ category, subcategory, product }) {
   }
 
   function capitalizeEachWord(str) {
-    return str.split(' ') // Split the sentence into words
-              .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter of each word
-              .join(' '); // Join the words back into a sentence
+    return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   }
 
   const price = (elm) => {
@@ -185,13 +219,21 @@ export default function SingleProduct11({ category, subcategory, product }) {
                     readOnly
                   />
                   <div
-                    onClick={() =>
+                    // onClick={() =>
+                    //   setQuantityCartItem(
+                    //     product.product_id,
+                    //     isIncludeCard()?.quantity - 1 || quantity - 1,
+                    //     product?.maximum_order_quantity
+                    //   )
+                    // }
+                    onClick={() => {
+                      const currentQty=isIncludeCard()?.quantity ?? quantity;
                       setQuantityCartItem(
                         product.product_id,
-                        isIncludeCard()?.quantity - 1 || quantity - 1,
+                        Math.max(1, currentQty - 1),
                         product?.maximum_order_quantity
-                      )
-                    }
+                      );
+                    }}
                     className="qty-control__reduce"
                   >
                     -
@@ -220,12 +262,11 @@ export default function SingleProduct11({ category, subcategory, product }) {
               </div>
               ):(
                 <div className="out-of-stock">
-  <span className="badge fs-5 text-uppercase">Out of Stock</span>
-  <p className="text-red mt-2">
-    This product is currently unavailable.
-  </p>
- 
-</div>
+                  <span className="badge fs-5 text-uppercase">Out of Stock</span>
+                  <p className="text-red mt-2">
+                    This product is currently unavailable.
+                  </p>
+                </div>
               )}
             </form>
             <div className="product-single__addtolinks">

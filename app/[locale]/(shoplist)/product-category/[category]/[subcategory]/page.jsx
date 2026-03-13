@@ -21,6 +21,8 @@ import CollapsibleDescription from "@/components/shoplist/CollapsibleDescription
 // };
 
 async function getCategorySubCategory(categoryName, subCategoryName) {
+  const catSlug = categoryName.toLowerCase();
+  const subSlug = subCategoryName.toLowerCase();
   // console.log(`${process.env.NEXT_PUBLIC_API_URL}api/products?category=${categoryName.split("-").join(" ").toUpperCase()}&subCategory=${subCategoryName.split("-").join(" ").toUpperCase()}`);
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products`, {
     method: 'POST',
@@ -32,7 +34,7 @@ async function getCategorySubCategory(categoryName, subCategoryName) {
       subCategory: subCategoryName.split("-").join(" ").toUpperCase(),
     }),
     next: {
-      tags: ["subcategories"],
+      tags: ["subCategories", `category-${catSlug}`, `subcategory-${subSlug}`],
       revalidate: 604800 // 7 days
     },
   });
@@ -87,7 +89,7 @@ export async function generateMetadata({ params }) {
 
     try {
         const data = await getProductCategorySEO(category, subcategory);
-        console.log(JSON.parse(data.meta_value)[0]);
+        // console.log(JSON.parse(data.meta_value)[0]);
         return {
             title: JSON.parse(data.meta_value)[0]?.seo_title ? `${JSON.parse(data.meta_value)[0]?.seo_title}` : "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
             description: JSON.parse(data.meta_value)[0]?.seo_description ? JSON.parse(data.meta_value)[0]?.seo_description?.replace(/<\/?[^>]+(>|$)/g, "").trim() : "Buy Best Perfumes Online Ahmed Al Maghribi Perfumes."
@@ -111,11 +113,12 @@ export async function generateMetadata({ params }) {
     }
 }
 const ShopPage8 = async ({ params }) => {
-  const { category, subcategory } = params;
+  const { category, subcategory,locale } = params;
 
   try {
     const data = await getCategorySubCategory(category, subcategory);
-    console.log(data);
+      const activeDescription= locale==='ar'?data.description_ar:data.description
+    // console.log(data);
     return (
       <>
         <QuickView />
@@ -126,7 +129,7 @@ const ShopPage8 = async ({ params }) => {
           <div className="mb-4 pb-lg-3"></div>
           <Shop10 products={ data.products }/>
           <div className="mb-4 pb-lg-3"></div>
-          <CollapsibleDescription description={data.description} />
+          <CollapsibleDescription description={activeDescription}locale={locale} />
         </main>
         <div className="mb-5 pb-xl-5"></div>
         <section className="d-none d-lg-block" style={{ height: "100%" }}>
