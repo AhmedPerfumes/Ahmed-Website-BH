@@ -131,6 +131,19 @@ export default function Checkout() {
   //     });
   //   }
   // };
+
+  const mapProductsFromFormData = (products) =>
+    products.map((item) => ({
+      product_id: item.product_id,
+      product_name: item.product_name,
+      quantity: item.quantity,
+      category_name: item.category_name,
+      subcategory_name: item.subcategory_name,
+      coupon: item.coupon,
+      discount: item.discount,
+      // ...('is_gift' in item && { is_gift: item.is_gift }),
+      // ...('campaign' in item && { campaign: item.campaign }),
+    }));
  
   async function onOrder(event) {
     event.preventDefault();
@@ -151,9 +164,17 @@ export default function Checkout() {
       userJson = JSON.parse(user);
     }
 
+    const {
+      shippingAdd,
+      note,
+      password,
+      otp,
+      ...cleanFormData
+    } = formData;
+
     const additionalFields = {
-      ...formData,
-      products : cartProducts,
+      ...cleanFormData,
+      products : mapProductsFromFormData(cartProducts),
       payment_method: selectedOption,
       shippingPrice,
       shippingPriceVat,
@@ -166,6 +187,7 @@ export default function Checkout() {
       locale,
       couponCode
     }
+    // console.log('additionalFields', additionalFields);return;
  
     try {
       // const formDataa = new FormData(additionalFields);
