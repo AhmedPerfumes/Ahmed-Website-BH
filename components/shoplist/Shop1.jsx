@@ -187,22 +187,56 @@ useEffect(() => {
     setFilteredProducts(filtered);
   };
 
+  // const discPrice = (elm) => {
+  //   const currentUTC = new Date(); // Current UTC time
+  //   const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
+  //   const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
+  //   if(elm?.discount) {
+  //     if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
+  //       return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - (elm.price / 100 * elm.discount.value)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
+  //     } else {
+  //       return <span className="money price">{elm?.price}{ currency.symbol }</span>;
+  //     }
+  //   } else if(elm?.sale_price) {
+  //     return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
+  //   } else {
+  //     return <span className="money price">{elm?.price}{ currency.symbol }</span>;
+  //   }
+  // };
+
+  const fmt = (v) => `${Number(v).toFixed(3)}${currency.symbol}`;
   const discPrice = (elm) => {
     const currentUTC = new Date(); // Current UTC time
+    const base = Number(elm.price);
     const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
     const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
-    if(elm?.discount) {
-      if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
-        return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - (elm.price / 100 * elm.discount.value)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
-      } else {
-        return <span className="money price">{elm?.price}{ currency.symbol }</span>;
-      }
-    } else if(elm?.sale_price) {
-      return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
-    } else {
+    console.log(elm,"elm");
+    
+    if(elm?.discount?.discount_type == "percent") {
+        const sale = base - (base * Number(elm.discount.value || 0)) / 100;
+        return (
+          <>
+            <span className="money price price-old">{fmt(base)}</span>{" "}
+            <span className="money price price-sale">{fmt(sale)}</span>
+          </>
+        );
+      } else if(elm?.discount?.discount_type == "amount") {
+        const sale = base - Number(elm.discount.value || 0);
+        return (
+          <>
+            <span className="money price price-old">{fmt(base)}</span>{" "}
+            <span className="money price price-sale">{fmt(sale)}</span>
+          </>
+        );
+    //   }  else if(elm?.sale_price) {
+    //   return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
+    }
+     else {
       return <span className="money price">{elm?.price}{ currency.symbol }</span>;
     }
   };
+
+
 
   return (
     <>

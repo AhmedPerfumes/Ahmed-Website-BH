@@ -65,28 +65,35 @@ export default function OrderCompleted() {
 
   const subTotalPrice = (elm) => {
     if (elm.is_gift) {
-      console.log('FREE');
       return <td>0.000{currency.symbol} (Free Gift)</td>;
     }
     const currentUTC = new Date(); // Current UTC time
     const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
     const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
-    if(elm?.discount) {
-      console.log('...', elm.discount);
-      console.log('...', new Date(current_date_time), new Date(elm.discount.start_date));
+   if(elm?.discount) {
+      // console.log('...', elm.discount);
+      // console.log('...', new Date(current_date_time), new Date(elm.discount.start_date));
       if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
         console.log('if...');
-        return <td>{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.qty).toFixed(currency.decimals)}{ currency.symbol }</td>;
+        if(elm.discount.discount_type == 'percent') {
+          console.log('percent...', elm);
+          return <td>{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.qty).toFixed(currency.decimals)}{ currency.symbol }</td>;
+        } else if(elm.discount.discount_type == 'amount') {
+          console.log('amount...', elm);
+          return <td>{((elm.price - elm.discount.value) * elm.qty).toFixed(currency.decimals)}{ currency.symbol }</td>;
+        }
+        // return <td>{((elm.price - (elm.price / 100 * elm.discount.value)) * elm.qty).toFixed(currency.decimals)}{ currency.symbol }</td>;
       } else {
         console.log('else...');
         return <td>{(elm.price * elm.qty).toFixed(currency.decimals)}{ currency.symbol }</td>;
       }
-    } else if(elm?.coupon) {
-      // console.log('else if', elm);
-      if(new Date(current_date_time) >= new Date(elm.coupon.start_date) && new Date(current_date_time) <= new Date(elm.coupon.end_date)) {
-        return <td>{((elm.price - (elm.price / 100 * elm.coupon.value)) * elm.qty).toFixed(currency.decimals)}{ currency.symbol }</td>;
+    }
+    else if(elm?.coupon && elm.coupon.length != 0 && elm.coupon[couponDataContext?.code.toLowerCase()]?.code == couponDataContext?.code.toLowerCase()) {
+      console.log('COUPON', elm);
+      if(new Date(current_date_time) >= new Date(elm.coupon[couponDataContext?.code.toLowerCase()]?.start_date) && new Date(current_date_time) <= new Date(elm.coupon[couponDataContext?.code.toLowerCase()]?.end_date)) {
+        return <td>{((elm.price - (elm.price / 100 * elm.coupon[couponDataContext?.code.toLowerCase()]?.value)) * elm.qty).toFixed(3)}{ currency.symbol }</td>;
       } else {
-        return <td>{(elm.price * elm.quantity).toFixed(currency.decimals)}{ currency.symbol }</td>;
+        return <td>{(elm.price * elm.qty).toFixed(3)}{ currency.symbol }</td>;
       }
     } else if(elm?.sale_price) {
         return <td>{((elm.price - (elm.price / 100 * elm.sale_price)) * elm.qty).toFixed(currency.decimals)}{ currency.symbol }</td>;
