@@ -8,6 +8,7 @@ import Head from "next/head";
 
 import { allProducts } from "@/data/products";
 import MobileFooter2 from "@/components/footers/MobileFooter2";
+import { headers } from 'next/headers';
 
 // export const metadata = {
 //   title: "Perfumes | Buy Best Perfumes Online | Ahmed Perfume",
@@ -16,6 +17,19 @@ import MobileFooter2 from "@/components/footers/MobileFooter2";
 //     icon: "/assets/images/ahmed-favicon.png",
 //   },
 // };
+
+function getRequestOrigin() {
+  const headersList = headers();
+  const host = headersList.get('host') || process.env.NEXT_PUBLIC_DEFAULT_ORIGIN; // e.g., 'localhost:3000' or 'yourdomain.com'
+  const protocol = headersList.get('x-forwarded-proto') || 'https'; // or 'https'
+  
+  // if (!host) {
+  //   // Fallback for local development or edge cases
+  //   return process.env.NEXT_PUBLIC_DEFAULT_ORIGIN || 'http://localhost:3000';
+  // }
+
+  return `${protocol}://${host}`;
+}
 
 async function getproduct(categoryName, subCategoryName, product) {
   // console.log(`${process.env.NEXT_PUBLIC_API_URL}api/products`, {
@@ -29,10 +43,12 @@ async function getproduct(categoryName, subCategoryName, product) {
   //     product: product.split("-").join(" ").toUpperCase(),
   //   })
   // });
+  const origin = getRequestOrigin();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'origin': origin,
     },
     body: JSON.stringify({
       category: categoryName.split("-").join(" ").toUpperCase(),
@@ -61,12 +77,14 @@ async function getProductSEO(categoryName, subCategoryName, product) {
   //     product: product.split("-").join(" ").toUpperCase(),
   //   })
   // });
+  const origin = getRequestOrigin();
   const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}api/productSEO`,
       {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
+              'origin': origin,
           },
           body: JSON.stringify({
               category: categoryName.split("-").join(" ").toUpperCase(),
