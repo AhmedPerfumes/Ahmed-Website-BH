@@ -11,16 +11,16 @@ export const openModalShopFilter = () => {
     shopFilter.classList.remove("aside_visible");
   };
   export const openModalUserlogin = () => {
-    const pageOverlay = document.getElementById("pageOverlay");
-    const shopFilter = document.getElementById("userAside");
-    pageOverlay.classList.add("page-overlay_visible");
-    shopFilter.classList.add("aside_visible");
+    // const pageOverlay = document.getElementById("pageOverlay");
+    // const shopFilter = document.getElementById("userAside");
+    // pageOverlay.classList.add("page-overlay_visible");
+    // shopFilter.classList.add("aside_visible");
   };
   export const closeModalUserlogin = () => {
-    const pageOverlay = document.getElementById("pageOverlay");
-    const shopFilter = document.getElementById("userAside");
-    pageOverlay.classList.remove("page-overlay_visible");
-    shopFilter.classList.remove("aside_visible");
+    // const pageOverlay = document.getElementById("pageOverlay");
+    // const shopFilter = document.getElementById("userAside");
+    // pageOverlay.classList.remove("page-overlay_visible");
+    // shopFilter.classList.remove("aside_visible");
   };
   export const openModalProductDescription = () => {
     const pageOverlay = document.getElementById("pageOverlay");

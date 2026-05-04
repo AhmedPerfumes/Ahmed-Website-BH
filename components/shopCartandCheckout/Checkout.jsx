@@ -477,6 +477,7 @@ export default function Checkout() {
         setIsOTPVerified(true);
         setIsDisabled(false);
         setOTPError(null);
+        localStorage.setItem("token", data.access_token);
       } else {
         if(data['mobile']) {
           setOTPError(data['mobile']);

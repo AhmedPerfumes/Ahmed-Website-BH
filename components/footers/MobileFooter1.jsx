@@ -45,7 +45,7 @@ export default function MobileFooter1() {
 
                 <div className="col-3">
                     {!isLoggedIn ? (
-                        <Link className="footer-mobile__link d-flex flex-column align-items-center" href="#">
+                        <Link href="/account_dashboard" className="footer-mobile__link d-flex flex-column align-items-center">
                             <User />
                             <span> LogIn </span>
                         </Link>
