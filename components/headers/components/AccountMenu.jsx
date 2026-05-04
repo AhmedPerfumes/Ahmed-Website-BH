@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
-import User from "../../../../Ahmed-Website/components/headers/components/User";
-import UserLoggedIn from "../../../../Ahmed-Website/components/headers/components/UserLoggedIn";
 import './AccountMenu.css'
 import { useState } from "react";
 import { usePathname } from "@/i18n/routing";
+import User from "./User";
+import UserLoggedIn from "./UserLoggedIn";
 
 export default function AccountMenu({isLoggedIn, locale, handleLogout,}) {
     const [couponCount, setCouponCount] = useState(0);

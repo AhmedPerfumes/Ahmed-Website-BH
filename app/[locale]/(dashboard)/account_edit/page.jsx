@@ -1,4 +1,5 @@
-import AccountEdit from "@/components/otherPages/AccountEdit";
+
+import EditAccount from "@/components/otherPages/EditAccount";
 import React from "react";
 
 export const metadata = {
@@ -10,5 +11,5 @@ export const metadata = {
 };
 
 export default function AccountEditPage() {
-  return <AccountEdit />;
+  return <EditAccount />;
 }
