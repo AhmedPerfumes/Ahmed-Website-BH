@@ -10,12 +10,12 @@ import Pagination1 from "../common/Pagination1";
 
 export default function Cart() {
   const { shippingServiceCharges, vatTax, isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
-  const locale = useLocale();
+  const { cartProducts, setCartProducts, totalPrice, freeShippingFlag } = useContextElement();
   const [error, setError] = useState(null);
+  const locale = useLocale();
   // const [couponCode, setCouponCode] = useState("");
   // const [couponError, setCouponError] = useState(null);
   // const [couponSuccess, setCouponSuccess] = useState(null);
-  const { cartProducts, setCartProducts, totalPrice, freeShippingFlag } = useContextElement();
   // const setQuantity = async (id, quantity, productQty) => {
   //   if (quantity >= 1 && quantity <= productQty) {
   //     setError(null);
@@ -31,16 +31,8 @@ export default function Cart() {
   // };
 
   const setQuantity = async (id, quantity, productQty, maxOrderQty) => {
-    // Determine dynamic max allowed per product
-    const MAX_LIMIT =
-      maxOrderQty && maxOrderQty > 0
-        ? maxOrderQty
-        : productQty; // fallback to stock quantity
-
-    // Check stock limit
+    const MAX_LIMIT = maxOrderQty && maxOrderQty > 0 ? maxOrderQty : productQty;
     const withinStock = quantity >= 1 && quantity <= productQty;
-
-    // Check max purchase limit
     const withinLimit = quantity <= MAX_LIMIT;
 
     if (withinStock && withinLimit) {
@@ -49,39 +41,22 @@ export default function Cart() {
       const items = [...cartProducts];
       const itemIndex = items.findIndex((elm) => elm.product_id == id);
 
-      if (itemIndex !== -1) {
-        items[itemIndex] = {
-          ...items[itemIndex],
-          quantity,
-        };
-      }
+      if (itemIndex !== -1) { items[itemIndex] = { ...items[itemIndex], quantity }; }
 
       setCartProducts(items);
     } else {
-      setError(
-        !withinStock
-          ? "Quantity is more than available quantity"
-          : `Maximum allowed quantity is ${MAX_LIMIT}`
-      );
+      setError( !withinStock ? "Quantity is more than available quantity" : `Maximum allowed quantity is ${MAX_LIMIT}`);
     }
   };
   const removeItem = async(id) => {
     setCartProducts((pre) => [...pre.filter((elm) => elm.product_id != id)]);
   };
 
-  const [checkboxes, setCheckboxes] = useState({
-    free_shipping: freeShippingFlag,
-    flat_rate: false,
-    local_pickup: false,
-  });
+  const [checkboxes, setCheckboxes] = useState({ free_shipping: freeShippingFlag, flat_rate: false, local_pickup: false,});
 
-  // Step 2: Create a handler function
   const handleCheckboxChange = (event) => {
     const { id, checked } = event.target;
-    setCheckboxes((prevCheckboxes) => ({
-      ...prevCheckboxes,
-      [id]: checked,
-    }));
+    setCheckboxes((prevCheckboxes) => ({ ...prevCheckboxes, [id]: checked, }));
   };
 
   // const handleCouponChange = (e) => {
@@ -240,11 +215,7 @@ export default function Cart() {
                         </ul> */}
                       </div>
                     </td>
-                    <td>
-                      
-                        { price(elm) }
-                      
-                    </td>
+                    <td> { price(elm) } </td>
                     <td>
                       {!elm.is_gift ? <div className="qty-control position-relative">
                         <input
@@ -252,24 +223,12 @@ export default function Cart() {
                           name="quantity"
                           value={elm.quantity}
                           min={1}
-                          onChange={(e) =>
-                            setQuantity(elm.product_id, e.target.value / 1, elm.product_qty, elm?.maximum_order_quantity)
-                          }
+                          onChange={(e) => setQuantity(elm.product_id, e.target.value / 1, elm.product_qty, elm?.maximum_order_quantity) }
                           className="qty-control__number text-center"
                           readOnly
                         />
-                        <div
-                          onClick={() => setQuantity(elm.product_id, elm.quantity - 1, elm.product_qty, elm?.maximum_order_quantity)}
-                          className="qty-control__reduce"
-                        >
-                          -
-                        </div>
-                        <div
-                          onClick={() => setQuantity(elm.product_id, elm.quantity + 1, elm.product_qty, elm?.maximum_order_quantity)}
-                          className="qty-control__increase"
-                        >
-                          +
-                        </div>
+                        <div onClick={() => setQuantity(elm.product_id, elm.quantity - 1, elm.product_qty, elm?.maximum_order_quantity)} className="qty-control__reduce"> - </div>
+                        <div onClick={() => setQuantity(elm.product_id, elm.quantity + 1, elm.product_qty, elm?.maximum_order_quantity)} className="qty-control__increase"> + </div>
                       </div> : 1}
                     </td>
                     {/* <td>
@@ -299,23 +258,10 @@ export default function Cart() {
                         </div>
                       </div>
                     </td> */}
+                    <td> { subTotalPrice(elm) } </td>
                     <td>
-                      
-                        { subTotalPrice(elm) }
-                      
-                    </td>
-                    <td>
-                      <a
-                        onClick={() => removeItem(elm.product_id)}
-                        className="remove-cart"
-                      >
-                        <svg
-                          width="10"
-                          height="10"
-                          viewBox="0 0 10 10"
-                          fill="#767676"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
+                      <a onClick={() => removeItem(elm.product_id)} className="remove-cart" >
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">
                           <path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z" />
                           <path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z" />
                         </svg>

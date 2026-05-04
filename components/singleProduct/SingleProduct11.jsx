@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Slider4 from "./sliders/Slider4";
 import BreadCumb from "./BreadCumb";
 import Star from "../common/Star";
@@ -133,8 +134,15 @@ export default function SingleProduct11({ category, subcategory, product: initia
       const item = {...product, category_name: capitalizeEachWord(category.split('-').join(' ')), subcategory_name: capitalizeEachWord(subcategory.split('-').join(' '))};
       item.quantity = quantity;
       setCartProducts((pre) => [...pre, item]);
-      document.getElementById("cartDrawerOverlay").classList.add("page-overlay_visible");
-      document.getElementById("cartDrawer").classList.add("aside_visible");
+      toast.success(t("Added to cart successfully"), {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      // document.getElementById("cartDrawerOverlay").classList.add("page-overlay_visible");
+      // document.getElementById("cartDrawer").classList.add("aside_visible");
     }
   };
 

@@ -1,18 +1,8 @@
 "use client";
-const countries = [
-  "Abu Dhabi",
-  "Ajman",
-  "Al Ain",
-  "Dubai",
-  "Fujairah",
-  "Ras Al Khaymah",
-  "Sharjah",
-  "Umm Al Quwain",
-];
 import { useContextElement } from "@/context/Context";
 import { useUser } from "@/context/UserContext";
 import { useMenu } from '@/context/MenuContext';
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import he from 'he';
@@ -25,65 +15,95 @@ import BOGOFeature from "../BogoFeature";
 // import FreeGiftFeature from '@/components/FreeGiftFeature';
 
 export default function Checkout() {
-  const { shippingServiceCharges, vatTax, isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
-  const router = useRouter();
-  const locale = useLocale();
-  const hasCleaned = useRef(false);
-
- const { cartProducts, totalPrice, freeShippingFlag, setOrderDetails, setCouponDataContext, setCartProducts, promotionsContext } = useContextElement();
-  const { isLoggedIn } = useUser();
   // const [selectedRegion, setSelectedRegion] = useState("");
-  const [idDDActive, setIdDDActive] = useState(false);
   // const [shippingAdd, setShippingAdd] = useState(false);
+  const [showCouponModal, setShowCouponModal] = useState(false);
+  const [idDDActive, setIdDDActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOption, setSelectedOption] = useState('cod');
-  const [formData, setFormData] = useState({
-    shippingAddress: {
-      first_name: '',
-      last_name: '',
-      mobile: '',
-      email: '',
-      country: 'BH',
-      area: '',
-      building: '',
-      region: ''
-    },
-    billingAddress: {
-      first_name: '',
-      last_name: '',
-      mobile: '',
-      email: '',
-      country: 'BH',
-      area: '',
-      building: '',
-      region: ''
-    },
-    shippingAdd: false,
-    note: '',
-    password: '',
-    otp: ''
-  });
   const [createAccount, setCreateAccount] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [OTPError, setOTPError] = useState(null);
   const [OTPSuccess, setOTPSuccess] = useState(null);
-
   const [isSendOTPLoading, setIsSendOTPLoading] = useState(false);
   const [isOTPButton, setIsOTPButton] = useState(true);
   const [isOTPVerified, setIsOTPVerified] = useState(false);
-
   const [couponCode, setCouponCode] = useState("");
   const [couponError, setCouponError] = useState(null);
   const [couponSuccess, setCouponSuccess] = useState(null);
   const [couponData, setCouponData] = useState(null);
+  const [termsChecked, setTermsChecked] = useState(false);
+  const [termsError, setTermsError] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [formData, setFormData] = useState({
+    shippingAddress: { first_name: '', last_name: '', mobile: '', email: '', country: 'BH', area: '', building: '', region: '' },
+    billingAddress: { first_name: '', last_name: '', mobile: '', email: '', country: 'BH', area: '', building: '', region: '' },
+    shippingAdd: false,
+    note: '',
+    password: '',
+    otp: ''
+  });
 
-  const handleRadioChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
+  const { cartProducts, totalPrice, freeShippingFlag, setOrderDetails, setCouponDataContext, setCartProducts, promotionsContext } = useContextElement();
+  const { shippingServiceCharges, vatTax, isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
+  const { isLoggedIn } = useUser();
+  const router = useRouter();
+  const locale = useLocale();
+  const termsRef = useRef(null);
+  const hasCleaned = useRef(false);
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        const el = document.getElementById("general_error_msg");
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const userStr = localStorage.getItem("user");
+      let firstName = "";
+      let lastName = "";
+      let email = "";
+      let mobile = "";
+      let area = "";
+      let building = "";
+      let region = "";
+
+      if (userStr) {
+        const user = JSON.parse(atob(userStr));
+        console.log('user',user);
+        email = user.email || "";
+        mobile = user.phone || user.mobile || "";
+
+        if (user.name) {
+          const [f, ...lArr] = user.name.split(" ");
+          firstName = f || "";
+          lastName = lArr.join(" ") || "";
+        }
+      }
+
+      const addrStr = localStorage.getItem("address");
+      if (addrStr) {
+        const addr = JSON.parse(atob(addrStr));
+        area = addr.city || "";
+        building = addr.address || "";
+        region = addr.state || "";
+      }
+
+      setFormData((prev) => ({ 
+        ...prev, 
+        billingAddress: { ...prev.billingAddress, first_name: firstName, last_name: lastName, email, mobile, area, building, region, }, 
+        shippingAddress: { ...prev.shippingAddress, first_name: firstName, last_name: lastName, email, mobile, area, building, region, },}));
+    }
+  }, [isLoggedIn]);
+
+  const handleRadioChange = (event) => { setSelectedOption(event.target.value); };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -91,43 +111,12 @@ export default function Checkout() {
     if (name.startsWith('shipping') || name.startsWith('billing')) {
       const addressField = name.startsWith('shipping') ? 'shippingAddress' : 'billingAddress';
       const fieldName = name.split('.')[1]; // Get the specific field (e.g., street, city)
-      setFormData((prevData) => ({
-        ...prevData,
-        [addressField]: {
-          ...prevData[addressField],
-          [fieldName]: value,
-        },
+      setFormData((prevData) => ({ ...prevData, [addressField]: { ...prevData[addressField], [fieldName]: value, },
       }));
     } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+      setFormData((prevData) => ({ ...prevData, [name]: value, }));
     }
   };
-   useEffect(() => {
-    if (hasCleaned.current) return;
-    // Check if any regular (non-gift, non-free) products are in BOGO
-    const hasBogoRegularItems = cartProducts.some((item) => 
-      !item.is_gift && 
-      promotionsContext.some((promo) => promo.buy_products.some((buyItem) => buyItem.product_id === item.product_id))
-    );
-    
-    if (!hasBogoRegularItems) {
-      // Only remove coupon properties from products that have no BOGO and no discount
-      const cleanedCart = cartProducts.map((item) => {
-        const hasDiscount = item.discount != null;
-        if (!hasDiscount) {
-          const { is_coupon, value, ...rest } = item;
-          return rest;
-        }
-        return item;
-      });
-      setCartProducts(cleanedCart);
-      setCouponDataContext(null);
-      hasCleaned.current = true; // prevent future runs
-    }
-  }, [cartProducts, promotionsContext, setCartProducts, setCouponDataContext]);
 
   const handleCheckboxChange = () => {
     setFormData((prevData) => {
@@ -147,13 +136,7 @@ export default function Checkout() {
   //     const addressField = id.startsWith('shipping') ? 'shippingAddress' : 'billingAddress';
   //     const fieldName = id.split('.')[1]; // Get the specific field (e.g., street, city)
   //     setFormData((prevData) => {
-  //       return {
-  //         ...prevData,
-  //         [addressField]: {
-  //           ...prevData[addressField],
-  //           [fieldName]: emirates,
-  //         },
-  //       };
+  //       return { ...prevData, [addressField]: { ...prevData[addressField], [fieldName]: emirates, },};
   //     });
   //   }
   // };
@@ -222,10 +205,58 @@ export default function Checkout() {
  
   async function onOrder(event) {
     event.preventDefault();
+
+    if (!termsChecked) {
+      setTermsError(true);
+      if (termsRef.current) { 
+        termsRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
     // console.log('Order submitted:', formData);
     setIsLoading(true);
     setError(null);
     setSuccess(null);
+
+    const billing = formData.billingAddress;
+    const newErrors = {};
+
+    if (!billing.last_name.trim()) newErrors.last_name = "Last Name is required";
+    if (!billing.area.trim()) newErrors.area = "Area / Mantaqa is required";
+    if (!billing.building.trim()) newErrors.building = "Building / Villa is required";
+    if (!billing.region.trim()) newErrors.region = "Region is required";
+    if (!billing.email.trim()) newErrors.email = "Email is required";
+    if (!billing.mobile.trim()) newErrors.mobile = "Mobile Number is required";
+    if (!isLoggedIn && !isOTPVerified) newErrors.otp = "OTP must be verified";
+
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
+      setIsLoading(false); 
+      
+      setTimeout(() => {
+        const firstErrorFieldId = Object.keys(newErrors)[0];
+        let elementId = "";
+        switch (firstErrorFieldId) {
+          case "last_name": elementId = "checkout_last_name"; break;
+          case "area": elementId = "checkout_street_address"; break;
+          case "building": elementId = "checkout_street_address_2"; break;
+          case "region": elementId = "checkout_region"; break;
+          case "email": elementId = "billingAddress.email"; break;
+          case "mobile": elementId = "checkout_otp"; break;
+          case "otp": elementId = "billing_otp"; break;
+        }
+        
+        const el = document.getElementById(elementId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+
+      return;
+    } else { 
+      setFieldErrors({}); 
+    }
 
     const shippingPrice = freeShippingFlag ? 0.00 : parseFloat(shippingServiceCharges[0].price);
     const shippingPriceVat = shippingPrice / 100 * vatTax.percentage;
@@ -247,122 +278,97 @@ export default function Checkout() {
       ...cleanFormData
     } = formData;
 
-    const additionalFields = {
-      ...formData,
-      products : mapProductsFromFormData(cartProducts),
-      payment_method: selectedOption,
-      shippingPrice,
-      shippingPriceVat,
-      servicePrice,
-      servicePriceVat,
-      vatTax: vatTax.percentage,
-      totalPrice,
-      finalPrice,
-      customer_id: userJson ? userJson.id : null,
-      locale,
-      couponCode
-    }
-    // console.log('additionalFields', additionalFields);return;
+    const additionalFields = { ...formData, products : mapProductsFromFormData(cartProducts), payment_method: selectedOption, shippingPrice, shippingPriceVat, servicePrice, servicePriceVat, vatTax: vatTax.percentage, totalPrice, finalPrice, customer_id: userJson ? userJson.id : null, locale, couponCode }
+
+    const token = localStorage.getItem('token');
  
     try {
       // const formDataa = new FormData(additionalFields);
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/storeOrder`, {
         method: 'POST',
         body: JSON.stringify(additionalFields),
-        headers: {
-          'content-type': 'application/json'
-        }
+        headers: { "content-type": "application/json", ...(token && { Authorization: `Bearer ${token}` })},
       })
- 
-      if (!response.ok) {
-        throw new Error('Failed to submit the data. Please try again.');
+
+      if (response.status === 401) {
+        // Clear all authentication-related items
+        if (localStorage.getItem('user')) {
+          localStorage.removeItem('user');
+        }
+        if (localStorage.getItem('token')) {
+          localStorage.removeItem('token');
+        }
+
+        // If they were a guest user verified via OTP, they need to re-verify
+        // If they were logged in, they need to re-login
+        const errorMsg = isLoggedIn 
+          ? 'Your session has expired. Please login again.' 
+          : 'Mobile verification expired. Please verify your number again.';
+
+        setError(errorMsg);
+
+        setTimeout(() => {
+          // Redirecting to the combined login/register/OTP page
+          window.location.reload();
+        }, 2000);
+
+        return; // Stop execution
       }
  
-      // Handle response if necessary
+      if (!response.ok) {
+        const errorMessage = data.message || data.error || "Failed to submit the data. Please try again.";
+        throw new Error(errorMessage);
+      }
       const data = await response.json();
-      // console.log(data);
-      if(data.message && data.message.split(' ')[0] == 'Order') {
+
+      if (data.message && data.message.split(" ")[0] == "Order") {
         setSuccess(data.message);
         setError(null);
         setOrderDetails(data);
         setFormData({
-          shippingAddress: {
-            first_name: '',
-            last_name: '',
-            mobile: '',
-            email: '',
-            area: '',
-            building: '',
-            region: ''
-          },
-          billingAddress: {
-            first_name: '',
-            last_name: '',
-            mobile: '',
-            email: '',
-            area: '',
-            building: '',
-            region: ''
-          },
+          shippingAddress: { first_name: "", last_name: "", mobile: "", email: "", area: "", building: "", emirates: "" },
+          billingAddress: {first_name: "", last_name: "", mobile: "", email: "", area: "", building: "", emirates: "" },
           shippingAdd: false,
         });
         setTimeout(() => router.push(`/${locale}/shop-order-complete`), 1000);
-      } else if(data.message && data.message.split(' ')[0] == 'Redirecting') {
+      } else if (data.message && data.message.split(" ")[0] == "Redirecting") {
         setSuccess(data.message);
         setError(null);
-        // localStorage.setItem('orderData', btoa(JSON.stringify(data)));
         router.push(data.redirect_url);
       } else if (data.qtyMessage) {
-        // setSuccess();
         setError(data.qtyMessage);
-        // localStorage.setItem('orderData', btoa(JSON.stringify(data)));
-        // router.push(data.redirect_url);
       } else if (data.discountMessage) {
-        // setSuccess();
         setError(data.discountMessage);
+
         setTimeout(() => {
           localStorage.setItem("cartList", JSON.stringify([])); // store an empty array in localStorage
           setCartProducts([]); // update the cartProducts state to an empty array
-        }, 2000); // time in milliseconds (e.g., 1000ms = 1 second)
-        // localStorage.setItem('orderData', btoa(JSON.stringify(data)));
-        // router.push(data.redirect_url);
-      } 
-      else if (data.bogoMessage) {
+        }, 2000);
+      } else if (data.couponMessage) {
+        setError(data.couponMessage);
+      } else if (data.duplicateOrderMessage) {
+        setError(data.duplicateOrderMessage);
+      } else if (data.priceMessage) {
+        setError(data.priceMessage);
+      } else if (data.collectionMessage) {
+        setError(data.collectionMessage);
+      } else if (data.focMessage) {
+        setError(data.focMessage);
+      } else if (data.bogoMessage) {
         setError(data.bogoMessage);
-      }else {
-        if(data.message) {
-          setError(data.message);
-        }
-        if(data.products) {
-          setError(data.products);
-        }
-        if(data['billingAddress.first_name']) {
-          setError(data['billingAddress.first_name']);
-        }
-        if(data['billingAddress.last_name']) {
-          setError(data['billingAddress.last_name']);
-        }
-        if(data['billingAddress.email']) {
-          setError(data['billingAddress.email']);
-        }
-        if(data['billingAddress.mobile']) {
-          setError(data['billingAddress.mobile']);
-        }
-        if(data['billingAddress.area']) {
-          setError(data['billingAddress.area']);
-        }
-        if(data['billingAddress.building']) {
-          setError(data['billingAddress.building']);
-        }
-        if(data['billingAddress.region']) {
-          setError(data['billingAddress.region']);
-        }
+      } else {
+        if (data.products) setError(data.products);
+        if (data["billingAddress.last_name"]) setError(data["billingAddress.last_name"]);
+        if (data["billingAddress.area"]) setError(data["billingAddress.area"]);
+        if (data["billingAddress.building"]) setError(data["billingAddress.building"]);
+        if (data["billingAddress.region"]) setError(data["billingAddress.region"]);
+        if (data["billingAddress.email"]) setError(data["billingAddress.email"]);
+        if (data["billingAddress.mobile"]) setError(data["billingAddress.mobile"]);
         setSuccess(null);
       }
     } catch (error) {
       // Capture the error message to display to the user
       setError(error.message);
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -370,6 +376,7 @@ export default function Checkout() {
 
   async function sendOTP(e) {
     e.preventDefault();
+    
     // console.log('Mobile:', formData.billingAddress.mobile);
     // return;
     setIsSendOTPLoading(true);
@@ -379,7 +386,7 @@ export default function Checkout() {
       setIsSendOTPLoading(false);
       return;
     }
-    const regex = /^\d{10}$/;
+    const regex = /^\d{8}$/;
     if(!regex.test(formData.billingAddress.mobile)) {
       setOTPError('Invalid Mobile Number');
       setOTPSuccess(null);
@@ -395,9 +402,7 @@ export default function Checkout() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/sendOTP`, {
         method: 'POST',
         body: JSON.stringify({mobile}),
-        headers: {
-          'Content-Type': 'application/json', // Specify the content type
-        }
+        headers: { 'Content-Type': 'application/json', }
       })
  
       if (!response.ok) {
@@ -455,9 +460,7 @@ export default function Checkout() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/verifyOTP`, {
         method: 'POST',
         body: JSON.stringify({mobile, otp, flag: 'checkout'}),
-        headers: {
-          'Content-Type': 'application/json', // Specify the content type
-        }
+        headers: { 'Content-Type': 'application/json', }
       })
  
       if (!response.ok) {
@@ -608,7 +611,7 @@ export default function Checkout() {
   // };
 
   const subTotalPrice = (elm) => {
-    if (elm.is_gift) { return <td>0.00{currency.symbol} (Free Gift)</td>; }
+    if (elm.is_gift) { return <td>0.000{currency.symbol} (Free Gift)</td>; }
     const currentUTC = new Date(); // Current UTC time
     const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
     const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
@@ -663,370 +666,209 @@ export default function Checkout() {
   const isExpired = (end_date) => { return new Date(end_date) < new Date(); };
   return (
     <>
-    {/* <FreeGiftFeature couponData={couponData}/> */}
     <FreeGiftFeature couponData={couponData}/>
-        <BOGOFeature/>
+    <BOGOFeature/>
     {cartProducts.length ? (
       <form onSubmit={onOrder}>
         <div className="checkout-form">
           <div className="billing-info__wrapper">
             <h4>BILLING DETAILS</h4>
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-6 col-12">
                 <div className="form-floating my-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="checkout_first_name"
-                    placeholder="First Name"
-                    name="billingAddress.first_name"
-                    value={formData.billingAddress.first_name}
-                    onChange={handleChange}
-                    required
-                  />
+                  <input type="text" className="form-control" id="checkout_first_name" placeholder="First Name" readOnly={isLoggedIn} name="billingAddress.first_name" value={formData.billingAddress.first_name} onChange={handleChange}/>
                   <label htmlFor="checkout_first_name">First Name</label>
                 </div>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-6 col-12">
                 <div className="form-floating my-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="checkout_last_name"
-                    placeholder="Last Name"
-                    name="billingAddress.last_name"
-                    value={formData.billingAddress.last_name}
-                    onChange={handleChange}
-                    required
-                  />
+                  <input type="text" className="form-control" id="checkout_last_name" placeholder="Last Name"   name="billingAddress.last_name" value={formData.billingAddress.last_name} onChange={handleChange}/>
                   <label htmlFor="checkout_last_name">Last Name</label>
+                  {fieldErrors.last_name && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.last_name} </div> )}
                 </div>
               </div>
               <div className="col-md-12">
                 <div className="search-field my-3">
-                  <div
-                    className={`form-label-fixed hover-container ${
-                      idDDActive ? "js-content_visible" : ""
-                    }`}
-                  >
-                    <label htmlFor="country" className="form-label">
-                      Country / Region*
-                    </label>
+                  <div className={`form-label-fixed hover-container ${ idDDActive ? "js-content_visible" : "" }`}>
+                    <label htmlFor="country" className="form-label"> Country / Region* </label>
                     <div className="js-hover__open">
-                      <input
-                        type="text"
-                        className="form-control form-control-lg search-field__actor"
-                        id="country"
-                        name="billingAddress.country"
-                        value="Bahrain"
-                        readOnly
-                        placeholder="Bahrain"
-                      />
+                      <input type="text" className="form-control form-control-lg search-field__actor" id="country" name="billingAddress.country" value="Bahrain" readOnly placeholder="Bahrain"/>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-12">
+              <div className="col-md-6 col-12">
                 <div className="form-floating mt-3 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="checkout_street_address"
-                    placeholder="Area / Mantaqa *"
-                    name="billingAddress.area"
-                    value={formData.billingAddress.area}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label htmlFor="checkout_company_name">
-                    Area / Mantaqa *
-                  </label>
+                  <input type="text" className="form-control" id="checkout_street_address" placeholder="Area / Mantaqa *" readOnly={isLoggedIn} name="billingAddress.area" value={formData.billingAddress.area} onChange={handleChange} />
+                  <label htmlFor="checkout_street_address"> Area / Mantaqa * </label>
+                  {fieldErrors.area && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.area} </div> )}
                 </div>
+              </div>
+              <div className="col-md-6 col-12">
                 <div className="form-floating mt-3 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="checkout_street_address_2"
-                    placeholder="Building / Villa / Apartment"
-                    name="billingAddress.building"
-                    value={formData.billingAddress.building}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label htmlFor="checkout_company_name">
-                    Building / Villa / Apartment
-                  </label>
+                  <input type="text" className="form-control" id="checkout_street_address_2" placeholder="Building / Villa / Apartment" name="billingAddress.building" readOnly={isLoggedIn} value={formData.billingAddress.building} onChange={handleChange}  />
+                  <label htmlFor="checkout_street_address_2"> Building / Villa </label>
+                  {fieldErrors.building && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.building} </div> )}
                 </div>
               </div>
 
-              {/* <div className="col-md-12">
-                <div className="search-field my-3">
-                  <div
-                    className={`form-label-fixed hover-container ${
-                      idDDActive ? "js-content_visible" : ""
-                    }`}
-                  >
-                    <label htmlFor="search-dropdown" className="form-label">
-                      Region*
-                    </label>
-                    <div className="js-hover__open">
-                      <input
-                        type="text"
-                        className="form-control form-control-lg search-field__actor search-field__arrow-down"
-                        id="search-dropdown"
-                        name="billingAddress.emirates"
-                        value={formData.billingAddress.emirates}
-                        readOnly
-                        placeholder="Select Emirate..."
-                        onClick={() => setIdDDActive((pre) => !pre)}
-                        required
-                      />
-                    </div>
-                    <div className="filters-container js-hidden-content mt-2">
-                      <div className="search-field__input-wrapper">
-                        <input
-                          type="text"
-                          className="search-field__input form-control form-control-sm bg-lighter border-lighter"
-                          placeholder="Search"
-                          onChange={(e) => {
-                            setSearchQuery(e.target.value);
-                          }}
-                        />
-                      </div>
-                      <ul className="search-suggestion list-unstyled">
-                        {countries
-                          .filter((elm) =>
-                            elm
-                              .toLowerCase()
-                              .includes(searchQuery.toLowerCase())
-                          )
-                          .map((elm, i) => (
-                            <li
-                              id="billingAddress.emirates"
-                              onClick={(e) => {
-                                handleEmiratesChange(e, elm);
-                                setIdDDActive(false);
-                              }}
-                              key={i}
-                              className="search-suggestion__item js-search-select"
-                            >
-                              {elm}
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-
               <div className="col-md-12">
                 <div className="form-floating mt-3 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="checkout_region"
-                    placeholder="Region *"
-                    name="billingAddress.region"
-                    value={formData.billingAddress.region}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label htmlFor="checkout_region">
-                    Region *
-                  </label>
+                  <input type="text" className="form-control" id="checkout_region" placeholder="Region *" name="billingAddress.region" readOnly={isLoggedIn} value={formData.billingAddress.region} onChange={handleChange}  />
+                  <label htmlFor="checkout_region"> Region * </label>
+                  {fieldErrors.region && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.region} </div> )}
                 </div>
-                {/* <div className="form-floating mt-3 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="checkout_street_address_2"
-                    placeholder="Building / Villa / Apartment"
-                    name="billingAddress.building"
-                    value={formData.billingAddress.building}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label htmlFor="checkout_company_name">
-                    Building / Villa / Apartment
-                  </label>
-                </div> */}
               </div>
+              {isLoggedIn && ( <Link className="btn-link btn-link_lg text-center fw-bold text-danger p-2" href={`/${locale}/account_edit_address`} target="_blank" > - Click to Edit Address - </Link> )}
 
               <div className="col-md-12">
                 <div className="form-floating my-3">
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="billingAddress.email"
-                    placeholder="Your Mail *"
-                    name="billingAddress.email"
-                    value={formData.billingAddress.email}
-                    onChange={handleChange}
-                    required
-                  />
+                  <input type="email" className="form-control" id="billingAddress.email" placeholder="Your Mail *" name="billingAddress.email" readOnly={isLoggedIn} value={formData.billingAddress.email} onChange={handleChange}  />
                   <label htmlFor="checkout_email">Email Address *</label>
+                  {fieldErrors.email && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.email} </div> )}
                 </div>
               </div>
               <div className="col-md-12">
                 <div className="form-floating my-3">
-                  <input
-                    type="text"
-                    pattern="^\d{8}$"
-                    title="Only positive integers allowed"
-                    className="form-control"
-                    id="checkout_otp"
-                    placeholder="Eg. 50000000 *"
-                    name="billingAddress.mobile"
-                    value={formData.billingAddress.mobile}
-                    onChange={handleChange}
-                    required
-                  />
+                  <input type="text" pattern="^\d{8}$" title="Only positive integers allowed" className="form-control" id="checkout_otp" placeholder="Eg. 50000000 *"  name="billingAddress.mobile" readOnly={isLoggedIn} value={formData.billingAddress.mobile} onChange={handleChange}  />
                   <label htmlFor="checkout_phone">Mobile Number (Eg. 50000000)*</label>
+                  {fieldErrors.mobile && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.mobile} </div> )}
+                  {fieldErrors.otp && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.otp} </div> )}
                 </div>
-                  {/* {OTPError ? <div style={{ color: 'red' }}>{OTPError}</div> : <div style={{ color: 'green' }}>{OTPSuccess}</div>}
-                  {isOTPButton ? <button
-                    className="btn btn-primary w-100 text-uppercase"
-                    type="button"
-                    disabled={isSendOTPLoading}
-                    onClick={sendOTP}
-                  >
-                  {isSendOTPLoading ? 'Loading...' : 'Send OTP'}
-                  </button> : <>{!isOTPVerified && <><div className="form-floating my-3">
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="otp"
-                      placeholder="Eg. 1234 *"
-                      name="otp"
-                      value={formData.otp}
-                      onChange={handleChange}
-                    />
-                    <label htmlFor="checkout_otp">OTP (Eg. 1234)*</label>
-                  </div>
-                  <button
-                    className="btn btn-primary w-100 text-uppercase"
-                    type="button"
-                    disabled={isSendOTPLoading}
-                    onClick={verifyOTP}
-                  >
-                {isSendOTPLoading ? 'Loading...' : 'Verify OTP'}
-                </button></>}</>} */}
+
+                {!isLoggedIn && (
+                    <div className="col-md-12">
+                      {OTPError ? ( <div style={{ color: "red" }}>{OTPError}</div> ) : ( <div style={{ color: "green" }}>{OTPSuccess}</div> )}
+                      {isOTPButton ? ( <button className="btn btn-primary w-100 text-uppercase" type="button" disabled={isSendOTPLoading} onClick={sendOTP} > {isSendOTPLoading ? "Loading..." : "Send OTP"} </button> ) : ( 
+                        <>
+                        {!isOTPVerified && ( 
+                          <>
+                            <div className="form-floating my-3">
+                              <input type="number" className="form-control" id="billing_otp" placeholder="Eg. 1234 *" name="otp" value={formData.otp} onChange={handleChange} />
+                              <label htmlFor="billing_otp"> OTP (Eg. 1234)* </label>
+                            </div>
+                            <button className="btn btn-primary w-100 text-uppercase" type="button" disabled={isSendOTPLoading} onClick={verifyOTP} >
+                              {isSendOTPLoading ? "Loading..." : "Verify OTP"} 
+                            </button>
+                          </>
+                        )}
+                        </>
+                      )}
+                    </div>
+                  )}
               </div>
               <div className="col-md-12">
                 {!isLoggedIn && <div className="form-check mt-3">
-                  <input
-                    className="form-check-input form-check-input_fill"
-                    type="checkbox"
-                    defaultValue=""
-                    id="create_account"
-                    onClick={(prev) => setCreateAccount(!createAccount)}
-                    name="create_account"
-                  />
-                  <label className="form-check-label" htmlFor="create_account">
-                    CREATE AN ACCOUNT?
-                  </label>
+                  <input className="form-check-input form-check-input_fill" type="checkbox" defaultValue="" id="create_account" onClick={(prev) => setCreateAccount(!createAccount)} name="create_account" />
+                  <label className="form-check-label" htmlFor="create_account"> CREATE AN ACCOUNT? </label>
                 </div>}
                 <div className="form-check mb-3">
-                  <input
-                    className="form-check-input form-check-input_fill"
-                    type="checkbox"
-                    defaultValue=""
-                    id="ship_different_address"
-                    onClick={handleCheckboxChange}
-                    name="shipping"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="ship_different_address"
-                  >
-                    SHIP TO A DIFFERENT ADDRESS?
-                  </label>
+                  <input className="form-check-input form-check-input_fill" type="checkbox" defaultValue="" id="ship_different_address" onClick={handleCheckboxChange} name="shipping" />
+                  <label className="form-check-label" htmlFor="ship_different_address" > SHIP TO A DIFFERENT ADDRESS? </label>
                 </div>
               </div>
             </div>
             <div className="col-md-12">
               <div className="mt-3 mb-3">
-                <textarea
-                  className="form-control form-control_gray"
-                  placeholder="Order Notes (optional)"
-                  cols="30"
-                  rows="8"
-                  name="note"
-                  onChange={handleChange}
-                  value={ formData.note }
-                ></textarea>
+                <textarea className="form-control form-control_gray" placeholder="Order Notes (optional)" cols="30" rows="8" name="note" onChange={handleChange} value={ formData.note } ></textarea>
               </div>
             </div>
             {createAccount && <div className="col-md-12">
               <div className="form-floating my-3">
-                <input
-                  type="password"
-                  className="form-control"
-                  id="password"
-                  placeholder="Password *"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="password" className="form-control" id="password" placeholder="Password *" name="password" value={formData.password} onChange={handleChange}  />
                 <label htmlFor="checkout_email">Password *</label>
               </div>
             </div>}
+
+            {formData.shippingAdd == true ? (
+              <div className="billing-info__wrapper mt-4">
+                <h4>SHIPPING DETAILS</h4>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-floating my-3">
+                      <input type="text" className="form-control" id="checkout_first_name" placeholder="First Name" name="shippingAddress.first_name" value={formData.shippingAddress.first_name} onChange={handleChange} required />
+                      <label htmlFor="checkout_first_name">First Name</label>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-floating my-3">
+                      <input type="text" className="form-control" id="checkout_last_name" placeholder="Last Name" name="shippingAddress.last_name" value={formData.shippingAddress.last_name} onChange={handleChange} required />
+                      <label htmlFor="checkout_last_name">Last Name</label>
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                    <div className="search-field my-3">
+                      <div className={`form-label-fixed hover-container ${ idDDActive ? "js-content_visible" : "" }`}>
+                        <label htmlFor="country" className="form-label"> Country / Region* </label>
+                        <div className="js-hover__open">
+                          <input type="text" className="form-control form-control-lg search-field__actor" id="country" name="shippingAddress.country" value="Bahrain" readOnly placeholder="Bahrain"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                    <div className="form-floating mt-3 mb-3">
+                      <input type="text" className="form-control" id="checkout_street_address" placeholder="Address *" name="shippingAddress.area" value={formData.shippingAddress.area} onChange={handleChange} required />
+                      <label htmlFor="checkout_company_name"> Area / Mantaqa * </label>
+                    </div>
+                    <div className="form-floating mt-3 mb-3">
+                      <input type="text" className="form-control" id="checkout_street_address_2" placeholder="Building / Villa / Apartment" name="shippingAddress.building" value={formData.shippingAddress.building} onChange={handleChange} required />
+                      <label htmlFor="checkout_company_name"> Building / Villa / Apartment </label>
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                    <div className="form-floating mt-3 mb-3">
+                      <input type="text" className="form-control" id="checkout_region" placeholder="Region *" name="shippingAddress.region" value={formData.shippingAddress.region} onChange={handleChange} required />
+                      <label htmlFor="checkout_region"> Region * </label>
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                    <div className="form-floating my-3">
+                      <input type="email" className="form-control" id="checkout_email" placeholder="Your Mail *" name="shippingAddress.email" value={formData.shippingAddress.email} onChange={handleChange} required />
+                      <label htmlFor="checkout_email">Email Address *</label>
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                    <div className="form-floating my-3">
+                      <input type="text" pattern="^\d{8}$" title="Only positive integers allowed" className="form-control" id="checkout_phone" placeholder="Eg. 50000000 *" name="shippingAddress.mobile" value={formData.shippingAddress.mobile} onChange={handleChange} required />
+                      <label htmlFor="checkout_phone">Phone (Eg. 50000000)*</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
           </div>
           <div className="checkout__totals-wrapper">
             <div className="sticky-content">
               <div className="checkout__totals">
                 <h3>Your Order</h3>
-                <table className="checkout-cart-items">
-                  <thead>
-                    <tr>
-                      <th>PRODUCT</th>
-                      <th>SUBTOTAL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cartProducts.map((elm, i) => (
-                      <tr key={i}>
-                        <td>
-                          {he.decode(elm.product_name)} x {elm.quantity}
-                        </td>
-                        {subTotalPrice(elm)}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="cart-items-collapse">
+                  <table className="checkout-cart-items">
+                    <thead> <tr> <th>PRODUCT</th> <th>SUBTOTAL</th> </tr> </thead>
+                    <tbody> {cartProducts.map((elm, i) => ( <tr key={i}> <td> {he.decode(elm.product_name)} x {elm.quantity} </td> {subTotalPrice(elm)} </tr> ))} </tbody>
+                  </table>
+                </div>
                 <table className="checkout-totals">
-                  <tbody>
-                    <tr>
-                      <th>SUBTOTAL</th>
-                      <td>{totalPrice.toFixed(currency.decimals)}{ currency.symbol }</td>
-                    </tr>
-                    <tr>
-                      <th>SHIPPING</th>
-                      <td>{freeShippingFlag ? 'You Got Free Shipping' : `Shipping Cost: ${ shippingServiceCharges[0].price }${ currency.symbol}`}</td>
-                    </tr>
-                    {/* <tr>
-                      <th>SERVICE FEE</th>
-                      <td>{ shippingServiceCharges[1].price }{ currency.symbol }</td>
-                    </tr> */}
+                  <tbody> 
+                    <tr> <th>SUBTOTAL</th> <td>{totalPrice.toFixed(currency.decimals)}{ currency.symbol }</td> </tr>
+                    <tr> <th>SHIPPING</th> <td>{freeShippingFlag ? 'You Got Free Shipping' : `Shipping Cost: ${ shippingServiceCharges[0].price }${ currency.symbol}`}</td> </tr>
                     <tr>
                       <th>TOTAL</th>
-                      <td>{!freeShippingFlag ? (parseFloat(shippingServiceCharges[0].price) + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals) :
-                          (0 + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals)}{ currency.symbol } (includes { !freeShippingFlag ? (
-                          (
-                            (parseFloat(shippingServiceCharges[0].price) - parseFloat(shippingServiceCharges[0].price) / (1 + parseFloat(vatTax.percentage / 100))) +
+                      <td>{!freeShippingFlag ? 
+                      (parseFloat(shippingServiceCharges[0].price) + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals) : 
+                      (0 + totalPrice + parseFloat(shippingServiceCharges[1].price)).toFixed(currency.decimals)}{ currency.symbol } 
+                      (includes { !freeShippingFlag ? (
+                          ((parseFloat(shippingServiceCharges[0].price) - parseFloat(shippingServiceCharges[0].price) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(totalPrice) - parseFloat(totalPrice) / (1 + parseFloat(vatTax.percentage / 100))) +
                             (parseFloat(shippingServiceCharges[1].price) - parseFloat(shippingServiceCharges[1].price) / (1 + parseFloat(vatTax.percentage / 100)))
                           ).toFixed(currency.decimals)) : (
-                          (
-                            0 +
-                            (parseFloat(totalPrice) - parseFloat(totalPrice) / (1 + parseFloat(vatTax.percentage / 100))) +
-                            (parseFloat(shippingServiceCharges[1].price) - parseFloat(shippingServiceCharges[1].price) / (1 + parseFloat(vatTax.percentage / 100)))
-                          ).toFixed(currency.decimals)) }{ currency.symbol } VAT)</td>
+                          ( 0 + (parseFloat(totalPrice) - parseFloat(totalPrice) / (1 + parseFloat(vatTax.percentage / 100))) + (parseFloat(shippingServiceCharges[1].price) - parseFloat(shippingServiceCharges[1].price) / (1 + parseFloat(vatTax.percentage / 100)))).toFixed(currency.decimals)) }{ currency.symbol } VAT)</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+              
               {/* <div > */}
                 {/* <form
                   onSubmit={applyCoupon}
@@ -1060,50 +902,13 @@ export default function Checkout() {
               {/* </div> */}
               <div className="checkout__payment-methods">
                 <div className="form-check">
-                  <input
-                    className="form-check-input form-check-input_fill"
-                    type="radio"
-                    name="checkout_payment_method"
-                    id="checkout_payment_method_3"
-                    value={'cod'}
-                    checked={selectedOption === 'cod'}
-                    onChange={handleRadioChange}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="checkout_payment_method_3"
-                  >
-                    Cash on delivery
-                    {/* <span className="option-detail d-block">
-                      Phasellus sed volutpat orci. Fusce eget lore mauris
-                      vehicula elementum gravida nec dui. Aenean aliquam varius
-                      ipsum, non ultricies tellus sodales eu. Donec dignissim
-                      viverra nunc, ut aliquet magna posuere eget.
-                    </span> */}
-                  </label>
+                  <input className="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_3" value={'cod'} checked={selectedOption === 'cod'} onChange={handleRadioChange} />
+                  <label className="form-check-label" htmlFor="checkout_payment_method_3" > Cash on delivery </label>
                 </div>
                 <div className="form-check">
-                  <input
-                    className="form-check-input form-check-input_fill"
-                    type="radio"
-                    name="checkout_payment_method"
-                    id="checkout_payment_method_4"
-                    value={'tap'}
-                    checked={selectedOption === 'tap'}
-                    onChange={handleRadioChange}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="checkout_payment_method_4"
-                  >
+                  <input className="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_4" value={'tap'} checked={selectedOption === 'tap'} onChange={handleRadioChange} />
+                  <label className="form-check-label" htmlFor="checkout_payment_method_4" > 
                     Tap - Credit / Debit Card
-                    {/* <Image
-                      src="/assets/images/paymentGateway/tap-logo-white.svg"
-                      width="100"
-                      height="20"
-                      style={{ color: '#000' }}
-                      alt="Cropped Faux leather Jacket"
-                    /> */}
                     <svg  width="100" height="20" xmlns="http://www.w3.org/2000/svg" id="Layer_1" viewBox="0 0 1679.5 696.5">
                       <path style={{ fill: '#000', 'stroke-width': '0px' }} class="cls-1" d="M790.2,41h-52.6v105.3h-.1v44.9h.1v206.4c0,20.1.7,36,2.1,47.7,1.4,11.7,4.8,23.3,10.2,34.7,11.9,23.6,32.2,38.9,60.7,45.8,28.6,6.9,60.5,6.7,95.8-.5v-46c-29.2,4.7-52.6,5.3-70,1.8s-30.2-12.7-38.4-27.7c-3.7-6.6-6-13.8-6.8-21.9s-1.1-19.7-.9-34.9v-205.3h116.1v-44.9s-76.8,1.2-116.1,1.2h-13.7c-3.7,0-10,.5-10-1,0-7,23.7-2,23.7-11V41h-.1Z"/>
                       <path style={{ fill: '#000', 'stroke-width': '0px' }} class="cls-1" d="M1264.6,246.4c-1.6-13-4.7-24.7-9.1-35.3-10.1-24.3-27.1-43-51.2-56-24.1-13-53.6-19.5-88.4-19.5s-75.6,9.3-101.9,27.9c-26.3,18.6-43.9,45-52.8,79.1l51.3,15.1c6.8-24.8,19-43.1,36.7-54.9,17.7-11.8,39.6-17.7,65.8-17.7s44.6,3.9,59.5,11.8c14.9,7.8,25.5,19.8,31.9,35.8,5.7,14.2,8.6,31.8,9,53.1-4.8.7-9.8,1.3-14.7,1.9-39.5,5.2-70.8,9.4-93.7,12.8-22.9,3.4-44.2,7.5-63.9,12.5-30.2,7.9-53.8,20.9-70.7,39-17,18-25.4,41.9-25.4,71.6s4.9,39.4,14.7,56.5,24.5,30.6,44,40.7c19.6,10,43.1,15.1,70.7,15.1s47.8-3.7,68.2-11.2c20.5-7.5,38.2-18.6,53.2-33.5,8.5-8.4,15.9-17.9,22.4-28.5l8.4-15.2c11.6,2.7-8.4,17.2-8.4,49s0,28.9,0,28.9h47v-235.1c0-16.1-.8-30.7-2.5-43.7h0l-.1-.2ZM1213.8,362.4c-.7,10.5-2.1,20.4-4.2,29.5-3.5,19.2-10.8,36.2-21.8,51-11,14.9-25.5,26.4-43.5,34.7-18,8.3-38.6,12.5-61.8,12.5s-35-3.2-47.4-9.5c-12.4-6.3-21.5-14.5-27.2-24.6-5.7-10-8.6-20.9-8.6-32.6,0-18.7,6.1-33.4,18.2-44,12.2-10.7,27.7-18.6,46.7-24,18-4.9,38.4-9,61.2-12.3,22.8-3.3,51.2-6.9,85.1-10.9l4.2-.5c0,11.5-.4,21.8-1,30.7h.1Z"/>
@@ -1117,17 +922,19 @@ export default function Checkout() {
                   Your personal data will be used to process your order, support
                   your experience throughout this website, and for other
                   purposes described in our
-                  <Link href={`/${locale}/privacy`} target="_blank">
-                    privacy policy
-                  </Link>
+                  <Link href={`/${locale}/privacy`} target="_blank"> privacy policy </Link>
                   .
-                </div><br/>
-                <input type="checkbox" required/>&nbsp;&nbsp;
-                  <span>I have read and agree to the website <Link href="https://www.ahmedalmaghribi.com/terms-and-condition/" target="_blank">terms and conditions</Link> </span>*
+                </div>
+                <br/>
+                <label ref={termsRef} className={`d-flex align-items-center form-check-label ${termsError ? 'text-danger' : ''}`} style={termsError ? { border: '1px solid #dc3545', padding: '10px', borderRadius: '5px', backgroundColor: 'rgba(220, 53, 69, 0.05)' } : {}}>
+                  <input type="checkbox"  checked={termsChecked} onChange={(e) => { setTermsChecked(e.target.checked); setTermsError(false); }} className="form-check-input mt-0 me-2" />
+                  <span>I have read and agree to the website <Link href={`/${locale}/terms`} target="_blank" style={{ textDecoration: 'underline' }}>terms and conditions</Link> *</span>
+                </label>
               </div>
-              {error ? <div style={{ color: 'red' }}>{error}</div> : <div style={{ color: 'green' }}>{success}</div>}
+              {error ? <div id="general_error_msg" style={{ color: 'red' }}>{error}</div> : <div style={{ color: 'green' }}>{success}</div>}
+
               <button
-                className="btn btn-primary w-100 text-uppercase"
+                className="btn btn-primary w-100 text-uppercase btn-checkout"
                 type="submit"
                 disabled={isLoading}
               >
@@ -1138,228 +945,6 @@ export default function Checkout() {
         </div>
       {/* </form> */}
 
-      {formData.shippingAdd == true ? (
-        // <form className="col-md-8" onSubmit={(e) => e.preventDefault()}>
-          <div className="checkout-form">
-            <div className="billing-info__wrapper">
-              <h4>SHIPPING DETAILS</h4>
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-floating my-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="checkout_first_name"
-                      placeholder="First Name"
-                      name="shippingAddress.first_name"
-                      value={formData.shippingAddress.first_name}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_first_name">First Name</label>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-floating my-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="checkout_last_name"
-                      placeholder="Last Name"
-                      name="shippingAddress.last_name"
-                      value={formData.shippingAddress.last_name}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_last_name">Last Name</label>
-                  </div>
-                </div>
-                <div className="col-md-12">
-                  <div className="search-field my-3">
-                    <div
-                      className={`form-label-fixed hover-container ${
-                        idDDActive ? "js-content_visible" : ""
-                      }`}
-                    >
-                      <label htmlFor="country" className="form-label">
-                        Country / Region*
-                      </label>
-                      <div className="js-hover__open">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg search-field__actor"
-                          id="country"
-                          name="shippingAddress.country"
-                          value="Bahrain"
-                          readOnly
-                          placeholder="Bahrain"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-12">
-                  <div className="form-floating mt-3 mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="checkout_street_address"
-                      placeholder="Address *"
-                      name="shippingAddress.area"
-                      value={formData.shippingAddress.area}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_company_name">
-                      Area / Mantaqa *
-                    </label>
-                  </div>
-                  <div className="form-floating mt-3 mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="checkout_street_address_2"
-                      placeholder="Building / Villa / Apartment"
-                      name="shippingAddress.building"
-                      value={formData.shippingAddress.building}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_company_name">
-                      Building / Villa / Apartment
-                    </label>
-                  </div>
-                </div>
-
-                {/* <div className="col-md-12">
-                  <div className="search-field my-3">
-                    <div
-                      className={`form-label-fixed hover-container ${
-                        idDDActive ? "js-content_visible" : ""
-                      }`}
-                    >
-                      <label htmlFor="search-dropdown" className="form-label">
-                        Emirates*
-                      </label>
-                      <div className="js-hover__open">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg search-field__actor search-field__arrow-down"
-                          id="search-dropdown"
-                          name="shippingAddress.emirates"
-                          value={formData.shippingAddress.emirates}
-                          readOnly
-                          placeholder="Select Emirate..."
-                          onClick={() => setIdDDActive((pre) => !pre)}
-                          required
-                        />
-                      </div>
-                      <div className="filters-container js-hidden-content mt-2">
-                        <div className="search-field__input-wrapper">
-                          <input
-                            type="text"
-                            className="search-field__input form-control form-control-sm bg-lighter border-lighter"
-                            placeholder="Search"
-                            onChange={(e) => {
-                              setSearchQuery(e.target.value);
-                            }}
-                          />
-                        </div>
-                        <ul className="search-suggestion list-unstyled">
-                          {countries
-                            .filter((elm) =>
-                              elm
-                                .toLowerCase()
-                                .includes(searchQuery.toLowerCase())
-                            )
-                            .map((elm, i) => (
-                              <li
-                              id="shippingAddress.emirates"
-                                onClick={(e) => {
-                                  handleEmiratesChange(e, elm);
-                                  setIdDDActive(false);
-                                }}
-                                key={i}
-                                className="search-suggestion__item js-search-select"
-                              >
-                                {elm}
-                              </li>
-                            ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
-
-                <div className="col-md-12">
-                  <div className="form-floating mt-3 mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="checkout_region"
-                      placeholder="Region *"
-                      name="shippingAddress.region"
-                      value={formData.shippingAddress.region}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_region">
-                      Region *
-                    </label>
-                  </div>
-                  {/* <div className="form-floating mt-3 mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="checkout_street_address_2"
-                      placeholder="Building / Villa / Apartment"
-                      name="shippingAddress.building"
-                      value={formData.shippingAddress.building}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_company_name">
-                      Building / Villa / Apartment
-                    </label>
-                  </div> */}
-                </div>
-
-                <div className="col-md-12">
-                  <div className="form-floating my-3">
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="checkout_email"
-                      placeholder="Your Mail *"
-                      name="shippingAddress.email"
-                      value={formData.shippingAddress.email}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_email">Email Address *</label>
-                  </div>
-                </div>
-                <div className="col-md-12">
-                  <div className="form-floating my-3">
-                    <input
-                      type="text"
-                      pattern="^\d{8}$"
-                      title="Only positive integers allowed"
-                      className="form-control"
-                      id="checkout_phone"
-                      placeholder="Eg. 50000000 *"
-                      name="shippingAddress.mobile"
-                      value={formData.shippingAddress.mobile}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="checkout_phone">Phone (Eg. 50000000)*</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-      ) : null}
       </form>
       ) : (
         <>

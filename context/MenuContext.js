@@ -31,6 +31,7 @@ export function MenuProvider({ children }) {
      
           // Handle response if necessary
           const data = await response.json();
+          console.log(data, "temp")
           if(data && data.productCategories.length > 0) {
             setError(null);
             setCategoriesSubCategories(data.productCategories);

@@ -1,0 +1,179 @@
+/* design tokens */
+:root {
+	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+	--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.account-modal {
+	font-family: Kanit-Regular !important;
+}
+
+/* container & alignment */
+.hover-account {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+/* dropdown card */
+.account-hover-menu {
+	position: absolute;
+	top: calc(100% + 1px);
+	right: 0;
+	min-width: 240px;
+	background: #fff;
+	border: 1px solid #eee;
+	border-radius: 10px;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+	overflow: hidden;
+
+	/* animation + hover/focus behavior */
+	opacity: 0;
+	transform: scale(0.95) translateY(-10px);
+	transform-origin: top right;
+	pointer-events: none;
+	transition: 
+		opacity 200ms var(--ease-out), 
+		transform 250ms var(--ease-out);
+	transition-delay: 150ms; /* Grace period when mouse leaves icon */
+	z-index: 1000;
+
+	/* Modern starting style for entry */
+	@starting-style {
+		opacity: 0;
+		transform: scale(0.95) translateY(-10px);
+	}
+}
+
+.hover-account:hover .account-hover-menu,
+.hover-account:focus-within .account-hover-menu {
+	opacity: 1;
+	transform: scale(1) translateY(0);
+	pointer-events: auto;
+	transition-delay: 0ms; /* Instant appearance when hovering in */
+}
+
+/* 
+   Invisible Bridge:
+   Extends the hover area 20px upwards to catch the mouse 
+   as it moves from the icon to the menu.
+*/
+.account-hover-menu::after {
+	content: "";
+	position: absolute;
+	top: -20px;
+	left: 0;
+	right: 0;
+	height: 20px;
+	background: transparent;
+	z-index: -1;
+}
+
+/* little arrow */
+.account-hover-menu::before {
+	content: "";
+	position: absolute;
+	top: -6px;
+	right: 18px;
+	width: 12px;
+	height: 12px;
+	background: #fff;
+	border-left: 1px solid #eee;
+	border-top: 1px solid #eee;
+	transform: rotate(45deg);
+}
+
+/* list + rows */
+.account-hover-menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 8px 0;
+	max-height: 70vh;
+	overflow: auto;
+}
+
+.account-hover-menu .menu-title {
+	padding: 12px 18px;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #000000;
+	background: #fcfcfc;
+	border-bottom: 1px solid #f0f0f0;
+	font-weight: 700;
+}
+
+.account-hover-menu li {
+	margin: 2px 6px;
+	border-radius: 6px;
+	overflow: hidden;
+	
+	/* Staggered entrance on parent hover */
+	opacity: 0;
+	transform: translateY(4px);
+	transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+
+.hover-account:hover .account-hover-menu li {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Cascading stagger delays */
+.account-hover-menu li:nth-child(1) { transition-delay: 50ms; }
+.account-hover-menu li:nth-child(2) { transition-delay: 80ms; }
+.account-hover-menu li:nth-child(3) { transition-delay: 110ms; }
+.account-hover-menu li:nth-child(4) { transition-delay: 140ms; }
+.account-hover-menu li:nth-child(5) { transition-delay: 170ms; }
+.account-hover-menu li:nth-child(6) { transition-delay: 200ms; }
+.account-hover-menu li:nth-child(n+7) { transition-delay: 230ms; }
+
+.account-hover-menu li a {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 14px;
+	font-size: 14px;
+	color: #444;
+	text-decoration: none;
+	transition: background 150ms var(--ease-out), transform 100ms var(--ease-out);
+}
+
+/* Press feedback */
+.account-hover-menu li a:active {
+	transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.account-hover-menu li:hover a {
+		background: #f8f9fa;
+		color: #000;
+	}
+}
+
+/* active state (based on current route) */
+.account-hover-menu li.active a {
+	background: #fffbf2;
+	color: #a87a35;
+	font-weight: 600;
+	border-left: 3px solid #a87a35;
+	padding-left: 11px;
+}
+
+/* divider + logout */
+.account-hover-menu .divider {
+	height: 1px;
+	background: #eeeeee;
+	margin: 8px 0;
+	opacity: 0.6; /* Slight transparency for the divider */
+}
+
+.account-hover-menu .logout a {
+	color: #dc3545;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.account-hover-menu .logout a:hover {
+		background: #fff5f5;
+	}
+}

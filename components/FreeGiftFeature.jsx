@@ -391,14 +391,14 @@ const FreeGiftFeature = ({ couponData }) => {
   if (loading) return <></>;
 
   return (
-    <div className="my-4 px-4">
+    <div className="my-3 px-4">
       {activeThreshold ? (
         <div>
           {activeThreshold.gifts.length === 1 ? (
             // Render single gift card
             <h4 className="font-bold mb-4">
               <span className='t-subtitle' style={{ color:'#198754',fontSize: '18px', lineHeight: '1.5rem',textAlign: 'center' }}>
-                {thresholds.length > 0 && activeThreshold.name} :- You've Earned a Free Gift!
+                 You've Earned a Free Gift!
               </span>
             </h4>
           ) : (
@@ -406,7 +406,7 @@ const FreeGiftFeature = ({ couponData }) => {
             <>
               <h4 className="font-bold mb-4">
                 <span className='t-subtitle' style={{ color:'#198754',fontSize: '18px', lineHeight: '1.5rem',textAlign: 'center' }}>
-                  {thresholds.length > 0 && activeThreshold.name} :- You've Earned a Free Gift – Choose 1 Perfume From Below!
+                   You've Earned a Free Gift – Choose 1 Perfume From Below!
                 </span>
               </h4>
               <Swiper
@@ -430,16 +430,17 @@ const FreeGiftFeature = ({ couponData }) => {
                           // console.log('Button clicked for:', product.product_id);
                           handleGiftSelect(product);
                         }}
-                        className={`pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside ${
+                        className={`pc__atc btn btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside ${
                           selectedGift === product.product_id
-                            ? 'bg-blue-500'
-                            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                            ? 'bg-success text-white'
+                            : 'bg-white text-dark shadow-sm'
                         }`}
+                        style={{ bottom: '10px', left: '10px', right: '10px', opacity: '1', visibility: 'visible', transform: 'none' }}
                         disabled={selectedGift === product.product_id}
                         aria-label={`Select ${he.decode(product.product_name)} as free gift`}
                         key={product.product_id}
                       >
-                        {selectedGift === product.product_id ? 'Already Selected' : 'Select Gift'}
+                        {selectedGift === product.product_id ? 'Selected' : 'Select Gift'}
                       </button>
                     </div>
                     <div className="pc__info position-relative">
@@ -449,41 +450,45 @@ const FreeGiftFeature = ({ couponData }) => {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <div className="products-carousel__prev ssp11 position-absolute">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M22 12H2M2 12L8 6M2 12L8 18"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+              <div className="products-carousel__prev ssp11 position-absolute top-50 start-0 translate-middle-y z-3 ms-2">
+                <button className="btn btn-white shadow-sm rounded-circle d-flex align-items-center justify-content-center p-0 border" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 18L9 12L15 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
               </div>
-              <div className="products-carousel__next ssn11 position-absolute">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2 12H22M22 12L16 6M22 12L16 18"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+              <div className="products-carousel__next ssn11 position-absolute top-50 end-0 translate-middle-y z-3 me-2">
+                <button className="btn btn-white shadow-sm rounded-circle d-flex align-items-center justify-content-center p-0 border" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 18L15 12L9 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
               </div>
-              <div className="products-pagination mt-4 text-center js-products-pagination"></div>
+              <div className="products-pagination text-center js-products-pagination"></div>
             </>
           )}
         </div>

@@ -75,7 +75,7 @@ function DiscountGrid({ title, onlyDiscounted = false }) {
       const discounted = (
         elm.price -
         (elm.price * elm.discount.value) / 100
-      ).toFixed(2);
+      ).toFixed(currency.decimals);
       return (
         <>
           <span className="money price price-old">
@@ -93,7 +93,7 @@ function DiscountGrid({ title, onlyDiscounted = false }) {
             {elm.price}{currency.symbol}
           </span>
           <span className="money price price-sale">
-            {Number(elm.sale_price).toFixed(2)}{currency.symbol}
+            {Number(elm.sale_price).toFixed(currency.decimals)}{currency.symbol}
           </span>
         </>
       );

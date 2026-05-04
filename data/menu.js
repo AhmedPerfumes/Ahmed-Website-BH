@@ -220,35 +220,80 @@ export const collections = [
   // },
 ];
 
+// export const dashboardMenuItems = [
+//   {
+//     id: 1,
+//     href: "/account_dashboard",
+//     title: "Dashboard",
+//   },
+//   {
+//     id: 2,
+//     href: "/account_orders",
+//     title: "Orders",
+//   },
+//   {
+//     id: 3,
+//     href: "/account_edit_address",
+//     title: "Addresses",
+//   },
+//   {
+//     id: 4,
+//     href: "/account_edit",
+//     title: "Account Details",
+//   },
+//   {
+//     id: 5,
+//     href: "/account_wishlist",
+//     title: "Wishlist",
+//   },
+//   {
+//     id: 6,
+//     href: "/login_register",
+//     title: "Logout",
+//   },
+// ];
+
 export const dashboardMenuItems = [
   {
     id: 1,
     href: "/account_dashboard",
-    title: "Dashboard",
+    title: "Account Overview",
+    shortTitle: "Account",
+    icon: "#icon_user",
   },
   {
     id: 2,
     href: "/account_orders",
-    title: "Orders",
+    title: "My Purchases",
+    shortTitle: "Orders",
+    icon: "#icon_cart",
   },
   {
     id: 3,
     href: "/account_edit_address",
     title: "Addresses",
+    shortTitle: "Address",
+    icon: "#icon_shipping",
   },
   {
     id: 4,
-    href: "/account_edit",
-    title: "Account Details",
+    href: "/account_coupons",
+    title: "My Coupons",
+    shortTitle: "Coupons",
+    icon: "#icon_gift",
   },
   {
     id: 5,
-    href: "/account_wishlist",
-    title: "Wishlist",
+    href: "/account_loyalty",
+    title: "Loyalty Points",
+    shortTitle: "Loyalty",
+    icon: "#icon_star",
   },
   {
     id: 6,
     href: "/login_register",
     title: "Logout",
+    shortTitle: "Logout",
+    icon: "#icon_logout",
   },
 ];

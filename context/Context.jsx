@@ -2,6 +2,9 @@
 import { allProducts } from "@/data/products";
 import React, { useEffect } from "react";
 import { useContext, useState,useReducer } from "react";
+import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
+import { useMenu } from "./MenuContext";
 const dataContext = React.createContext();
 export const useContextElement = () => {
   return useContext(dataContext);
@@ -76,7 +79,8 @@ const cartReducer = (state, action) => {
 
 
 export default function Context({ children }) {
- const [state, dispatch] = useReducer(cartReducer, {
+  const t = useTranslations();
+  const [state, dispatch] = useReducer(cartReducer, {
     products: [],
     isProcessing: false,
   });
@@ -87,6 +91,9 @@ export default function Context({ children }) {
   const [orderDetails, setOrderDetails] = useState({});
   const [couponDataContext, setCouponDataContext] = useState(null);
   const[promotionsContext, setPromotionsContext] = useState([]);
+
+  const { shippingServiceCharges } = useMenu();
+  // console.log(shippingServiceCharges, "123123")
 
   useEffect(() => {
     const currentUTC = new Date();
@@ -147,7 +154,8 @@ export default function Context({ children }) {
     setTotalPrice(subtotal);
     
     // Oman static free shipping threshold (20) based on your original commented code
-    // setFreeShippingFlag(Number(subtotal.toFixed(3)) >= 20);
+    // const freeShippingThreshold = shippingServiceCharges?.[3]?.price ?? 15;
+    setFreeShippingFlag(Number(subtotal.toFixed(3)) >= 15);
   }, [state.products, couponDataContext, promotionsContext]);
 
   const addProductToQuickView = (product) => {
@@ -183,8 +191,16 @@ export default function Context({ children }) {
       payload: product
     });
 
-    document.getElementById("cartDrawerOverlay")?.classList.add("page-overlay_visible");
-    document.getElementById("cartDrawer")?.classList.add("aside_visible");
+    toast.success(t("Added to cart successfully"), {
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+    
+    // document.getElementById("cartDrawerOverlay")?.classList.add("page-overlay_visible");
+    // document.getElementById("cartDrawer")?.classList.add("aside_visible");
   };
 
   // 3. SAFE REMOVE GIFT USING REDUCER

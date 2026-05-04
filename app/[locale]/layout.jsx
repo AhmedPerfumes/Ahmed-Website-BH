@@ -28,6 +28,7 @@ import { routing } from "@/i18n/routing";
 import { FacebookPixelEvents } from "@/components/Metapixel";
 import Head from "next/head";
 import Script from "next/script";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
     title: "Buy Best Perfumes Online | Ahmed Al Maghribi Perfumes",
@@ -214,11 +215,12 @@ export default async function LocaleLayout({ children, params: { locale } }) {
           />
         </noscript>
                 <NextIntlClientProvider messages={messages}>
+                    <Toaster position="bottom right" reverseOrder={false} />
                     <Svgs />
-                    <Context>
+                    <MenuProvider>
+                      <Context>
                         <UserProvider>
                             <FacebookPixelEvents />
-                            <MenuProvider>
                                 <MobileHeader />
                                 {children}
                                 <MobileFooter1 />
@@ -232,9 +234,9 @@ export default async function LocaleLayout({ children, params: { locale } }) {
                                 <ProductDescription />
                                 <ProductAdditionalInformation />
                                 <ProductReviews />
-                            </MenuProvider>
                         </UserProvider>
-                    </Context>
+                      </Context>
+                    </MenuProvider>
                     <div className="page-overlay" id="pageOverlay"></div>
                     <ScrollTop />
                 </NextIntlClientProvider>
