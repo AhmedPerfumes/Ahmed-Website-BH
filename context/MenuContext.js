@@ -85,7 +85,6 @@ export function MenuProvider({ children }) {
           setIsLoading(false);
           console.error(error);
         } finally {
-            setError(null);
             setIsLoading(false);
         }
       }

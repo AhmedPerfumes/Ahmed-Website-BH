@@ -191,12 +191,33 @@ export default function Context({ children }) {
       payload: product
     });
 
-    toast.success(t("Added to cart successfully"), {
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
+    const imageUrl = product.image 
+      ? `${process.env.NEXT_PUBLIC_API_URL}storage/${product.image}` 
+      : `${process.env.NEXT_PUBLIC_API_URL}storage/${product?.images && JSON.parse(product.images)[0]}`;
+
+    toast.custom((toastObj) => (
+      <div className={`custom-cart-toast ${toastObj.visible ? 'animate-enter' : 'animate-leave'}`}>
+        <img src={imageUrl} alt={product.product_name} className="toast-image" />
+        <div className="toast-details">
+          <p className="toast-title">{product.product_name}</p>
+          <div className="toast-actions">
+            <button 
+              className="view-cart-btn" 
+              onClick={() => {
+                document.getElementById("cartDrawerOverlay")?.classList.add("page-overlay_visible");
+                document.getElementById("cartDrawer")?.classList.add("aside_visible");
+                toast.dismiss(toastObj.id);
+              }}
+            >
+              {t("View Cart")}
+            </button>
+          </div>
+        </div>
+        <button className="close-toast" onClick={() => toast.dismiss(toastObj.id)}>×</button>
+      </div>
+    ), {
+      duration: 3000,
+      position: 'bottom-right',
     });
     
     // document.getElementById("cartDrawerOverlay")?.classList.add("page-overlay_visible");

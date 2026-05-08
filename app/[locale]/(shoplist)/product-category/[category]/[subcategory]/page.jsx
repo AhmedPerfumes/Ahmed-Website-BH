@@ -141,15 +141,14 @@ const ShopPage8 = async ({ params }) => {
       <>
         <QuickView />
         <Header14 />
-        <Banner5 image={ data.image } mobile_image={data.mobile_image}/>
+        <Banner5 image={ data.image } mobile_image={data.mobile_image} categoryName={subcategory}/>
         <main className="page-wrapper pt-0">
           <Categories description={ data.description }/>
-          <div className="mb-4 pb-lg-3"></div>
           <Shop10 products={ data.products }/>
-          <div className="mb-4 pb-lg-3"></div>
+          {/* <div className="mb-4 pb-lg-3"></div> */}
           <CollapsibleDescription description={activeDescription}locale={locale} />
         </main>
-        <div className="mb-5 pb-xl-5"></div>
+        {/* <div className="mb-5 pb-xl-5"></div> */}
         <section className="d-none d-lg-block" style={{ height: "100%" }}>
           <Footer14 />
           

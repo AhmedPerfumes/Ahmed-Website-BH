@@ -32,8 +32,6 @@ export default function Shop10({ subCategories, products }) {
   const subcategory = pathname.split("/")[4];
   const t = useTranslations();
 
-  // console.log('0000111', JSON.stringify(subCategories), products);
-
   const { toggleWishlist, isAddedtoWishlist } = useContextElement();
   const { setQuickViewItem } = useContextElement();
   const { addProductToCart, isAddedToCartProducts } = useContextElement();
@@ -52,7 +50,6 @@ export default function Shop10({ subCategories, products }) {
   }, []);
 
   const sortCategory = (items, option) => {
-    // console.log('Cat', items, option);
     switch (option) {
       case 'popularity':
         return ([...items].map((item) => ({...item, products: [...item.products].sort((a, b) => b.sales - a.sales)})));
@@ -68,7 +65,6 @@ export default function Shop10({ subCategories, products }) {
   };
   
    const sortSubCategory = (items, option) => {
-    console.log('SubCat', items, option);
     switch (option) {
       case 'popularity':
         return [...items].sort((a, b) => b.sales - a.sales);
@@ -96,23 +92,23 @@ export default function Shop10({ subCategories, products }) {
     <section className="gift-shop shop-main container">
       <div id="next-section">
       </div>
-      <div className="d-flex justify-content-between mb-4 pb-md-2 border-bottom border-dark">
-        <div className="breadcrumb mb-0 d-none d-md-block flex-grow-1">
+      <div className="shop-toolbar">
+        <div className="breadcrumb mb-0">
           <BreadCumb category={ category } subcategory={ subcategory }/>
         </div>
         {/* <!-- /.breadcrumb --> */}
 
-        <div className="shop-acs d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
+        <div className="shop-acs">
           <select
-            className="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0"
-            aria-label="Sort Items"
+            className="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0 brand-select"
+            aria-label={t("Sort Items")}
             name="total-number"
             value={sortOption}
             onChange={handleSortChange}
           >
             {sortingOptions.map((option, index) => (
               <option key={index} value={option.value}>
-                {option.label}
+                {t(option.label)}
               </option>
             ))}
           </select>
@@ -133,8 +129,6 @@ export default function Shop10({ subCategories, products }) {
               </button>
             ))}
           </div> */}
-          {/* <!-- /.col-size --> */}
-
           {/* <div className="shop-asc__seprator mx-3 bg-light d-none d-lg-block order-md-1"></div> */}
 
           {/* <div className="shop-filter d-flex align-items-center order-0 order-md-3">
@@ -163,8 +157,7 @@ export default function Shop10({ subCategories, products }) {
       </div>
       {/* <!-- /.d-flex justify-content-between --> */}
 
-      <div className="products-grid">
-        <div className="mb-4 mb-xl-5"></div>
+      <div className="products-grid pt-4">
 
         {/* <h2 className="section-title fw-normal mb-3 pb-2 text-center">
           {subcategory == null ? "Oriental Fragrance" : ""}
@@ -175,20 +168,20 @@ export default function Shop10({ subCategories, products }) {
             {/* <div className="border-bottom"></div> */}
           { catProducts && catProducts.map((subCategory, ind) => {
               return (
-                <div key={ind}><div className="mb-4 mb-xl-5"></div>
-                <h2 className="section-title fw-normal mb-3 pb-2 text-center">
-                  { t(subCategory.name) }
-                </h2>
-                <Style2 category={ category } subcategory={ subCategory.name } products={ subCategory.products }/>
-                <div className="border-bottom"></div></div>
+                <div key={ind} className="product-section mb-5">
+                  <h2 className="section-title fw-normal mb-4 text-center text-uppercase" style={{ letterSpacing: '0.1em' }}>
+                    { t(subCategory.name) }
+                  </h2>
+                  <Style2 category={ category } subcategory={ subCategory.name } products={ subCategory.products }/>
+                </div>
               )
             })
           }
 
           { products &&
-                <><div className="mb-4 mb-xl-5"></div>
-                <Style2 category={ category } subcategory={ subcategory ? subcategory : null } products={ subCatProducts }/>
-                <div className="border-bottom"></div></>
+                <div className="product-section mb-5">
+                  <Style2 category={ category } subcategory={ subcategory ? subcategory : null } products={ subCatProducts }/>
+                </div>
           }
             {/* <div className="mb-4 mb-xl-5"></div>
 

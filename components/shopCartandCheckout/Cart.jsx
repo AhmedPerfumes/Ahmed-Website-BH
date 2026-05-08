@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useMenu } from '../../context/MenuContext';
 import Pagination1 from "../common/Pagination1";
 
@@ -13,6 +13,14 @@ export default function Cart() {
   const { cartProducts, setCartProducts, totalPrice, freeShippingFlag } = useContextElement();
   const [error, setError] = useState(null);
   const locale = useLocale();
+  const t = useTranslations();
+
+  // Calculate progress towards free shipping
+  const freeShippingThreshold = 15;
+  const progressPercentage = Math.min(
+    (totalPrice / freeShippingThreshold) * 100,
+    100
+  );
   // const [couponCode, setCouponCode] = useState("");
   // const [couponError, setCouponError] = useState(null);
   // const [couponSuccess, setCouponSuccess] = useState(null);
@@ -335,6 +343,32 @@ export default function Cart() {
                           Free shipping
                         </label>
                       </div> */}
+                      <div className="d-md-none">
+                        <div className="free-shipping-progress mt-2">
+                          {totalPrice < freeShippingThreshold ? (
+                            <div>
+                              <p>
+                                {t("free shipping message", {
+                                  amount: (freeShippingThreshold - totalPrice).toFixed(currency.decimals),
+                                  currency: currency.symbol,
+                                })}
+                              </p>
+                              <div className="progress">
+                                <div
+                                  className="progress-bar"
+                                  role="progressbar"
+                                  style={{ width: `${progressPercentage}%` }}
+                                  aria-valuenow={progressPercentage}
+                                  aria-valuemin="0"
+                                  aria-valuemax="100"
+                                ></div>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="success mb-0">{t("free shipping success")}</p>
+                          )}
+                        </div>
+                      </div>
                       {
                         freeShippingFlag ? <div className="form-check">
                           <label className="form-check-label" htmlFor="flat_rate">

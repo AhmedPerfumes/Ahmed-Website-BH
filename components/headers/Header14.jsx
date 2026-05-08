@@ -23,6 +23,7 @@ import { PersonOutline, PersonOutlineOutlined, PersonOutlineSharp } from "@mui/i
 export default function Header14() {
     const locale = useLocale();
     const containerRef = useRef(null);
+    const headerSearchRef = useRef(null);
     const { isLoggedIn } = useUser();
     const router = useRouter();
     const pathname = usePathname();
@@ -57,6 +58,35 @@ export default function Header14() {
         };
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const isOutsidePopup = containerRef.current && !containerRef.current.contains(event.target);
+            const isOutsideHeaderSearch = headerSearchRef.current && !headerSearchRef.current.contains(event.target);
+            
+            if (isOutsidePopup && isOutsideHeaderSearch) {
+                setIsPopupOpen(false);
+            }
+        };
+
+        const handleKeyEvents = (event) => {
+            if (event.key === "Escape") {
+                setIsPopupOpen(false);
+            }
+        };
+
+        if (isPopupOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("keydown", handleKeyEvents);
+            document.addEventListener("focusin", handleClickOutside); // Handle tabbing out
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyEvents);
+            document.removeEventListener("focusin", handleClickOutside);
+        };
+    }, [isPopupOpen]);
+
     const handleChange = (event) => {
         setSearchKeyWord(event.target.value);
     };
@@ -71,10 +101,6 @@ export default function Header14() {
     const handleLangChange = (e) => {
         router.push(pathname, { locale: e.target.value });
     };
-
-    if (isMenuLoading) return <div></div>;
-
-    if (error) return <div>{error}</div>;
 
     const swiperOptions = {
         autoplay: {
@@ -103,7 +129,7 @@ export default function Header14() {
     return (
         <>
             <header id="header" className={ pathname == "/" ? `header header_sticky bg-white ${ scrollDirection == "up" ? "header_sticky-active" : "" } ` : "header header_sticky position-sticky w-100 bg-white"} style={pathname == "/" ? {} : {}}>
-                <Swiper className="swiper-container js-swiper-slider slideshow type4 slideshow-navigation-white-sm swiper-container-fade swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events bg-black" {...swiperOptions} style={{ height: "3rem" }} >
+                <Swiper key={locale} dir={locale === "ar" ? "rtl" : "ltr"} className="swiper-container js-swiper-slider slideshow type4 slideshow-navigation-white-sm bg-black" {...swiperOptions} style={{ height: "3rem" }} >
                     {slideData1000.map((elm, i) => (
                         <SwiperSlide key={i} 
                             style={{ textTransform: "uppercase", fontSize: "12px",}}
@@ -132,13 +158,17 @@ export default function Header14() {
                                     placeholder={t("Search Products")}
                                     value={searchKeyWord}
                                     onChange={handleChange}
+                                    style={{
+                                        paddingLeft: locale === "ar" ? "2.5rem" : "0",
+                                        paddingRight: locale === "ar" ? "0" : "2.5rem",
+                                    }}
                                 />
-                                <button className="btn-icon search-popup__submit" type="submit">
+                                <button className="btn-icon search-popup__submit" type="submit" style={locale === "ar" ? { right: "auto", left: 0 } : {}}>
                                     <svg className="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" >
                                         <use href="#icon_search" />
                                     </svg>
                                 </button>
-                                <button className="btn-icon btn-close-lg search-popup__reset" type="reset" ></button>
+                                <button className="btn-icon btn-close-lg search-popup__reset" type="reset" style={locale === "ar" ? { right: "auto", left: 0 } : {}}></button>
                             </div>
 
                             <div className="search-popup__results">
@@ -169,7 +199,7 @@ export default function Header14() {
                                         </li>
                                     </ul>
                                 </div>
-                                <div className="search-result row row-cols-5"></div>
+                                {/* <div className="search-result row row-cols-5"></div> */}
                             </div>
                         </form>
                     </div>
@@ -208,12 +238,14 @@ export default function Header14() {
                                 </a>
                             </div>
                             <div className="header-tools d-flex align-items-center flex-1 justify-content-end me-2">
-                                <div className="header-search search-field d-none d-lg-flex  mx-4">
+                                <div ref={headerSearchRef} className="header-search search-field d-none d-lg-flex  mx-4">
                                     <form onSubmit={onSearch}>
                                         <input className="header-search__input w-100" type="text" name="search-keyword" placeholder={t("Search Products")} 
-                                            onClick={() => setIsPopupOpen((pre) => !pre) }
+                                            onFocus={() => setIsPopupOpen(true) }
+                                            onClick={() => setIsPopupOpen(true) }
                                             value={searchKeyWord}
                                             onChange={handleChange}
+                                            style={locale === "ar" ? { paddingLeft: 0, paddingRight: "1rem" } : {}}
                                         />
                                     </form>
                                 </div>
@@ -239,7 +271,7 @@ export default function Header14() {
                                     <svg className="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" >
                                         <use href="#icon_cart" />
                                     </svg>
-                                    <span className="cart-amount d-block position-absolute js-cart-items-count">
+                                    <span className="cart-amount d-block position-absolute js-cart-items-count" style={locale === "ar" ? { left: "auto", right: "1.375rem" } : {}}>
                                         <CartLength />
                                     </span>
                                 </a>

@@ -224,9 +224,7 @@ const ProductDetailsPage16 = async({ params }) => {
                     product={data}
                 />
         <main className="page-wrapper">
-          <div className="mb-md-1 pb-md-3"></div>
-          <SingleProduct11 category={ categoryName } subcategory={ subCategoryName } product={ data } />
-          <RelatedSlider relatedProds={ data.related_prods }/>
+          <SingleProduct11 category={ categoryName } subcategory={ subCategoryName } product={ data } relatedProds={ data.related_prods } />
         </main>
         <section className="d-none d-lg-block" style={{ height: "100%" }}>
           <Footer14 />
