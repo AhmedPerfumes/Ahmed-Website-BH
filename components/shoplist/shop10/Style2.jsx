@@ -122,7 +122,8 @@ export default function Style2({ category, subcategory, products: initialProduct
   const { addProductToQuickView } = useContextElement();
   const { addProductToCart, isAddedToCartProducts } = useContextElement();
 
-  const price = (elm) => {
+  const 
+  price = (elm) => {
     const currentUTC = new Date(); // Current UTC time
     const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
     const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
