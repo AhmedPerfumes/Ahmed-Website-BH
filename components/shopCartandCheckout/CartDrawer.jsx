@@ -5,13 +5,14 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import he from 'he';
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useMenu } from '../../context/MenuContext';
 import VideoPanel from "../VideoPanel";
 
 export default function CartDrawer() {
   const { isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
   const locale = useLocale();
+  const t = useTranslations();
   const [error, setError] = useState(null);
   const { cartProducts, setCartProducts, totalPrice } = useContextElement();
   const pathname = usePathname();
@@ -91,7 +92,7 @@ export default function CartDrawer() {
   }, [pathname]);
 
   // Calculate progress towards free shipping
-  const freeShippingThreshold = 20;
+  const freeShippingThreshold = 15;
   const progressPercentage = Math.min(
     (totalPrice / freeShippingThreshold) * 100,
     100
@@ -131,12 +132,12 @@ export default function CartDrawer() {
   return (
     <>
       <div
-        className="aside aside_right overflow-hidden cart-drawer "
+        className={`aside ${locale === "ar" ? "aside_left" : "aside_right"} overflow-hidden cart-drawer `}
         id="cartDrawer"
       >
         <div className="aside-header d-flex align-items-center">
           <h3 className="text-uppercase fs-6 mb-0">
-            SHOPPING BAG (
+            {t("SHOPPING BAG")} (
             <span className="cart-amount js-cart-items-count">
               {cartProducts.length}
             </span>{" "}
@@ -144,7 +145,7 @@ export default function CartDrawer() {
           </h3>
           <button
             onClick={closeCart}
-            className="btn-close-lg js-close-aside btn-close-aside ms-auto"
+            className={`btn-close-lg js-close-aside btn-close-aside ${locale === "ar" ? "me-auto" : "ms-auto"}`}
           ></button>
         </div>
         <h6 style={{ color: "red" }}>{error && error}</h6>
@@ -166,7 +167,7 @@ export default function CartDrawer() {
                   </div>
                   <div className="cart-drawer-item__info flex-grow-1">
                     <h6 className="cart-drawer-item__title fw-normal">
-                      {elm?.product_name && he.decode(elm.product_name)}
+                      {t(elm?.product_name && he.decode(elm.product_name))}
                     </h6>
                     {/* <p className="cart-drawer-item__option text-secondary">
                       Color: Yellow
@@ -222,7 +223,7 @@ export default function CartDrawer() {
           </div>
         ) : (
           <div className="fs-18 mt-5 px-5">
-            Your cart is empty. Start shopping!
+            {t("cart empty")}
           </div>
         )}
         <div className="cart-drawer-actions position-absolute start-0 bottom-0 w-100">
@@ -239,12 +240,14 @@ export default function CartDrawer() {
         <div className="d-flex-column justify-content-center d-flex d-md-none">
           <VideoPanel src="/assets/videos/popup video.mp4" section='sm_popup'/>
         </div> */}
-        <div className="free-shipping-progress mt-3">
+        <div className="free-shipping-progress mt-2">
               {totalPrice < freeShippingThreshold ? (
                 <div>
                   <p>
-                    Spend {(freeShippingThreshold - totalPrice).toFixed(currency.decimals)}{ currency.symbol } more to get free
-                    shipping! ⛟
+                    {t("free shipping message", {
+                      amount: (freeShippingThreshold - totalPrice).toFixed(currency.decimals),
+                      currency: currency.symbol,
+                    })}
                   </p>
                   <div className="progress">
                     <div
@@ -258,29 +261,29 @@ export default function CartDrawer() {
                   </div>
                 </div>
               ) : (
-                <h4 className="success">☆ Congratulations! You qualify for free shipping!</h4>
+                <p className="success mb-0">{t("free shipping success")}</p>
               )}
         </div>
           <hr className="cart-drawer-divider" />
           <div className="d-flex justify-content-between">
-            <h6 className="fs-base fw-medium">SUBTOTAL:</h6>
+            <h6 className="fs-base fw-medium">{t("SUBTOTAL")}:</h6>
             <span className="cart-subtotal fw-medium">{totalPrice.toFixed(currency.decimals)}{ currency.symbol }</span>
           </div>
           {cartProducts.length ? (
             <>
               <Link href={`/${locale}/shop-cart`} className="btn btn-light mt-3 d-block">
-                View Cart
+                {t("View Cart")}
               </Link>
               <Link
                 href={`/${locale}/shop-checkout`}
                 className="btn btn-primary mt-3 d-block"
               >
-                Checkout
+                {t("Checkout")}
               </Link>
             </>
           ) : (
             <Link href={`/${locale}/shop`} className="btn btn-light mt-3 d-block">
-              Explore shop
+              {t("Explore shop")}
             </Link>
           )}
         </div>

@@ -4,11 +4,17 @@
 
   @include media-breakpoint-down(xl) {
     flex-direction: column;
+    gap: 1.5rem;
   }
 
   .billing-info__wrapper {
     padding-top: 3.125rem;
     flex-grow: 1;
+
+    @include media-breakpoint-down(xl) {
+      padding-top: 1rem;
+      order: 2; // billing under totals
+    }
 
     .form-floating > label, .form-label-fixed > .form-label {
       color: $secondary;
@@ -16,14 +22,37 @@
   }
 
   .checkout__totals-wrapper {
+    @include media-breakpoint-down(xl) {
+      display: contents;
+    }
+
     .sticky-content {
       padding-top: 3.125rem;
+
+      @include media-breakpoint-up(xl) {
+        position: sticky;
+        top: 11.25rem;
+      }
+
+      @include media-breakpoint-down(xl) {
+        display: contents;
+      }
     }
 
     .btn-checkout {
       width: 100%;
       height: 3.75rem;
       font-size: 0.875rem;
+      transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+
+      &:active {
+        transform: scale(0.96);
+      }
+
+      @include media-breakpoint-down(xl) {
+        order: 4;
+        margin-top: 1rem;
+      }
     }
   }
 
@@ -35,6 +64,8 @@
     
     @include media-breakpoint-down(xl) {
       width: 100%;
+      padding: 1.25rem 1rem 1rem;
+      order: 3; // payment under billing
     }
 
     label {
@@ -65,18 +96,35 @@
 
 .checkout__totals {
   border: 1px solid #222;
-  margin-bottom: 1.25rem;
+  // margin-top: 1.25rem;
+  margin-bottom: 0;
   padding: 2.5rem 2.5rem 0.5rem;
   width: 26.25rem;
   
   @include media-breakpoint-down(xl) {
     width: 100%;
+    padding: 1.25rem 1rem 0.5rem;
+    border-color: #E5E7EB;
+    order: 1; // totals at the top
+  }
+
+  .cart-items-collapse {
+    @include media-breakpoint-down(xl) {
+      margin-bottom: 0.5rem;
+    }
   }
 
   > h3 {
     font-size: 1rem;
     text-transform: uppercase;
     margin-bottom: 1.25rem;
+
+    @include media-breakpoint-down(xl) {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+    }
   }
 
   table {
@@ -84,19 +132,76 @@
   }
 
   .checkout-cart-items {
+    @include media-breakpoint-down(xl) {
+      display: flex;
+      flex-direction: column;
+
+      thead {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      th:first-child, td:first-child {
+        width: 70%;
+        padding-right: 10px;
+      }
+
+      th:last-child, td:last-child {
+        width: 60%;
+        text-align: right;
+      }
+    }
+
     thead {
       th {
         border-bottom: 1px solid #e4e4e4;
         padding: 0.875rem 0;
         font-size: 0.875rem;
         font-weight: 500;
+
+        @include media-breakpoint-down(xl) {
+          font-size: 0.8125rem;
+          padding: 0.5rem 0;
+        }
       }
     }
 
     tbody {
+      @include media-breakpoint-down(xl) {
+        display: block;
+        max-height: 238px;
+        overflow-y: auto;
+        width: 100%;
+        padding-right: 0.5rem;
+        border-bottom: 1px solid #E5E7EB;
+
+        tr {
+          display: table;
+          width: 100%;
+          table-layout: fixed;
+        }
+
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
+        &::-webkit-scrollbar-track {
+          background-color: #f9f9f9;
+          border-radius: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #b3b3b3;
+          border-radius: 4px;
+        }
+      }
+
       td {
         padding: 0.40625rem 0;
         color: $secondary;
+
+        @include media-breakpoint-down(xl) {
+          font-size: 0.8125rem;
+        }
       }
 
       tr:first-child {
@@ -120,6 +225,11 @@
       padding: 0.875rem 0;
       font-size: 0.875rem;
       font-weight: 500;
+
+      @include media-breakpoint-down(xl) {
+        font-size: 0.8125rem;
+        padding: 0.5rem 0;
+      }
     }
 
     tr:last-child {

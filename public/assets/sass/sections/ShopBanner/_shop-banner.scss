@@ -1,11 +1,41 @@
 .shop-banner {
-  min-height: 18.5rem;
-
-  @include media-breakpoint-up(xl) {
-    min-height: 21.5rem;
+  // Responsive height instead of hardcoded fixed values
+  height: 50vh;
+  min-height: 350px;
+  max-height: 600px;
+  width: 100%;
+  
+  @include media-breakpoint-up(lg) {
+    height: 70vh;
+    min-height: 500px;
+    max-height: 800px;
   }
 
-  @include media-breakpoint-up(xl) {
-    min-height: 26.25rem;
+  .background-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #F5F0EB; // Warm beige placeholder
+    transition: opacity 0.4s ease-out;
   }
 }
+
+// Emil Kowalski inspired micro-animation
+.banner-fade-in {
+  opacity: 0;
+  animation: bannerFadeIn 0.5s ease-out forwards;
+}
+
+@keyframes bannerFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+

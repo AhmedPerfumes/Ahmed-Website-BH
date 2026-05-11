@@ -7,14 +7,40 @@
     flex-direction: row;
   }
 
+  // [Plan #1] Reorder totals above cart items on mobile
+  @include media-breakpoint-down(xl) {
+    gap: 1.5rem; // [Plan #4] Reduce section gap on mobile
+  }
+
   .cart-table__wrapper {
     padding-top: 3.125rem;
     flex-grow: 1;
+
+    // [Plan #8] Reduce top padding on mobile
+    @include media-breakpoint-down(xl) {
+      padding-top: 1rem;
+      padding-bottom: 5rem; // [Plan #7] Clearance for fixed checkout button
+    }
   }
 
   &__totals-wrapper {
+    // [Plan #1] Show totals first on mobile
+    @include media-breakpoint-down(xl) {
+      order: -1;
+    }
+
     .sticky-content {
       padding-top: 3.125rem;
+
+      @include media-breakpoint-up(xl) {
+        position: sticky;
+        top: 11.25rem;
+      }
+
+      // [Plan #8] Reduce top padding on mobile
+      @include media-breakpoint-down(xl) {
+        padding-top: 0;
+      }
     }
     
     .mobile_fixed-btn_wrapper {
@@ -37,18 +63,40 @@
           position: static;
         }
       }
+
+      // [Plan #2] Sticky checkout button at viewport bottom
+      @include media-breakpoint-down(xl) {
+        position: fixed;
+        bottom: 50px;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 0.75rem 1rem;
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        background: #fff;
+        border-top: 1px solid #F0F0F0;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+      }
     }
 
     .btn-checkout {
       width: 100%;
-      height: 3.75rem;
       font-size: 0.875rem;
+
+      // [Plan #2] Refined mobile checkout button
+      @include media-breakpoint-down(xl) {
+        font-weight: 700;
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+        border-radius: 8px;
+      }
     }
   }
 
   &__totals {
     border: 1px solid #222;
-    margin-bottom: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0;
     padding: 2.5rem 2.5rem 0.5rem;
     max-width: 100%;
 
@@ -56,10 +104,24 @@
       width: 26.25rem;
     }
 
+    // [Plan #3] Compact totals box on mobile
+    @include media-breakpoint-down(xl) {
+      padding: 1.25rem 1rem 0.5rem;
+      border-color: #E5E7EB;
+    }
+
     > h3 {
       font-size: 1rem;
       text-transform: uppercase;
       margin-bottom: 1.25rem;
+
+      // [Plan #3] Compact heading on mobile
+      @include media-breakpoint-down(xl) {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.75rem;
+      }
     }
 
     table {
@@ -70,6 +132,12 @@
         padding: 0.875rem 0;
         font-size: 0.875rem;
         font-weight: 500;
+
+        // [Plan #3] Compact table cells on mobile
+        @include media-breakpoint-down(xl) {
+          font-size: 0.8125rem;
+          padding: 0.5rem 0;
+        }
       }
 
       th {
@@ -82,6 +150,11 @@
           border-bottom: 0;
         }
       }
+    }
+
+    .form-check {
+      margin-bottom: 0;
+      padding-left: 0;
     }
   }
 
@@ -115,6 +188,11 @@
         display: block;
         padding: 1.25rem 0;
         border-bottom: 1px solid $border-color;
+
+        // [Plan #5] Tighter cart rows on mobile
+        @include media-breakpoint-down(md) {
+          padding: 0.75rem 0;
+        }
         transition: all .3s ease;
 
         @include media-breakpoint-up(md) {
@@ -167,6 +245,11 @@
         display: block;
         margin-left: 9.375rem;
 
+        // [Plan #6] Adjust margin for smaller images on mobile
+        @media (max-width: 767.98px) {
+          margin-left: 6rem;
+        }
+
         @include media-breakpoint-up(md) {
           padding: 1.875rem 0;
           display: table-cell;
@@ -177,6 +260,11 @@
           width: 9.375rem;
           float: left;
           margin-left: 0;
+
+          // [Plan #6] Smaller image column on mobile
+          @media (max-width: 767.98px) {
+            width: 5.5rem;
+          }
 
           @include media-breakpoint-up(md) {
             float: none;
@@ -289,6 +377,11 @@
       img {
         width: 7.5rem;
         height: auto;
+
+        // [Plan #6] Smaller product images on mobile
+        @media (max-width: 767.98px) {
+          width: 5rem;
+        }
       }
 
       &__detail {

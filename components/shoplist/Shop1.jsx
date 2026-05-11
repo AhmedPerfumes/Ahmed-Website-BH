@@ -5,7 +5,7 @@ import Star from "../common/Star";
 import ColorSelection from "../common/ColorSelection";
 import { Navigation } from "swiper/modules";
 import Pagination1 from "../common/Pagination1";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import BreadCumb from "./BreadCumb";
 import Link from "next/link";
 import { useContextElement } from "@/context/Context";
@@ -19,86 +19,181 @@ import {
 import he from 'he';
 import Slider from "rc-slider";
 
-import {useLocale, useTranslations} from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useMenu } from '@/context/MenuContext';
+import { 
+  removeSpecialCharactersAndAmp, 
+  sanitizeUrlParam, 
+  capitalizeEachWord, 
+  formatPrice 
+} from "@/utils/shop";
+
+const ProductPrice = ({ elm, currency }) => {
+  const currentUTC = new Date();
+  const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000));
+  const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
+  
+  const isDiscountActive = elm?.discount && 
+    new Date(current_date_time) >= new Date(elm.discount.start_date) && 
+    new Date(current_date_time) <= new Date(elm.discount.end_date);
+
+  if (isDiscountActive) {
+    let discountedPrice = elm.price;
+    if (elm.discount.discount_type === "percent") {
+      discountedPrice = elm.price - (elm.price / 100 * elm.discount.value);
+    } else if (elm.discount.discount_type === "amount") {
+      discountedPrice = elm.price - elm.discount.value;
+    }
+    return (
+      <>
+        <span className="money price price-old">{formatPrice(elm.price, currency)}</span> 
+        <span className="money price price-sale"> {formatPrice(discountedPrice, currency)}</span>
+      </>
+    );
+  } else if (elm?.sale_price) {
+    const salePrice = elm.price - (elm.price / 100 * elm.sale_price);
+    return (
+      <>
+        <span className="money price price-old">{formatPrice(elm.price, currency)}</span> 
+        <span className="money price price-sale"> {formatPrice(salePrice, currency)}</span>
+      </>
+    );
+  }
+  return <span className="money price">{formatPrice(elm.price, currency)}</span>;
+};
+
+const ProductCardSkeleton = () => (
+  <div className="product-card-wrapper">
+    <div className="product-card">
+      <div className="pc__img-wrapper" style={{ background: '#f0f0f0' }}></div>
+      <div className="pc__info" style={{ padding: '15px 10px' }}>
+        <div className="skeleton-bar" style={{ height: '14px', width: '70%', background: '#eee', margin: '0 auto 8px', borderRadius: '4px' }}></div>
+        <div className="skeleton-bar" style={{ height: '12px', width: '40%', background: '#f5f5f5', margin: '0 auto', borderRadius: '4px' }}></div>
+      </div>
+    </div>
+  </div>
+);
 
 export default function Shop1({ search }) {
   const { isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
   const locale = useLocale();
-  const { toggleWishlist, isAddedtoWishlist } = useContextElement();
+  const { 
+    toggleWishlist, 
+    isAddedtoWishlist, 
+    addProductToCart, 
+    isAddedToCartProducts,
+    cartProducts,
+    setCartProducts 
+  } = useContextElement();
+  const allViews = [2, 3, 4];
+  const smallViews = [1, 2];
+  const [availableViews, setAvailableViews] = useState(allViews);
   const [selectedColView, setSelectedColView] = useState(3);
   const t = useTranslations();
+  // Sorting function
+   const sortItems = (items, option) => {
+    // console.log(items, option);
+    switch (option) {
+      case 'popularity':
+        return [...items].sort((a, b) => b.sales - a.sales);
+      case 'date':
+        return [...items].sort((a, b) => b.product_id - a.product_id);
+      case 'price':
+        return [...items].sort((a, b) => a.price - b.price);
+      case 'price-desc':
+        return [...items].sort((a, b) => b.price - a.price);
+      default:
+        return items;
+    }
+  };
 
-  const { addProductToCart, isAddedToCartProducts } = useContextElement();
+  // 🔧 Only coerce when crossing breakpoints; preserve user's valid choice
+  useEffect(() => {
+    const updateViews = () => {
+      const isSmall = window.innerWidth < 992;
+
+      if (isSmall) {
+        setAvailableViews(smallViews);
+        setSelectedColView((prev) => (smallViews.includes(prev) ? prev : 2));
+      } else {
+        setAvailableViews(allViews);
+        setSelectedColView((prev) => (allViews.includes(prev) ? prev : 3));
+      }
+    };
+    updateViews();
+    window.addEventListener("resize", updateViews);
+    return () => window.removeEventListener("resize", updateViews);
+  }, []);
   
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1); // Pagination state
-  const limit = 6; // Number of items per page
-  const [totalPages, setTotalPages] = useState(null);
-  const [currentPage, setCurrentPage] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-  const offset = 2500;
+  const [totalItems, setTotalItems] = useState(0);
   const [sortOption, setSortOption] = useState('popularity');
-  const [price, setPrice] = useState([500, 0]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [maxPrice, setMaxPrice] = useState(500);
+  const [price, setPrice] = useState([0, 500]);
   const [isDDActive, setIsDDActive] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const ref = useRef(null);
+  const gridRef = useRef(null);
+
+  const filteredProducts = useMemo(() => {
+    const filtered = products.filter(product => {
+      const matchesPrice = product.price >= price[0] && product.price <= price[1];
+      const translatedName = t(he.decode(product.product_name)).toLowerCase();
+      const matchesSearch = translatedName.includes(searchTerm.toLowerCase());
+      return matchesPrice && matchesSearch;
+    });
+    return sortItems(filtered, sortOption);
+  }, [products, price, sortOption, searchTerm, t]);
 
   useEffect(() => {
-    const fetchData = async (page) => {
+    const fetchAll = async () => {
       setLoading(true);
-      // console.log(`${process.env.NEXT_PUBLIC_API_URL}api/allProducts?page=${page}&limit=${limit}&search=${search?.split('-').join(' ')}`);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/allProducts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          page: page,
-          limit: limit,
-          search: search ? search.split('-').join(' ') : '',
-        }),
-      });
-      const newData = await response.json();
-      const { data, total, to } = newData;
-      if (data.length === 0) {
-        setHasMore(false);
+      try {
+        const head = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}api/allProducts`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              page: 1,
+              limit: 1,
+              search: search?.replace(/-/g, " ") || "",
+            }),
+          }
+        );
+        const { total } = await head.json();
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}api/allProducts`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              page: 1,
+              limit: total,
+              search: search?.replace(/-/g, " ") || "",
+            }),
+          }
+        );
+        const { data = [] } = await res.json();
+        const norm = data.map((p) => ({ ...p, price: Number(p.price) }));
+        const calculatedMax = norm.length > 0 ? Math.ceil(Math.max(...norm.map(p => p.price))) : 500;
+        setMaxPrice(calculatedMax);
+        setPrice([0, calculatedMax]);
+        setProducts(sortItems(norm, sortOption));
+        setTotalItems(total);
+      } catch (e) {
+        console.error("Error fetching products:", e);
+      } finally {
+        setLoading(false);
       }
-      // console.log('Data', data);
-      // setProducts((prevData) => [...prevData, ...data]); // Append new data
-      setProducts((prevData) => {
-        // console.log('Products', ...prevData);
-        return sortItems([...prevData, ...data], sortOption)
-      });
-
-      const filtered = data.filter(product => {
-        // console.log(product.price,'>=',price[0],'&&',product.price,'<=',price[1]);
-        return product.price <= price[0] && product.price >= price[1]
-      });
-      // console.log('filteredData', filtered);
-
-      setFilteredProducts((prevDataa) => {
-        // console.log('FilteredProducts', ...prevData);
-        return sortItems([...prevDataa, ...filtered], sortOption)
-      });
-      setTotalPages(total);
-      setCurrentPage(to);
-      setLoading(false);
     };
+    fetchAll();
+  }, [search, sortOption]);
 
-    fetchData(page);
-  }, [page, limit]); // Fetch data on page change
 
-useEffect(() => {
-  const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop + offset < document.documentElement.offsetHeight || loading || !hasMore) return;
-    setPage((prevPage) => prevPage + 1); // Load next page
-  };
 
-  window.addEventListener('scroll', handleScroll);
-  return () => window.removeEventListener('scroll', handleScroll);
-}, [loading]); // Clean up on component unmount
+
 
 useEffect(() => {
   const handleClickOutside = (event) => {
@@ -117,63 +212,44 @@ useEffect(() => {
   };
 }, []);
 
-  function removeSpecialCharactersAndAmp(str) {
-    // Remove the specific word "&amp;"
-    let cleanedStr = str.replace(/&amp;/g, '');
+  const getProductQuantity = (id) => {
+    const item = cartProducts.find(p => p.product_id === id);
+    return item ? item.quantity : 0;
+  };
 
-    // Remove all special characters
-    cleanedStr = cleanedStr.replace(/[^\w\s-]/g, '');
-
-    // Replace multiple spaces with a single space and trim
-    cleanedStr = cleanedStr.replace(/\s+/g, ' ').trim();
-
-    return cleanedStr;
-  }
+  const updateQuantity = (id, delta) => {
+    setCartProducts(prev => {
+      return prev.map(p => {
+        if (p.product_id === id) {
+          const newQty = (p.quantity || 1) + delta;
+          return newQty > 0 ? { ...p, quantity: newQty } : null;
+        }
+        return p;
+      }).filter(Boolean);
+    });
+  };
 
   const isSubcategory = (category, subcategory) => {
-    let subcat = "";
-    if (subcategory != null) {
-      return subcat =
-        removeSpecialCharactersAndAmp(subcategory.subcategory_name)
-          .split(" ")
-          .join("-")
-          .toLowerCase();
-    } else {
-      if (removeSpecialCharactersAndAmp(category) == "gift-sets") {
-        console.log("gift-sets");
-        return subcat = "gift-sets";
-      } else if (removeSpecialCharactersAndAmp(category) == "hair-mist") {
-        console.log("hair-mist");
-        return subcat = "hair-mist";
-      } else {
-        console.log("extrait-de-parfum");
-        return subcat = "extrait-de-parfum";
-      }
-    }
+    if (subcategory) return sanitizeUrlParam(subcategory.subcategory_name);
+    
+    const categorySlug = removeSpecialCharactersAndAmp(category);
+    const categoryMap = {
+      "gift-sets": "gift-sets",
+      "hair-mist": "hair-mist",
+      "extrait-de-parfum": "extrait-de-parfum",
+      "xtrait-de-parfum": "extrait-de-parfum"
+    };
+
+    return categoryMap[categorySlug] || "online-exclusive";
   }
 
-   // Sorting function
-   const sortItems = (items, option) => {
-    // console.log(items, option);
-    switch (option) {
-      case 'popularity':
-        return [...items].sort((a, b) => b.sales - a.sales);
-      case 'date':
-        return [...items].sort((a, b) => b.product_id - a.product_id);
-      case 'price':
-        return [...items].sort((a, b) => a.price - b.price);
-      case 'price-desc':
-        return [...items].sort((a, b) => b.price - a.price);
-      default:
-        return items;
-    }
-  };
+   
 
   const handleSortChange = (event) => {
     // setLoading(true);
     setSortOption(event.target.value);
     setProducts(sortItems(products, event.target.value));
-    setFilteredProducts(sortItems(filteredProducts, event.target.value));
+    // setFilteredProducts(sortItems(filteredProducts, event.target.value));
     // setLoading(false);
   };
 
@@ -184,7 +260,7 @@ useEffect(() => {
     const filtered = products.filter(product => 
       product.price >= value[0] && product.price <= value[1]
     );
-    setFilteredProducts(filtered);
+    // setFilteredProducts(filtered);
   };
 
   // const discPrice = (elm) => {
@@ -204,37 +280,7 @@ useEffect(() => {
   //   }
   // };
 
-  const fmt = (v) => `${Number(v).toFixed(3)}${currency.symbol}`;
-  const discPrice = (elm) => {
-    const currentUTC = new Date(); // Current UTC time
-    const base = Number(elm.price);
-    const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
-    const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
-    console.log(elm,"elm");
-    
-    if(elm?.discount?.discount_type == "percent") {
-        const sale = base - (base * Number(elm.discount.value || 0)) / 100;
-        return (
-          <>
-            <span className="money price price-old">{fmt(base)}</span>{" "}
-            <span className="money price price-sale">{fmt(sale)}</span>
-          </>
-        );
-      } else if(elm?.discount?.discount_type == "amount") {
-        const sale = base - Number(elm.discount.value || 0);
-        return (
-          <>
-            <span className="money price price-old">{fmt(base)}</span>{" "}
-            <span className="money price price-sale">{fmt(sale)}</span>
-          </>
-        );
-    //   }  else if(elm?.sale_price) {
-    //   return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - (elm.price / 100 * elm.sale_price)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
-    }
-     else {
-      return <span className="money price">{elm?.price}{ currency.symbol }</span>;
-    }
-  };
+
 
 
 
@@ -286,103 +332,174 @@ useEffect(() => {
         {/* <!-- /.full-width_border --> */}
       </section>
       <div className="mb-4 pb-lg-3"></div>
-      <section className="shop-main container">
-        <div className="d-flex justify-content-between mb-4 pb-md-2">
-          <div className="breadcrumb mb-0 d-none d-md-block flex-grow-1">
+      <section className="gift-shop shop-main container" ref={gridRef}>
+        <div className="shop-toolbar">
+          <div className="breadcrumb mb-0">
             <BreadCumb category={null} subcategory={null}/>
-          </div>
-
-          <div className="shop-acs d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
-            <select
-              className="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0"
-              aria-label="Sort Items"
-              name="total-number"
-              value={sortOption}
-              onChange={handleSortChange}
-            >
-              {sortingOptions.map((option, index) => (
-                <option key={index} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-
-            {/* <div className="shop-asc__seprator mx-3 bg-light d-none d-md-block order-md-0"></div>
-
-            <div className="col-size align-items-center order-1 d-none d-lg-flex">
-              <span className="text-uppercase fw-medium me-2">View</span>
-              {itemPerRow.map((elm, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedColView(elm)}
-                  className={`btn-link fw-medium me-2 js-cols-size ${
-                    selectedColView == elm ? "btn-link_active" : ""
-                  } `}
-                >
-                  {elm}
-                </button>
-              ))}
-            </div> */}
-            {/* <!-- /.col-size --> */}
-
-            {/* <div className="shop-asc__seprator mx-3 bg-light d-none d-lg-block order-md-1"></div> */}
-
-            
-            {/* <div
-            id="accordion-filter-price"
-            className="accordion-collapse collapse show border-0"
-            aria-labelledby="accordion-heading-price"
-            data-bs-parent="#price-filters"
-          >
-            
-          </div> */}
-            {/* <!-- /.col-size d-flex align-items-center ms-auto ms-md-3 --> */}
-          <div
-            ref={ref}
-            className={`position-relative hover-container d-none d-lg-block  px-1 ${
-              isDDActive ? "js-content_visible" : ""
-            }`}
-          >
-            <div
-              onClick={() => setIsDDActive((pre) => !pre)}
-              className="js-hover__open"
-            >
-              <span className="multi-select__actor fw-medium text-uppercase js-no-update">
-                Price
-              </span>
+          </div>          <div className="shop-acs d-flex align-items-center gap-3 position-relative" ref={ref}>
+            <div className="search-field position-relative d-none d-md-block">
+              <input 
+                type="text" 
+                className="form-control border px-3 py-1" 
+                placeholder={t("Search Products")}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ 
+                  fontSize: '13px', 
+                  width: '200px', 
+                  backgroundColor: '#f8f9fa',
+                  border: '1px solid #eee',
+                  borderRadius: 0
+                }}
+              />
+              <svg 
+                className="position-absolute top-50 translate-middle-y" 
+                style={{ [locale === 'ar' ? 'left' : 'right']: '12px', opacity: 0.4 }} 
+                width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
             </div>
-            <div className="filters-container js-hidden-content mt-2">
-                <Slider
-                  range
-                  formatLabel={() => ``}
-                  max={500}
-                  min={0}
-                  defaultValue={price}
-                  onChange={(value) => handleFilterChange(value)}
-                  id="slider"
-                />
-                <div className="price-range__info d-flex align-items-center mt-2">
-                  <div className="me-auto">
-                    <span className="text-secondary">Min Price: </span>
-                    <span className="price-range__max">{price[0]}{ currency.symbol }</span>
-                  </div>
-                  <div>
-                    <span className="text-secondary">Max Price: </span>
-                    <span className="price-range__min">{price[1]}{ currency.symbol }</span>
+
+            <button 
+              className={`btn d-flex align-items-center text-uppercase fw-bold p-0 border-0 ${isDDActive ? 'text-dark' : 'text-secondary'}`}
+              onClick={() => setIsDDActive(!isDDActive)}
+              style={{ letterSpacing: '1px', fontSize: '14px' }}
+              dir="ltr"
+            >
+              <svg className="me-2" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 5h16M4 10h12M7 15h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+              {t("Filter")}
+            </button>
+
+            {isDDActive && (
+              <div 
+                className="filter-popup position-absolute top-100 mt-3 p-4 bg-white shadow-xl rounded-4 animate__animated animate__fadeInUp animate__faster" 
+                style={{ 
+                  zIndex: 1000, 
+                  width: '320px', 
+                  [locale === 'ar' ? 'left' : 'right']: 0,
+                  border: '1px solid #f0f0f0',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+                }}
+              >
+                {/* Sorting */}
+                <div className="mb-4">
+                  <label className="text-uppercase fw-bold text-secondary mb-3 d-block" style={{ fontSize: '10px', letterSpacing: '1.5px' }}>{t("Sort By")}</label>
+                  <select
+                    className="form-select border rounded-3 fs-sm py-2 px-3"
+                    value={sortOption}
+                    onChange={handleSortChange}
+                    style={{ fontSize: '14px', cursor: 'pointer' }}
+                  >
+                    {sortingOptions.map((option, index) => (
+                      <option key={index} value={option.value}>
+                        {t(option.label)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* View Selection */}
+                <div className="mb-4">
+                  <label className="text-uppercase fw-bold text-secondary mb-3 d-block" style={{ fontSize: '10px', letterSpacing: '1.5px' }}>{t("View")}</label>
+                  <div className="d-flex align-items-center gap-2">
+                    {availableViews.map((c, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedColView(c)}
+                        className={`flex-grow-1 py-2 rounded-3 border transition-all d-flex align-items-center justify-content-center ${selectedColView === c ? "bg-dark border-dark" : "bg-light border-light"}`}
+                        aria-label={`View ${c} columns`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke={selectedColView === c ? "#fff" : "#666"}
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          {Array.from({ length: c }).map((_, idx) => {
+                            const spacing = 16 / (c + 1);
+                            const x = 4 + spacing * (idx + 1);
+                            return <line key={idx} x1={x} y1="5" x2={x} y2="19" />;
+                          })}
+                        </svg>
+                      </button>
+                    ))}
                   </div>
                 </div>
-            </div>
+
+                {/* Price Range */}
+                <div className="mb-0">
+                  <label className="text-uppercase fw-bold text-secondary mb-4 d-block" style={{ fontSize: '10px', letterSpacing: '1.5px' }}>{t("Price Range")}</label>
+                  <div className="px-2">
+                    <Slider
+                      range
+                      max={maxPrice}
+                      min={0}
+                      defaultValue={price}
+                      value={price}
+                      onChange={(value) => handleFilterChange(value)}
+                    />
+                  </div>
+                  <div className="d-flex justify-content-between mt-3 pt-1 fw-medium" style={{ fontSize: '12px' }}>
+                    <div>
+                      <span className="text-secondary me-1">Min:</span>
+                      <span>{price[0]}{currency.symbol}</span>
+                    </div>
+                    <div>
+                      <span className="text-secondary me-1">Max:</span>
+                      <span>{price[1]}{currency.symbol}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-          {/* <!-- /.shop-acs --> */}
         </div>
         {/* <!-- /.d-flex justify-content-between --> */}
 
+        {/* Mobile Search Bar (Below toolbar) */}
+        <div className="d-md-none mb-4">
+          <div className="position-relative">
+            <input 
+              type="text" 
+              className="form-control border px-3 py-2 w-100" 
+              placeholder={t("Search Products")}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ 
+                fontSize: '14px', 
+                backgroundColor: '#f8f9fa',
+                border: '1px solid #eee',
+                borderRadius: 0
+              }}
+            />
+            <svg 
+              className="position-absolute top-50 translate-middle-y" 
+              style={{ [locale === 'ar' ? 'left' : 'right']: '12px', opacity: 0.4 }} 
+              width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            >
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+          </div>
+        </div>
+
         <div
-          className={`products-grid row row-cols-2 row-cols-md-3 row-cols-lg-${selectedColView}`}
+          className={`products-grid row row-cols-${Math.min(selectedColView, 2)} row-cols-md-${selectedColView}`}
           id="products-grid"
         >
-          {filteredProducts?.map((elm, i) => (
+          {loading ? (
+            Array.from({ length: 12 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))
+          ) : (
+            filteredProducts?.map((elm, i) => (
             <div key={i} className="product-card-wrapper">
               <div className="product-card mb-3 mb-md-4 mb-xxl-5">
                 <div className="pc__img-wrapper">
@@ -404,20 +521,22 @@ useEffect(() => {
                                 {JSON.parse(elm.images)[0] && <Image
                                   loading="lazy"
                                   src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(elm.images)[0]}`}
-                                  width="330"
-                                  height="400"
-                                  alt="img"
+                                  width={480}
+                                  height={600}
+                                  alt={elm.product_name || "img"}
                                   className="pc__img"
+                                  sizes="(max-width: 768px) 50vw, 33vw"
                                 />
                                 }
 
                                 {JSON.parse(elm.images)[1] && <Image
                                   loading="lazy"
                                   src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(elm.images)[1]}`}
-                                  width="330"
-                                  height="400"
-                                  alt="img"
+                                  width={480}
+                                  height={600}
+                                  alt={elm.product_name || "img"}
                                   className="pc__img pc__img-second"
+                                  sizes="(max-width: 768px) 50vw, 33vw"
                                 />
                                 }
                               </>
@@ -430,13 +549,13 @@ useEffect(() => {
                           </div>
                         )}
                         {elm.product_qty <= 0 ? (
-                          <div style={{ backgroundColor: '#dc3545' }} className="product-label text-uppercase text-white top-0 left-0 mt-2 mx-2">
-                            Out Of Stock
+                          <div className="product-label label--out-of-stock">
+                            {t("Out Of Stock")}
                           </div>
                         ) : (
                           elm.discount && (
-                            <div style={{ backgroundColor: '#198754' }} className="product-label text-uppercase text-white top-0 left-0 mt-2 mx-2">
-                              Sale {elm.discount.value}%
+                            <div className="product-label label--sale">
+                              {t("Sale")} {elm.discount.value}%
                             </div>
                           )
                         )}
@@ -468,21 +587,27 @@ useEffect(() => {
                       </svg>
                     </span>
                   </Swiper>
-                  {
-                    isAddedToCartProducts(elm?.product_id) ? 
-                    elm.product_qty > 0 && <button
-                        className="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                        title="Already Added"
+                  <div className="product-card__actions">
+                    {getProductQuantity(elm.product_id) > 0 ? (
+                      <div className="pc__qty-selector--desktop">
+                        <button className="qty-btn" onClick={() => updateQuantity(elm.product_id, -1)} aria-label={t("Decrease quantity")}>−</button>
+                        <span className="qty-value">{getProductQuantity(elm.product_id)}</span>
+                        <button className="qty-btn" onClick={() => updateQuantity(elm.product_id, 1)} aria-label={t("Increase quantity")}>+</button>
+                      </div>
+                    ) : elm.product_qty > 0 ? (
+                      <button
+                        className="btn btn-primary js-add-cart"
+                        onClick={() => addProductToCart({...elm, category_name: elm.category_name, subcategory_name: elm.subcategory?.subcategory_name})}
+                        title={t("Add To Cart")}
                       >
-                      {t("Already Added")}
-                    </button> : elm.product_qty > 0 && <button
-                      className="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                      onClick={() => addProductToCart({...elm, category_name: elm.category_name, subcategory_name: elm.subcategory?.subcategory_name})}
-                      title="Add to Cart"
-                    >
-                      {t("Add To Cart")}
-                    </button>
-                  }
+                        {t("Add To Cart")}
+                      </button>
+                    ) : (
+                      <button className="btn btn-out-of-stock" disabled>
+                        {t("Out Of Stock")}
+                      </button>
+                    )}
+                  </div>
                   {/* {elm.product_qty > 0 && <button
                     className="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
                     onClick={() => addProductToCart(elm)}
@@ -504,80 +629,50 @@ useEffect(() => {
                     <Link href={`/${locale}/shop/${removeSpecialCharactersAndAmp(elm.category_name).split(' ').join('-').toLowerCase()}/${isSubcategory(elm.category_name.split(' ').join('-').toLowerCase(), elm.subcategory)}/${removeSpecialCharactersAndAmp(elm.product_name).split(' ').join('-').toLowerCase()}`}>{elm?.product_name && t(he.decode(elm?.product_name))}</Link>
                   </h6>
                   <div className="product-card__price d-flex">
-                    {/* {elm.price ? (
-                      <>
-                        {" "}
-                        <span className="money price price-old">
-                          ${elm.price}
-                        </span>
-                        <span className="money price price-sale">
-                          ${elm.price}
-                        </span>
-                      </>
-                    ) : ( */}
-                      { discPrice(elm) }
-                    {/* )} */}
+                    <ProductPrice elm={elm} currency={currency} />
                   </div>
-                  {/* {elm.colors && (
-                    <div className="d-flex align-items-center mt-1">
-                      {" "}
-                      <ColorSelection />{" "}
+                  
+                  {getProductQuantity(elm.product_id) > 0 ? (
+                    <div className="pc__qty-selector">
+                      <button 
+                        className="qty-btn" 
+                        onClick={() => updateQuantity(elm.product_id, -1)}
+                        aria-label={t("Decrease quantity")}
+                      >
+                        −
+                      </button>
+                      <span className="qty-value">{getProductQuantity(elm.product_id)}</span>
+                      <button 
+                        className="qty-btn" 
+                        onClick={() => updateQuantity(elm.product_id, 1)}
+                        aria-label={t("Increase quantity")}
+                      >
+                        +
+                      </button>
                     </div>
-                  )}
-                  {elm.reviews && (
-                    <div className="product-card__review d-flex align-items-center">
-                      <div className="reviews-group d-flex">
-                        <Star stars={elm.rating} />
-                      </div>
-                      <span className="reviews-note text-lowercase text-secondary ms-1">
-                        {elm.reviews}
-                      </span>
-                    </div>
-                  )} */}
-
-                  {/* <button
-                    className={`pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist ${
-                      isAddedtoWishlist(elm.product_id) ? "active" : ""
-                    }`}
-                    onClick={() => toggleWishlist(elm.product_id)}
-                    title="Add To Wishlist"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  ) : elm?.product_qty > 0 ? (
+                    <button
+                      className="pc__atc-mobile"
+                      onClick={() => addProductToCart({...elm, category_name: elm.category_name, subcategory_name: elm.subcategory?.subcategory_name})}
+                      aria-label={t("Add {name} to cart", { name: elm.product_name })}
                     >
-                      <use href="#icon_heart" />
-                    </svg>
-                  </button> */}
+                      {t("Add To Cart")}
+                    </button>
+                  ) : (
+                    <button className="pc__atc-mobile pc__atc-mobile--oos" disabled>
+                      {t("Out Of Stock")}
+                    </button>
+                  )}
                 </div>
-                {elm.discont && (
-                  <div className="pc-labels position-absolute top-0 start-0 w-100 d-flex justify-content-between">
-                    <div className="pc-labels__right ms-auto">
-                      <span className="pc-label pc-label_sale d-block text-white">
-                        -{elm.discont}%
-                      </span>
-                    </div>
-                  </div>
-                )}
-                {elm.isNew && (
-                  <div className="pc-labels position-absolute top-0 start-0 w-100 d-flex justify-content-between">
-                    <div className="pc-labels__left">
-                      <span className="pc-label pc-label_new d-block bg-white">
-                        NEW
-                      </span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
         {/* <!-- /.products-grid row --> */}
         {/* {loading && <p>Loading...</p>} */}
-        {!loading && <p className="mb-5 text-center fw-medium">SHOWING {currentPage ? currentPage : filteredProducts.length} {currentPage ? 'of': 'of'} {totalPages} items</p>}
+        {!loading && <p className="mb-5 text-center fw-medium">{t("Showing")} {filteredProducts.length} {t("items")}</p>}
+        
         {loading && <Pagination1 />}
 
         {/* <div className="text-center">

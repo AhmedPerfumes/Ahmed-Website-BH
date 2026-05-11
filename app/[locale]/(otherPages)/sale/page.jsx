@@ -22,7 +22,7 @@ const Citywalk = () => {
     <>
       {/* <Loader/> */}
       <Header14 />
-   <CityWalk/>
+      <CityWalk/>
     
       <section className="d-none d-lg-block" style={{ height: "100%" }}>
         <Footer14 />

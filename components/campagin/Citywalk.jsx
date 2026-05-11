@@ -64,27 +64,27 @@ function CityWalk() {
                                     );
                                 })()
                             ) : (
-                                <div style={{display:'none'}}>
-                                    <div
-                                        style={{
-                                            position: "relative",
-                                            aspectRatio: "21 / 11",
-                                            width: "100%",
-                                            borderRadius: 16,
-                                            overflow: "hidden",
-                                            boxShadow: "0 12px 30px rgba(0,0,0,.12)",
-                                        }}
-                                    >
-                                        <Image
-                                            loading="lazy"
+                                    <Link href={`/${locale}/sale`} className="d-block">
+                                        <div
+                                            style={{
+                                                position: "relative",
+                                                aspectRatio: "21 / 11",
+                                                width: "100%",
+                                                borderRadius: 16,
+                                                overflow: "hidden",
+                                                boxShadow: "0 12px 30px rgba(0,0,0,.12)",
+                                            }}
+                                        >
+                                            <Image
+                                                loading="lazy"
                                             src="/assets/images/campaigns/eos_desktop.jpg"
-                                            alt="Campaign Desktop"
-                                            fill
-                                            sizes="(min-width: 1680px) 1680px, 100vw"
-                                            style={{ objectFit: "cover" }}
-                                        />
-                                    </div>
-                                </div>
+                                                alt="Campaign Desktop"
+                                                fill
+                                                sizes="(min-width: 1680px) 1680px, 100vw"
+                                                style={{ objectFit: "cover" }}
+                                            />
+                                        </div>
+                                    </Link>
                             )}
                         </div>
                     </div>
@@ -94,25 +94,25 @@ function CityWalk() {
                 <div className="container-fluid pt-3 d-lg-none px-3">
                     <div className="d-flex justify-content-center">
                         <div className="w-100" style={{ maxWidth: 980 }}>
-                            {saleMobile ? (
+                            {saleDesktop ? (
                                 (() => {
-                                    const elm = saleMobile;
+                                    const elm = saleDesktop;
                                     return (
                                         <Link href={`/${locale}/${elm.link || "shop"}`} className="d-block">
                                             <div
                                                 style={{
                                                     position: "relative",
-                                                    aspectRatio: "6 / 10.5",
+                                                    aspectRatio: "21 / 11",
                                                     width: "100%",
                                                     borderRadius: 14,
                                                     overflow: "hidden",
-                                                    boxShadow: "0 10px 24px rgba(0,0,0,.12)",
+                                                    boxShadow: "0 6px 18px rgba(0,0,0,.08)",
                                                 }}
                                             >
                                                 <Image
                                                     loading="lazy"
                                                     src={`${process.env.NEXT_PUBLIC_API_URL}storage/${elm.image}`}
-                                                    alt={elm?.title || "Home Slider Mobile"}
+                                                    alt={elm?.title || "Home Slider"}
                                                     fill
                                                     sizes="(max-width: 980px) 100vw, 980px"
                                                     style={{ objectFit: "cover" }}
@@ -122,35 +122,43 @@ function CityWalk() {
                                     );
                                 })()
                             ) : (
-                                <div style={{display:'none'}}>
-                                    <div
-                                        style={{
-                                            position: "relative",
-                                            aspectRatio: "6/ 10.5",
-                                            width: "100%",
-                                            borderRadius: 14,
-                                            overflow: "hidden",
-                                            boxShadow: "0 10px 24px rgba(0,0,0,.12)",
-                                        }}
-                                    >
-                                        <Image
-                                            loading="lazy"
-                                            src="/assets/images/campaigns/eos_mobile.jpg"
-                                            alt="Campaign Mobile"
-                                            fill
-                                            sizes="(max-width: 980px) 100vw, 980px"
-                                            style={{ objectFit: "cover" }}
-                                        />
-                                    </div>
-                                </div>
+                                    <Link href={`/${locale}/sale`} className="d-block">
+                                        <div
+                                            style={{
+                                                position: "relative",
+                                                aspectRatio: "21 / 11",
+                                                width: "100%",
+                                                borderRadius: 14,
+                                                overflow: "hidden",
+                                                boxShadow: "0 6px 18px rgba(0,0,0,.08)",
+                                            }}
+                                        >
+                                            <Image
+                                                loading="lazy"
+                                            src="/assets/images/campaigns/eos_desktop.jpg"
+                                                alt="Campaign Desktop"
+                                                fill
+                                                sizes="(max-width: 980px) 100vw, 980px"
+                                                style={{ objectFit: "cover" }}
+                                            />
+                                        </div>
+                                    </Link>
                             )}
                         </div>
                     </div>
                 </div>
             </div>
-        <div className="mt-3">
 
-        <DiscountGrid title={saleDesktop?.title} onlyDiscounted={true}/>
+            {/* Header Title */}
+            <div className="container pt-3 pb-2">
+                <h1 className="text-center fw-normal mb-0" style={{ letterSpacing: '2px', textTransform: 'uppercase' }}>
+                    {t("Limited Time Offers")}
+                </h1>
+            </div>
+
+            
+        <div className="mt-3">
+            <DiscountGrid title={saleDesktop?.title || t("Sale Products")} onlyDiscounted={true}/>
         </div>
             {/* <section className="d-flex section-3">
                 <div className="">

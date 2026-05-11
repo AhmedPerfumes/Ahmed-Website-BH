@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Slider4 from "./sliders/Slider4";
 import BreadCumb from "./BreadCumb";
 import Star from "../common/Star";
@@ -13,15 +14,17 @@ import { useContextElement } from "@/context/Context";
 import he from 'he';
 import { useLocale, useTranslations } from "next-intl";
 import { useMenu } from '@/context/MenuContext';
+import RelatedSlider from "./RelatedSlider";
 
-export default function SingleProduct11({ category, subcategory, product: initialProduct, }) {
+export default function SingleProduct11({ category, subcategory, product: initialProduct, relatedProds }) {
   const { isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
-  const { cartProducts, setCartProducts } = useContextElement();
+  const { cartProducts, setCartProducts, addProductToCart } = useContextElement();
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState(null);
   const locale = useLocale();
   const t = useTranslations();
   const [product, setProduct] = useState(initialProduct);
+  const [isLiveLoading, setIsLiveLoading] = useState(true);
 
   useEffect(() => {
         if (initialProduct?.product_id !== product?.product_id) {
@@ -29,7 +32,10 @@ export default function SingleProduct11({ category, subcategory, product: initia
         }
 
         const fetchLiveStatus = async () => {
-            if (!initialProduct?.product_id) return;
+            if (!initialProduct?.product_id) {
+                setIsLiveLoading(false);
+                return;
+            }
 
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/live-status`, {
@@ -58,6 +64,8 @@ export default function SingleProduct11({ category, subcategory, product: initia
                 }
             } catch (err) {
                 console.error("Live product hydration failed", err);
+            } finally {
+                setIsLiveLoading(false);
             }
         };
 
@@ -68,29 +76,6 @@ export default function SingleProduct11({ category, subcategory, product: initia
     const item = cartProducts.filter((elm) => elm.product_id == product.product_id)[0];
     return item;
   };
-  // const setQuantityCartItem = (id, quantity) => {
-  //   if (isIncludeCard()) {
-  //     if (quantity >= 1 && quantity <= product.product_qty) {
-  //       setError(null);
-  //       const item = cartProducts.filter((elm) => elm.product_id == id)[0];
-  //       const items = [...cartProducts];
-  //       const itemIndex = items.indexOf(item);
-  //       item.quantity = quantity;
-  //       items[itemIndex] = item;
-  //       setCartProducts(items);
-  //     } else {
-  //       setError("Quantity is more than available quantity");
-  //     }
-  //   } else {
-  //     setQuantity((quantity <= product.product_qty && quantity >= 1) ? quantity : product.product_qty);
-  //     setError(null);
-  //     if(quantity > product.product_qty) {
-  //       setError("Quantity is more than available quantity");
-  //     } else {
-  //       setError(null);
-  //     }
-  //   }
-  // };
 
   const setQuantityCartItem = (id, quantity, maxOrderQty) => {
     const qty = Number(quantity);
@@ -132,9 +117,7 @@ export default function SingleProduct11({ category, subcategory, product: initia
     if (!isIncludeCard()) {
       const item = {...product, category_name: capitalizeEachWord(category.split('-').join(' ')), subcategory_name: capitalizeEachWord(subcategory.split('-').join(' '))};
       item.quantity = quantity;
-      setCartProducts((pre) => [...pre, item]);
-      document.getElementById("cartDrawerOverlay").classList.add("page-overlay_visible");
-      document.getElementById("cartDrawer").classList.add("aside_visible");
+      addProductToCart(item);
     }
   };
 
@@ -195,6 +178,37 @@ export default function SingleProduct11({ category, subcategory, product: initia
     }
   };
 
+  if (isMenuLoading) {
+    return (
+      <div className="container product-single pt-4 pb-5">
+        <div className="row">
+          <div className="col-lg-7 mb-4 mb-lg-0">
+            <div className="skeleton-bar" style={{ height: '500px', width: '100%', background: '#f5f5f5', borderRadius: '4px' }}></div>
+            <div className="d-flex justify-content-center gap-3 mt-3">
+               {[1, 2, 3, 4].map(i => (
+                 <div key={i} className="skeleton-bar" style={{ height: '80px', width: '80px', background: '#f5f5f5', borderRadius: '4px' }}></div>
+               ))}
+            </div>
+          </div>
+          <div className="col-lg-5 pt-lg-4">
+             <div className="skeleton-bar mb-4" style={{ height: '30px', width: '70%', background: '#f5f5f5', borderRadius: '4px' }}></div>
+             <div className="skeleton-bar mb-4" style={{ height: '24px', width: '40%', background: '#f5f5f5', borderRadius: '4px' }}></div>
+             <div className="skeleton-bar mb-5" style={{ height: '100px', width: '100%', background: '#f5f5f5', borderRadius: '4px' }}></div>
+             <div className="skeleton-bar" style={{ height: '50px', width: '100%', background: '#f5f5f5', borderRadius: '4px' }}></div>
+          </div>
+        </div>
+        <div className="mt-5 py-5" style={{ background: '#1a1a1a', width: '100vw', marginLeft: 'calc(-50vw + 50%)', position: 'relative' }}>
+           <div className="container">
+             <div className="skeleton-bar mb-5" style={{ height: '40px', width: '30%', background: '#333', borderRadius: '2px' }}></div>
+             <div className="skeleton-bar mb-5" style={{ height: '60px', width: '100%', background: '#333', borderRadius: '2px' }}></div>
+             <div className="skeleton-bar mb-5" style={{ height: '40px', width: '30%', background: '#333', borderRadius: '2px' }}></div>
+             <div className="skeleton-bar mb-5" style={{ height: '60px', width: '100%', background: '#333', borderRadius: '2px' }}></div>
+           </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       {Object.keys(product).length > 0 ? <><section className="product-single container product-single__type-9">
@@ -207,74 +221,83 @@ export default function SingleProduct11({ category, subcategory, product: initia
               <div className="breadcrumb mb-0 d-none d-md-block flex-grow-1">
                 <BreadCumb category={ category } subcategory={ subcategory }/>
               </div>
-              {/* <!-- /.breadcrumb --> */}
             </div>
-            <h1 className="product-single__name">{product?.product_name && t(he.decode(product?.product_name))}</h1>
-            <div className="product-single__price">
-              { price(product) }
+            <div className="d-flex flex-column justify-content-between mb-2 mb-md-4">
+              <h1 className="product-single__name mb-0">{product?.product_name && t(he.decode(product?.product_name))}</h1>
+              <div className="product-single__price m-0">
+                {isLiveLoading ? (
+                  <div className="skeleton-bar" style={{ height: '32px', width: '100px', background: '#f5f5f5', borderRadius: '4px' }}></div>
+                ) : (
+                  price(product)
+                )}
+              </div>
             </div>
             <div className="product-single__short-desc">
               <div dangerouslySetInnerHTML={{ __html: t.raw(cleanProductName(product.product_name)) }}></div>
             </div>
             <h6 style={{ color: "red" }}>{error && error}</h6>
             <form onSubmit={(e) => e.preventDefault()}>
-              {product.product_qty > 0 ? (
+              {isLiveLoading ? (
+                <div className="skeleton-bar" style={{ height: '50px', width: '100%', background: '#f5f5f5', borderRadius: '4px', marginBottom: '20px' }}></div>
+              ) : product.product_qty > 0 ? (
               <div className="product-single__addtocart">
-                <div className="qty-control position-relative">
-                  <input
-                    type="number"
-                    name="quantity"
-                    value={
-                      isIncludeCard() ? isIncludeCard().quantity : quantity
-                    }
-                    min="1"
-                    onChange={(e) =>
-                      setQuantityCartItem(product.product_id, e.target.value, product?.maximum_order_quantity)
-                    }
-                    className="qty-control__number text-center"
-                    readOnly
-                  />
-                  <div
-                    // onClick={() =>
-                    //   setQuantityCartItem(
-                    //     product.product_id,
-                    //     isIncludeCard()?.quantity - 1 || quantity - 1,
-                    //     product?.maximum_order_quantity
-                    //   )
-                    // }
-                    onClick={() => {
-                      const currentQty=isIncludeCard()?.quantity ?? quantity;
-                      setQuantityCartItem(
-                        product.product_id,
-                        Math.max(1, currentQty - 1),
-                        product?.maximum_order_quantity
-                      );
-                    }}
-                    className="qty-control__reduce"
-                  >
-                    -
+                {isIncludeCard() ? (
+                  <div className="qty-control position-relative w-100">
+                    <div
+                      onClick={() => {
+                        const currentQty=isIncludeCard()?.quantity ?? quantity;
+                        if (currentQty <= 1) {
+                            // If quantity is 1 and user clicks -, remove from cart
+                            const items = [...cartProducts];
+                            const filteredItems = items.filter((elm) => elm.product_id != product.product_id);
+                            setCartProducts(filteredItems);
+                        } else {
+                            setQuantityCartItem(
+                              product.product_id,
+                              currentQty - 1,
+                              product?.maximum_order_quantity
+                            );
+                        }
+                      }}
+                      className="qty-control__reduce"
+                    >
+                      -
+                    </div>
+                    <input
+                      type="number"
+                      name="quantity"
+                      value={
+                        isIncludeCard() ? isIncludeCard().quantity : quantity
+                      }
+                      min="1"
+                      onChange={(e) =>
+                        setQuantityCartItem(product.product_id, e.target.value, product?.maximum_order_quantity)
+                      }
+                      className="qty-control__number text-center"
+                      readOnly
+                    />
+                    <div
+                      onClick={() =>
+                        setQuantityCartItem(
+                          product.product_id,
+                          isIncludeCard()?.quantity + 1 || quantity + 1,
+                          product?.maximum_order_quantity
+                        )
+                      }
+                      className="qty-control__increase"
+                    >
+                      +
+                    </div>
                   </div>
-                  <div
-                    onClick={() =>
-                      setQuantityCartItem(
-                        product.product_id,
-                        isIncludeCard()?.quantity + 1 || quantity + 1,
-                        product?.maximum_order_quantity
-                      )
-                    }
-                    className="qty-control__increase"
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-addtocart js-open-aside w-100 m-0"
+                    onClick={() => addToCart()}
                   >
-                    +
-                  </div>
-                </div>
-                {/* <!-- .qty-control --> */}
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-addtocart js-open-aside"
-                  onClick={() => addToCart()}
-                >
-                  {isIncludeCard() ? t("Already Added") : t("Add to Cart")}
-                </button>
+                    {t("Add to Cart")}
+                  </button>
+                )}
               </div>
               ):(
                 <div className="out-of-stock">
@@ -289,17 +312,13 @@ export default function SingleProduct11({ category, subcategory, product: initia
               <ShareComponent title={product.product_name} />
             </div>
             <div className="product-single__meta-info">
-              {/* <div className="meta-item">
-                <label>SKU:</label>
-                <span> {product.sku && product.sku}</span>
-              </div> */}
               <div className="meta-item">
                 <label>{t("Estimated delivery:")}</label>
                 <span> {t("3 to 5 days")}</span>
               </div>
               <div className="meta-item">
-                <label>{t("Categories")}: </label>
-                <span>{ t(capitalizeEachWord(category.split('-').join(' '))) }, { t(capitalizeEachWord(subcategory.split('-').join(' '))) }</span>
+                <label>{t("Categories")}:</label>
+                <span> { t(capitalizeEachWord(category.split('-').join(' '))) }, { t(capitalizeEachWord(subcategory.split('-').join(' '))) }</span>
               </div>
             </div>
           </div>
@@ -321,7 +340,11 @@ export default function SingleProduct11({ category, subcategory, product: initia
             <AdditionalInfo product_name={ product.product_name } video={ product.video && JSON.parse(product.video)[0][0].value } title={ product.video[0][1] && JSON.parse(product.video)[0][1].value }/>
           </div>
         </div>
-      </section></> : <h2 className="h4 text-center text-uppercase mb-4 pb-xl-2 mb-xl-4">No Product Found</h2>}
+      </section>
+      {relatedProds?.length > 0 && (
+        <RelatedSlider relatedProds={relatedProds} isLiveLoading={isMenuLoading} />
+      )}
+      </> : <div className="container py-5 text-center"><h2>{t("Product not found")}</h2></div>}
     </>
   );
 }
