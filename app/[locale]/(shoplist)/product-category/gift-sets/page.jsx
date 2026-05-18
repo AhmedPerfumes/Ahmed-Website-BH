@@ -59,7 +59,7 @@ async function getCategorySubCategory(categoryName) {
 }
 
 // export default function ShopPage5() {
-  const ShopPage5 = async () => {
+  const ShopPage5 = async ({params}) => {
     const category = 'gift-sets';
      const locale = params.locale;
     // console.log(category);
