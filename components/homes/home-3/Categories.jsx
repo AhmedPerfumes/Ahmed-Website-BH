@@ -23,7 +23,7 @@ export default function Categories({ params, subCategories }) {
     slidesPerView: 2.5,
     spaceBetween: 20,
     slidesPerGroup: 1,
-    loop: true,
+    loop: !!(subCategories && subCategories.length > 6),
     modules: [Autoplay, Navigation],
     breakpoints: {
       576: {

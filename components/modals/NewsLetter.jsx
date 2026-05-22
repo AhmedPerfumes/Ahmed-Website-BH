@@ -39,9 +39,23 @@ export default function NewsLetter() {
 
     // Add event listener for close button
     const closeButton = modalElement.current.querySelector(".btn-close");
-    closeButton.addEventListener("click", () => {
+    const closeHandler = () => {
       modalInstance.hide(); // Programmatically hide the modal
-    });
+    };
+    
+    const handleHide = () => {
+      if (document.activeElement && modalElement.current.contains(document.activeElement)) {
+        document.activeElement.blur();
+      }
+    };
+
+    closeButton.addEventListener("click", closeHandler);
+
+    const modalRef = modalElement.current;
+    if (modalRef) {
+      modalRef.addEventListener("hide.bs.modal", handleHide);
+      modalRef.addEventListener("hidden.bs.modal", handleHide);
+    }
 
     // Listen for scroll events
     window.addEventListener("scroll", handleScroll);
@@ -49,7 +63,11 @@ export default function NewsLetter() {
     // Cleanup event listeners on unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      closeButton.removeEventListener("click", () => modalInstance.hide());
+      closeButton.removeEventListener("click", closeHandler);
+      if (modalRef) {
+        modalRef.removeEventListener("hide.bs.modal", handleHide);
+        modalRef.removeEventListener("hidden.bs.modal", handleHide);
+      }
     };
   }, [hasScrolled]);
 
