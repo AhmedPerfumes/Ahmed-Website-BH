@@ -105,13 +105,22 @@ export default function OrderTrack() {
           </p>
           {error ? <div style={{ color: 'red' }}>{error}</div> : <div style={{ color: 'green' }}>{success}</div>}
           <div className="form-floating my-4">
-            <input
+           <input
               type="text"
               className="form-control"
               id="order_tracking_id"
               placeholder="Order ID *"
+              value={orderNumber}
               name="order_number"
               required
+              onChange={(e) => {
+                const input = e.target.value;
+                if (!input.startsWith("#")) {
+                  setOrderNumber("#" + input.replaceAll("#", ""));
+                } else {
+                  setOrderNumber(input);
+                }
+              }}
             />
             <label htmlFor="order_tracking_id">Order ID *</label>
           </div>
