@@ -86,9 +86,8 @@ function VideoSectionStatic() {
   }}
   title="The Scent of Legacy: 25 Years of Ahmed Al Maghribi Perfumes"
   frameBorder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
   referrerPolicy="strict-origin-when-cross-origin"
-  allowFullScreen
 />
         </div>
       </motion.div>

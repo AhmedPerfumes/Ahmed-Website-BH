@@ -20,7 +20,7 @@ export default function RelatedSlider({ relatedProds }) {
     slidesPerView: 4,
     slidesPerGroup: 4,
     effect: "none",
-    loop: true,
+    loop: relatedProds && relatedProds.length > 4,
     modules: [Pagination, Navigation],
     pagination: {
       el: "#related_products .products-pagination",
