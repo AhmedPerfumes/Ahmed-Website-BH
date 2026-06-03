@@ -33,5 +33,5 @@ export const capitalizeEachWord = (str) => {
 
 export const formatPrice = (price, currency) => {
     if (!price || !currency) return "";
-    return `${parseFloat(price).toFixed(currency.decimals || 2)}${currency.symbol}`;
+    return `${parseFloat(price).toFixed(currency.decimals || 3)}${currency.symbol}`;
 };
