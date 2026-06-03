@@ -16,39 +16,39 @@ import he from "he";
 import { useLocale, useTranslations} from "next-intl";
 import { useMenu } from '@/context/MenuContext';
 
-// const ProductPrice = ({ elm, currency }) => {
-//   const currentUTC = new Date();
-//   const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000));
-//   const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
+const ProductPrice = ({ elm, currency }) => {
+  const currentUTC = new Date();
+  const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000));
+  const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
   
-//   const isDiscountActive = elm?.discount && 
-//     new Date(current_date_time) >= new Date(elm.discount.start_date) && 
-//     new Date(current_date_time) <= new Date(elm.discount.end_date);
+  const isDiscountActive = elm?.discount && 
+    new Date(current_date_time) >= new Date(elm.discount.start_date) && 
+    new Date(current_date_time) <= new Date(elm.discount.end_date);
 
-//   if (isDiscountActive) {
-//     let discountedPrice = elm.price;
-//     if (elm.discount.discount_type === "percent") {
-//       discountedPrice = elm.price - (elm.price / 100 * elm.discount.value);
-//     } else if (elm.discount.discount_type === "amount") {
-//       discountedPrice = elm.price - elm.discount.value;
-//     }
-//     return (
-//       <>
-//         <span className="money price price-old">{formatPrice(elm.price, currency)}</span> 
-//         <span className="money price price-sale"> {formatPrice(discountedPrice, currency)}</span>
-//       </>
-//     );
-//   } else if (elm?.sale_price) {
-//     const salePrice = elm.price - (elm.price / 100 * elm.sale_price);
-//     return (
-//       <>
-//         <span className="money price price-old">{formatPrice(elm.price, currency)}</span> 
-//         <span className="money price price-sale"> {formatPrice(salePrice, currency)}</span>
-//       </>
-//     );
-//   }
-//   return <span className="money price">{formatPrice(elm.price, currency)}</span>;
-// };
+  if (isDiscountActive) {
+    let discountedPrice = elm.price;
+    if (elm.discount.discount_type === "percent") {
+      discountedPrice = elm.price - (elm.price / 100 * elm.discount.value);
+    } else if (elm.discount.discount_type === "amount") {
+      discountedPrice = elm.price - elm.discount.value;
+    }
+    return (
+      <>
+        <span className="money price price-old">{formatPrice(elm.price, currency)}</span> 
+        <span className="money price price-sale"> {formatPrice(discountedPrice, currency)}</span>
+      </>
+    );
+  } else if (elm?.sale_price) {
+    const salePrice = elm.price - (elm.price / 100 * elm.sale_price);
+    return (
+      <>
+        <span className="money price price-old">{formatPrice(elm.price, currency)}</span> 
+        <span className="money price price-sale"> {formatPrice(salePrice, currency)}</span>
+      </>
+    );
+  }
+  return <span className="money price">{formatPrice(elm.price, currency)}</span>;
+};
 
 const ProductCardSkeleton = () => (
   <div className="product-card-wrapper">
@@ -178,28 +178,6 @@ export default function Style2({ category, subcategory, products: initialProduct
       </div>
     );
   }
-   const price = (elm) => {
-    const currentUTC = new Date(); // Current UTC time
-    const currentGST = new Date(currentUTC.getTime() + (4 * 60 * 60 * 1000)); // Add 4 hours for GST
-    const current_date_time = currentGST.toISOString().slice(0, 19).replace("T", " ");
-    if(elm?.discount) {
-      if(new Date(current_date_time) >= new Date(elm.discount.start_date) && new Date(current_date_time) <= new Date(elm.discount.end_date)) {
-        if(elm.discount.discount_type == "percent") {
-          return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - (elm.price / 100 * elm.discount.value)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
-        } else if(elm.discount.discount_type == "amount") {
-          return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {(elm.price - elm.discount.value).toFixed(currency.decimals)}{ currency.symbol }</span></>;
-        }
-      } else {
-        return <span className="money price">{elm?.price}{ currency.symbol }</span>;
-      }
-    } 
-    // else if(elm?.sale_price) {
-    //   return <><span className="money price price-old">{elm?.price}{ currency.symbol }</span> <span className="money price price-sale"> {((elm.sale_price)).toFixed(currency.decimals)}{ currency.symbol }</span></>;
-    // } 
-    else {
-      return <span className="money price">{elm?.price}{ currency.symbol }</span>;
-    }
-  };
 
   return (
     <div
@@ -367,7 +345,7 @@ export default function Style2({ category, subcategory, products: initialProduct
                   </Link>
                 </h6>
                 <div className="product-card__price d-flex">
-                   { price(elm) }
+                  <ProductPrice elm={elm} currency={currency} />
                 </div>
                 
                 {inCart ? (
