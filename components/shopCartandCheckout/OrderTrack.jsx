@@ -13,6 +13,8 @@ export default function OrderTrack() {
   const [showDetails, setShowDetails] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
 
+  const [orderNumber, setOrderNumber] = useState("#");
+
   if (isMenuLoading) {
     return <div><Pagination1 /></div>;
   }

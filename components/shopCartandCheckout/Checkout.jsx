@@ -222,6 +222,7 @@ export default function Checkout() {
     const billing = formData.billingAddress;
     const newErrors = {};
 
+    if (!billing.first_name.trim()) newErrors.first_name = "First Name is required";
     if (!billing.last_name.trim()) newErrors.last_name = "Last Name is required";
     if (!billing.area.trim()) newErrors.area = "Area / Mantaqa is required";
     if (!billing.building.trim()) newErrors.building = "Building / Villa is required";
@@ -238,6 +239,7 @@ export default function Checkout() {
         const firstErrorFieldId = Object.keys(newErrors)[0];
         let elementId = "";
         switch (firstErrorFieldId) {
+          case "first_name": elementId = "checkout_first_name"; break;
           case "last_name": elementId = "checkout_last_name"; break;
           case "area": elementId = "checkout_street_address"; break;
           case "building": elementId = "checkout_street_address_2"; break;
@@ -358,6 +360,7 @@ export default function Checkout() {
         setError(data.bogoMessage);
       } else {
         if (data.products) setError(data.products);
+        if (data["billingAddress.first_name"]) setError(data["billingAddress.first_name"]);
         if (data["billingAddress.last_name"]) setError(data["billingAddress.last_name"]);
         if (data["billingAddress.area"]) setError(data["billingAddress.area"]);
         if (data["billingAddress.building"]) setError(data["billingAddress.building"]);
@@ -679,6 +682,7 @@ export default function Checkout() {
                 <div className="form-floating my-3">
                   <input type="text" className="form-control" id="checkout_first_name" placeholder="First Name" readOnly={isLoggedIn} name="billingAddress.first_name" value={formData.billingAddress.first_name} onChange={handleChange}/>
                   <label htmlFor="checkout_first_name">First Name</label>
+                  {fieldErrors.first_name && ( <div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.first_name} </div> )}
                 </div>
               </div>
               <div className="col-md-6 col-12">
