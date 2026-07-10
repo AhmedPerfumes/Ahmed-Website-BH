@@ -2,7 +2,7 @@
 
 import { useContextElement } from "@/context/Context";
 import he from 'he';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useMenu } from '@/context/MenuContext';
 import Pagination1 from "../common/Pagination1";
 
@@ -10,49 +10,55 @@ export default function OrderPaymentCompleted({ orderDetails }) {
   const { isLoading: isMenuLoading, error: isMenuError, currency } = useMenu();
   const { setCartProducts } = useContextElement();
   const [showDate, setShowDate] = useState(false);
+  const hasFiredPurchase = useRef(false); // prevents purchase events firing more than once
 
   useEffect(() => {
-  if (orderDetails?.payment_status === "completed" && orderDetails?.order_id) {
+    if (orderDetails?.payment_status === "completed" && orderDetails?.order_id && !hasFiredPurchase.current) {
+      hasFiredPurchase.current = true; // lock — never fires again even if orderDetails re-renders
 
-    // 1️⃣ Calculate GA-safe value from items
-    const gaValue = orderDetails.products.reduce((sum, item) => {
-      return sum + (parseFloat(item.price) * item.qty);
-    }, 0);
+      // 1️⃣ Calculate GA-safe value from items
+      const gaValue = orderDetails.products.reduce((sum, item) => {
+        return sum + (parseFloat(item.price) * item.qty);
+      }, 0);
 
-    // ---- GA4 Purchase ----
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: "purchase",
-      ecommerce: {
-        transaction_id: orderDetails.order_id,
-        affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
-        value: Number(gaValue.toFixed(2)), // ✅ FIX
-        currency: currency?.code || "BHD",
-        items: orderDetails.products.map((item) => ({
-          item_id: item.product_id?.toString(),
-          item_name: he.decode(item.product_name || item.name),
-          price: parseFloat(item.price),
-          quantity: item.qty,
-        })),
-      },
-    });
+      // ---- GA4 Purchase (TikTok listener in layout.jsx maps this to ttq.track("Purchase")) ----
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "purchase",
+        ecommerce: {
+          transaction_id: orderDetails.order_id,
+          affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
+          value: Number(gaValue.toFixed(3)),
+          currency: currency?.code || "BHD",
+          items: orderDetails.products.map((item) => ({
+            item_id: item.product_id?.toString(),
+            item_name: he.decode(item.product_name || item.name),
+            price: parseFloat(item.price),
+            quantity: item.qty,
+          })),
+        },
+      });
 
-    // ---- TikTok Purchase (TikTok is fine with total) ----
-    window.ttq?.track("Purchase", {
-      contents: orderDetails.products.map((item) => ({
-        content_id: item.product_id?.toString(),
-        content_type: "product",
-        content_name: he.decode(item.product_name || item.name),
-      })),
-      value: parseFloat(orderDetails.total),
-      currency: currency?.code || "BHD",
-    });
+      // ---- Meta (Facebook) Pixel Purchase ----
+      if (typeof window.fbq === "function") {
+        window.fbq("track", "Purchase", {
+          content_ids: orderDetails.products.map((item) => item.product_id?.toString()),
+          content_type: "product",
+          contents: orderDetails.products.map((item) => ({
+            id: item.product_id?.toString(),
+            quantity: item.qty,
+          })),
+          value: parseFloat(orderDetails.total),
+          currency: currency?.code || "BHD",
+          order_id: orderDetails.order_id,
+        });
+      }
 
-    // Clear cart AFTER tracking
-    localStorage.removeItem("cartList");
-    setCartProducts([]);
-  }
-}, [orderDetails]);
+      // Clear cart AFTER tracking
+      localStorage.removeItem("cartList");
+      setCartProducts([]);
+    }
+  }, [orderDetails]);
 
   const subTotalPrice = (elm) => {
     if (elm.is_gift) {

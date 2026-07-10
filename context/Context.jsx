@@ -191,6 +191,38 @@ export default function Context({ children }) {
       payload: product
     });
 
+    // ---- GA4 add_to_cart (TikTok listener maps to ttq AddToCart) ----
+    // ---- Meta Pixel AddToCart (explicit — autoConfig is disabled) ----
+    try {
+      if (!product.is_gift) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "add_to_cart",
+          ecommerce: {
+            currency: "BHD",
+            value: parseFloat((product.price || 0) * (product.quantity || 1)),
+            items: [{
+              item_id: product.product_id?.toString(),
+              item_name: product.product_name,
+              price: parseFloat(product.price || 0),
+              quantity: product.quantity || 1,
+              item_category: product.category_name || "",
+            }],
+          },
+        });
+
+        if (typeof window.fbq === "function") {
+          window.fbq("track", "AddToCart", {
+            content_ids: [product.product_id?.toString()],
+            content_name: product.product_name,
+            content_type: "product",
+            value: parseFloat((product.price || 0) * (product.quantity || 1)),
+            currency: "BHD",
+          });
+        }
+      }
+    } catch (e) { /* tracking errors must never break cart */ }
+
     const imageUrl = product.image 
       ? `${process.env.NEXT_PUBLIC_API_URL}storage/${product.image}` 
       : `${process.env.NEXT_PUBLIC_API_URL}storage/${product?.images && JSON.parse(product.images)[0]}`;

@@ -214,10 +214,46 @@ export default function Checkout() {
       return;
     }
 
-    // console.log('Order submitted:', formData);
     setIsLoading(true);
     setError(null);
     setSuccess(null);
+
+    // ---- Pixel: Fire AddPaymentInfo on first Place Order attempt only ----
+    // Correct event for "Place Order" click — NOT Purchase (Purchase fires on Thank You page).
+    try {
+      if (!window.__placeOrderTracked && cartProducts && cartProducts.length > 0) {
+        window.__placeOrderTracked = true;
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "add_payment_info",
+          ecommerce: {
+            currency: "BHD",
+            value: parseFloat(totalPrice || 0),
+            payment_type: selectedOption || "cod",
+            items: cartProducts
+              .filter((item) => !item.is_gift)
+              .map((item) => ({
+                item_id: item.product_id?.toString(),
+                item_name: item.product_name,
+                price: parseFloat(item.price || 0),
+                quantity: item.quantity || 1,
+              })),
+          },
+        });
+
+        if (typeof window.fbq === "function") {
+          window.fbq("track", "AddPaymentInfo", {
+            content_ids: cartProducts
+              .filter((item) => !item.is_gift)
+              .map((item) => item.product_id?.toString()),
+            content_type: "product",
+            value: parseFloat(totalPrice || 0),
+            currency: "BHD",
+          });
+        }
+      }
+    } catch (e) { /* tracking errors must never block order submission */ }
 
     const billing = formData.billingAddress;
     const newErrors = {};
