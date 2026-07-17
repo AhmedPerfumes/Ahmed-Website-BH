@@ -264,7 +264,105 @@ export default function CartDrawer() {
                 <p className="success mb-0">{t("free shipping success")}</p>
               )}
         </div>
+
+        {
+            (() => {
+              // Only count non-excluded products
+              const regularProducts = cartProducts.filter((item) => item.category_name && !['gift sets', 'collections'].includes(item.category_name.toLowerCase()));
+              const regularQuantity = regularProducts.reduce((total, item) => total + item.quantity, 0);
+              const hasRegularProducts = regularProducts.length > 0;
+              const hasBogoActive = cartProducts.some((item) => item.bogo_free_qty && item.bogo_free_qty > 0);
+
+              if (!hasRegularProducts) return null;
+
+              const isBogoQualified = hasBogoActive || regularQuantity > 3;
+              const bogoProgressPercentage = isBogoQualified ? 100 : (regularQuantity / 4) * 100;
+              const itemsNeeded = 4 - regularQuantity;
+
+              return (
+                <div className="bogo-progress-container mt-3">
+                  <hr className="cart-drawer-divider" style={{ marginBottom: "16px", borderColor: "#EAEAEA" }} />
+                  <div style={{
+                    backgroundColor: isBogoQualified ? "#FCFBF7" : "#FFFFFF",
+                    border: `1px solid ${isBogoQualified ? "#D4AF37" : "#EAEAEA"}`,
+                    borderRadius: "6px",
+                    color: "#2C2C2C",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                    textAlign: "center",
+                    transition: "all 0.5s ease-in-out",
+                    overflow: "hidden",
+                    boxShadow: isBogoQualified ? "0 4px 12px rgba(212, 175, 55, 0.12)" : "0 2px 8px rgba(0,0,0,0.03)"
+                  }}>
+                    <div style={{
+                      display: "grid",
+                      gridTemplateRows: isBogoQualified ? "1fr" : "0fr",
+                      transition: "grid-template-rows 0.5s ease-in-out"
+                    }}>
+                      <div style={{ overflow: "hidden", minHeight: 0 }}>
+                        <div style={{
+                          padding: isBogoQualified ? "16px" : "0px 16px",
+                          transition: "all 0.5s ease-in-out",
+                          opacity: isBogoQualified ? 1 : 0,
+                          transform: isBogoQualified ? "translateY(0)" : "translateY(-10px)",
+                          letterSpacing: "0.3px"
+                        }}>
+                          <span style={{ color: "#D4AF37", fontSize: "16px", marginRight: "8px" }}>✨</span>
+                          <strong style={{ fontWeight: "600", color: "#D4AF37" }}>Offer Unlocked!</strong>
+                          <div style={{ fontSize: "13px", color: "#666", marginTop: "2px" }}>Buy 3, Get 1 Free applied at checkout.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      display: "grid",
+                      gridTemplateRows: !isBogoQualified ? "1fr" : "0fr",
+                      transition: "grid-template-rows 0.5s ease-in-out"
+                    }}>
+                      <div style={{ overflow: "hidden", minHeight: 0 }}>
+                        <div style={{
+                          padding: !isBogoQualified ? "16px" : "0px 16px",
+                          transition: "all 0.5s ease-in-out",
+                          opacity: !isBogoQualified ? 1 : 0,
+                          transform: !isBogoQualified ? "translateY(0)" : "translateY(10px)",
+                        }}>
+                          <div className="mb-3" style={{ letterSpacing: "0.2px" }}>
+                            <strong style={{ fontWeight: "600", textTransform: "uppercase", fontSize: "13px", letterSpacing: "1px", color: "#2C2C2C" }}>Buy 3 Get 1 Free</strong>
+                            <div style={{ fontSize: "13px", color: "#666", marginTop: "4px" }}>
+                              Add <strong style={{ color: "#D4AF37", fontWeight: "600" }}>{itemsNeeded > 0 ? itemsNeeded : 1}</strong> more product{itemsNeeded > 1 ? 's' : ''} to claim your gift
+                            </div>
+                          </div>
+                          <div className="progress" style={{
+                            height: "4px",
+                            borderRadius: "4px",
+                            backgroundColor: "#F0F0F0",
+                            overflow: "hidden"
+                          }}>
+                            <div
+                              className="progress-bar"
+                              role="progressbar"
+                              style={{
+                                width: `${bogoProgressPercentage}%`,
+                                background: "linear-gradient(90deg, #E5C158, #D4AF37)",
+                                transition: "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                                borderRadius: "4px"
+                              }}
+                              aria-valuenow={bogoProgressPercentage}
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()
+          }
           <hr className="cart-drawer-divider" />
+
+        
           <div className="d-flex justify-content-between">
             <h6 className="fs-base fw-medium">{t("SUBTOTAL")}:</h6>
             <span className="cart-subtotal fw-medium">{totalPrice.toFixed(currency.decimals)}{ currency.symbol }</span>
