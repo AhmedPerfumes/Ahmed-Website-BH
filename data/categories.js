@@ -316,7 +316,7 @@ export const categories88 = [
     imgSrc: "/assets/images/home/demo15/category-4.jpg",
     altText: "Kaaf",
     subText: "Radiate pure, refined luxury",
-    videoSrc: "/assets/videos/vlogs/rico.mp4",
+    videoSrc: "/assets/videos/vlogs/Rico.mp4",
     imgSrc2: "/assets/videos/vlogs/thumbnails/Rico.jpg",
     link: "/shop/perfumes/oriental-fragrance/kaaf",
     btn: "/shop/perfumes/oriental-fragrance/kaaf"
