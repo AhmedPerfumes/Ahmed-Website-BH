@@ -234,7 +234,7 @@ export default function Header14() {
                             </div>
                             <div className="logo">
                                 <a href="/">
-                                <img src="/assets/images/about/AhmedLogo.png" width="100px" alt="Ahmed"/>
+                                <img src="/assets/images/logo/Desktop.svg" width="100px" alt="Ahmed"/>
                                 </a>
                             </div>
                             <div className="header-tools d-flex align-items-center flex-1 justify-content-end me-2">

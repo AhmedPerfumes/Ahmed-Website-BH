@@ -2,7 +2,7 @@
 
 import { useContextElement } from "@/context/Context";
 import { useMenu } from '@/context/MenuContext';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import he from 'he';
 import Link from "next/link";
 import Pagination1 from "../common/Pagination1";
@@ -13,12 +13,16 @@ export default function OrderCompleted() {
   // console.log('...', freeShippingFlag);
   const [showDate, setShowDate] = useState(false);
   const [orderData, setorderData] = useState(null);
+  const hasFiredPurchase = useRef(false); // prevents purchase events firing more than once
+
   useEffect(() => {
     setShowDate(true);
     localStorage.setItem('cartList', []);
     setCartProducts([]);
 
-    if (orderDetails && orderDetails.order_id) {
+    // ✅ Fire purchase events exactly once when orderDetails becomes available
+    if (orderDetails && orderDetails.order_id && !hasFiredPurchase.current) {
+      hasFiredPurchase.current = true; // lock — never fires again for this page visit
 
       const gaItems = orderDetails.products.map((item) => ({
         item_id: item.product_id?.toString(),
@@ -32,27 +36,33 @@ export default function OrderCompleted() {
         0
       );
 
+      // ---- GA4 Purchase (TikTok listener in layout.jsx maps this to ttq.track("Purchase")) ----
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: "purchase",
         ecommerce: {
           transaction_id: orderDetails.order_id,
           affiliation: "Ahmed Al Maghribi Perfumes Online Bahrain",
-          value: gaValue,          // 🔥 FIX
+          value: gaValue,
           currency: currency?.code || "BHD",
-          items: gaItems,          // 🔥 FIX
+          items: gaItems,
         },
       });
 
-      window.ttq?.track("Purchase", {
-        contents: gaItems.map(i => ({
-          content_id: i.item_id,
+      // ---- Meta (Facebook) Pixel Purchase ----
+      if (typeof window.fbq === "function") {
+        window.fbq("track", "Purchase", {
+          content_ids: orderDetails.products.map((item) => item.product_id?.toString()),
           content_type: "product",
-          content_name: i.item_name,
-        })),
-        value: gaValue,
-        currency: currency?.code || "BHD",
-      });
+          contents: orderDetails.products.map((item) => ({
+            id: item.product_id?.toString(),
+            quantity: item.qty,
+          })),
+          value: gaValue,
+          currency: currency?.code || "BHD",
+          order_id: orderDetails.order_id,
+        });
+      }
     }
   }, [orderDetails]);
 
