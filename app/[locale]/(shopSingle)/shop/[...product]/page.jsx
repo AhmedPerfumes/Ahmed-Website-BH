@@ -107,14 +107,12 @@ async function getProductSEO(categoryName, subCategoryName, product) {
 }
 const ProductSchema = ({ category, subcategory, product }) => {
   let images = [
-      `${process.env.NEXT_PUBLIC_API_URL}storage/${
-          JSON.parse(product.images)[0]
+       `${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(product.images)[0]
       }`,
   ];
   JSON.parse(product.images)[1] &&
       images.push(
-          `${process.env.NEXT_PUBLIC_API_URL}storage/${
-              JSON.parse(product.images)[1]
+          `${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(product.images)[1]
           }`
       );
   const jsonLd = {
@@ -175,8 +173,8 @@ export async function generateMetadata({ params }) {
       };
   }
 }
-const ProductDetailsPage16 = async({ params }) => {
-  const [ categoryName, subCategoryName, product ] = params.product;
+const ProductDetailsPage16 = async ({ params }) => {
+  const [categoryName, subCategoryName, product] = params.product;
   // console.log(categoryName, subCategoryName, product);
   try {
     const data = await getproduct(categoryName, subCategoryName, product);
@@ -194,8 +192,7 @@ const ProductDetailsPage16 = async({ params }) => {
                     />
                     <meta
                         property="og:image"
-                        content={`${process.env.NEXT_PUBLIC_API_URL}storage/${
-                            JSON.parse(data.images)[0]
+                         content={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(data.images)[0]
                         }`}
                     />
                     <meta
@@ -224,7 +221,8 @@ const ProductDetailsPage16 = async({ params }) => {
                     product={data}
                 />
         <main className="page-wrapper">
-          <SingleProduct11 category={ categoryName } subcategory={ subCategoryName } product={ data } relatedProds={ data.related_prods } />
+        <SingleProduct11 category={categoryName} subcategory={subCategoryName} product={data} />
+          <RelatedSlider relatedProds={data.related_prods} />
         </main>
         <section className="d-none d-lg-block" style={{ height: "100%" }}>
           <Footer14 />

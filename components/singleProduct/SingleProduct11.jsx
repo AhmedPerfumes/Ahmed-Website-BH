@@ -236,8 +236,8 @@ export default function SingleProduct11({ category, subcategory, product: initia
                 )}
               </div>
             </div>
-             <div dangerouslySetInnerHTML={{ 
-              __html: (() => {
+            <div dangerouslySetInnerHTML={{
+                __html: (() => {
                   let translatedDesc = "";
                   try {
                     if (product?.product_name) {
@@ -361,7 +361,18 @@ export default function SingleProduct11({ category, subcategory, product: initia
            {category === "gift-sets" ? "Gift Set Contains" : "Fragrance Notes"}
           </h2>
           <div className="product-single__details-list__content text-white">
-           <AdditionalInfo product={ product } product_name={ product.product_name } video={ product.video && JSON.parse(product.video)[0][0].value } title={ product.video[0][1] && JSON.parse(product.video)[0][1].value }/>
+           {(() => {
+             let videoUrl = null;
+             let videoTitle = null;
+             if (product?.video) {
+               try {
+                 const parsed = JSON.parse(product.video);
+                 videoUrl = parsed?.[0]?.[0]?.value || null;
+                 videoTitle = parsed?.[0]?.[1]?.value || null;
+               } catch (e) {}
+             }
+             return <AdditionalInfo product={product} product_name={product.product_name} video={videoUrl} title={videoTitle} />;
+           })()}
           </div>
         </div>
       </section>

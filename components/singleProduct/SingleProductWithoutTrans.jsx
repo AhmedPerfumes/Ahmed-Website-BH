@@ -292,7 +292,18 @@ export default function SingleProduct11({ category, subcategory, product }) {
             Fragrance Notes
           </h2>
           <div className="product-single__details-list__content text-white">
-            <AdditionalInfoWithoutTrans product_name={ product.product_name } video={ product.video && JSON.parse(product.video)[0][0].value } title={ product.video[0][1] && JSON.parse(product.video)[0][1].value }/>
+            {(() => {
+              let videoUrl = null;
+              let videoTitle = null;
+              if (product?.video) {
+                try {
+                  const parsed = JSON.parse(product.video);
+                  videoUrl = parsed?.[0]?.[0]?.value || null;
+                  videoTitle = parsed?.[0]?.[1]?.value || null;
+                } catch (e) {}
+              }
+              return <AdditionalInfoWithoutTrans product_name={ product.product_name } video={ videoUrl } title={ videoTitle }/>;
+            })()}
           </div>
         </div>
       </section></> : <h2 className="h4 text-center text-uppercase mb-4 pb-xl-2 mb-xl-4">No Product Found</h2>}

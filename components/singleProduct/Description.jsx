@@ -1,7 +1,7 @@
 import React from "react";
 import {useLocale, useTranslations } from "next-intl";
 
-export default function Description({ product_name }) {
+export default function Description({ product,product_name }) {
   const t = useTranslations();
     const locale = useLocale();
   const isAr = locale === "ar";
