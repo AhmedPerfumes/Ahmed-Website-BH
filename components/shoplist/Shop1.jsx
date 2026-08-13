@@ -229,6 +229,23 @@ useEffect(() => {
     });
   };
 
+  const clean = (s) =>
+    s
+      .replace(/&amp;/g, "")
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .split(" ")
+      .join("-")
+      .toLowerCase();
+
+      const isSubcat = (cat, sub) =>
+    sub
+      ? clean(sub.subcategory_name)
+      : ["gift-sets", "hair-mist", "extrait-de-parfum"].includes(clean(cat))
+        ? clean(cat)
+        : "online-exclusive";
+
   const isSubcategory = (category, subcategory) => {
     if (subcategory) return sanitizeUrlParam(subcategory.subcategory_name);
     
