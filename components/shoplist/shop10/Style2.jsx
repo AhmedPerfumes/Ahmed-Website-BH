@@ -343,7 +343,7 @@ export default function Style2({ category, subcategory, products: initialProduct
                       .join("-")
                       .toLowerCase()}`}
                   >
-                    {elm?.product_name && t(he.decode(elm?.product_name))}
+                    {locale === 'ar' ? he.decode(elm?.product_name_ar || t(he.decode(elm?.product_name))) : he.decode(elm?.product_name || "")}
                   </Link>
                 </h6>
                 <div className="product-card__price d-flex">

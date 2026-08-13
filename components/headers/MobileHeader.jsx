@@ -19,6 +19,15 @@ export default function MobileHeader() {
 
   const [scrollDirection, setScrollDirection] = useState("down");
 
+    const [headerHeight, setHeaderHeight] = useState(0);
+  const headerRef = React.useRef(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, []);
+
   const [searchKeyWord, setSearchKeyWord] = useState("");
 
   const handleChange = (event) => {
@@ -84,7 +93,9 @@ export default function MobileHeader() {
   }
 
   return (
+    <div style={{ height: scrollDirection === "up" && headerHeight ? `${headerHeight}px` : 'auto' }}>
     <div
+     ref={headerRef}
       className={`header-mobile header_sticky ${
         scrollDirection == "up" ? "header_sticky-active" : "position-relative"
       } `}
@@ -274,6 +285,9 @@ export default function MobileHeader() {
         </div>
       </nav>
       {/* <!-- /.navigation --> */}
+      
     </div>
+    </div>
+    
   );
 }

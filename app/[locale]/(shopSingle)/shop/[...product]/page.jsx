@@ -122,7 +122,7 @@ const ProductSchema = ({ category, subcategory, product }) => {
       "@type": "Product",
       name: product.product_name,
       image: images,
-      description: product.description.replace(/<\/?[^>]+(>|$)/g, "").trim(),
+     description: product?.description && product.description !== "null" ? product.description.replace(/<\/?[^>]+(>|$)/g, "").trim() : "",
       sku: product.sku,
       brand: { "@type": "Brand", name: "Ahmed Al Maghribi Perfumes Bahrain" },
       offers: {
@@ -188,9 +188,9 @@ const ProductDetailsPage16 = async({ params }) => {
                     <meta property="og:title" content={data.product_name} />
                     <meta
                         property="og:description"
-                        content={data.description
-                            .replace(/<\/?[^>]+(>|$)/g, "")
-                            .trim()}
+                       content={data?.description && data.description !== "null"
+              ? data.description.replace(/<\/?[^>]+(>|$)/g, "").trim()
+              : ""}
                     />
                     <meta
                         property="og:image"

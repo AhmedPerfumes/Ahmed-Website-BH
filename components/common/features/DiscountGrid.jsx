@@ -431,7 +431,7 @@ function DiscountGrid({ title, onlyDiscounted = false }) {
                   <Link
                     href={`/${locale}/shop/${removeSpecialCharactersAndAmp(elm.category_name).split(" ").join("-").toLowerCase()}/${isSubcategory(elm.category_name.split(" ").join("-").toLowerCase(), elm.subcategory)}/${removeSpecialCharactersAndAmp(elm.product_name).split(" ").join("-").toLowerCase()}`}
                   >
-                    {t(he.decode(elm.product_name))}
+                     {locale === 'ar' ? he.decode(elm?.product_name_ar || t(he.decode(elm?.product_name))) : he.decode(elm?.product_name || "")}
                   </Link>
                 </h6>
 

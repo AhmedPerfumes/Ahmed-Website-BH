@@ -19,7 +19,7 @@ import {
 import he from 'he';
 import Slider from "rc-slider";
 
-import { useLocale, useTranslations } from 'next-intl';
+import {useLocale,useTranslations} from 'next-intl';
 import { useMenu } from '@/context/MenuContext';
 import { 
   removeSpecialCharactersAndAmp, 
@@ -626,7 +626,16 @@ useEffect(() => {
                 <div className="pc__info position-relative">
                   <p className="pc__category">{t(elm.category_name)}</p>
                   <h6 className="pc__title">
-                    <Link href={`/${locale}/shop/${removeSpecialCharactersAndAmp(elm.category_name).split(' ').join('-').toLowerCase()}/${isSubcategory(elm.category_name.split(' ').join('-').toLowerCase(), elm.subcategory)}/${removeSpecialCharactersAndAmp(elm.product_name).split(' ').join('-').toLowerCase()}`}>{elm?.product_name && t(he.decode(elm?.product_name))}</Link>
+                   <Link
+                      href={`/${locale}/shop/${clean(
+                        elm.category_name
+                      )}/${isSubcat(
+                        elm.category_name,
+                        elm.subcategory
+                      )}/${clean(elm.product_name)}`}
+                    >
+                      {locale === 'ar' ? he.decode(elm?.product_name_ar || t(he.decode(elm?.product_name))) : he.decode(elm?.product_name || "")}
+                    </Link>
                   </h6>
                   <div className="product-card__price d-flex">
                     <ProductPrice elm={elm} currency={currency} />
