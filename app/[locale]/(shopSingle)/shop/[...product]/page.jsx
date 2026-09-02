@@ -9,6 +9,7 @@ import Head from "next/head";
 import { allProducts } from "@/data/products";
 import MobileFooter2 from "@/components/footers/MobileFooter2";
 import { headers } from 'next/headers';
+import CollapsibleDescription from "@/components/shoplist/CollapsibleDescription";
 
 // export const metadata = {
 //   title: "Perfumes | Buy Best Perfumes Online | Ahmed Perfume",
@@ -223,6 +224,7 @@ const ProductDetailsPage16 = async ({ params }) => {
         <main className="page-wrapper">
         <SingleProduct11 category={categoryName} subcategory={subCategoryName} product={data} />
           <RelatedSlider relatedProds={data.related_prods} />
+          <CollapsibleDescription description={data.seo_content} title="About this Product" />
         </main>
         <section className="d-none d-lg-block" style={{ height: "100%" }}>
           <Footer14 />
