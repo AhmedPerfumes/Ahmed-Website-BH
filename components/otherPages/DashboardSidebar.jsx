@@ -41,6 +41,7 @@ export function LogoutButton() {
     e.preventDefault();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("address");
     router.replace("/login_register");
   };
 
@@ -120,6 +121,7 @@ export default function DashboardSidebar() {
     e.preventDefault();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("address");
     router.replace("/login_register");
   };
 

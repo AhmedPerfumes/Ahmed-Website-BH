@@ -95,6 +95,7 @@ export default function Header14() {
         e.preventDefault();
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        localStorage.removeItem("address");
         window.location.href = "/";
     };
 
