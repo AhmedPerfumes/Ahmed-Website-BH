@@ -226,11 +226,7 @@ export default function LoginRegister() {
         setSuccess(data.message);
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("user", btoa(JSON.stringify(data.data)));
-
-        const defaultAddr = data.data?.addresses?.find((addr) => addr.is_default );
-        if (defaultAddr) {
-          localStorage.setItem("address", btoa(JSON.stringify({ ...defaultAddr, is_default: 1 })));
-        }
+        localStorage.removeItem("address");
         setIsLoggedIn(true);
 
         // Apply coupon
