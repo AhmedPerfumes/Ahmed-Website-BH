@@ -6,9 +6,10 @@ import { useLocale } from "next-intl";
 import { Box, Container, Typography, Collapse } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
-export default function CollapsibleDescription({ description, title: customTitle }) {
+export default function CollapsibleDescription({ description, title: customTitle, locale: propLocale }) {
     const [expanded, setExpanded] = useState(false);
-    const locale = useLocale();
+    const hookLocale = useLocale();
+    const locale = propLocale || hookLocale;
     const isRtl = locale === "ar";
     const title = customTitle || (isRtl ? "عن هذه المجموعة" : "About this Collection");
 
