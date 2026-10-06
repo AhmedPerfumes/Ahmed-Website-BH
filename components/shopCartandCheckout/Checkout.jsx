@@ -142,8 +142,9 @@ export default function Checkout() {
                 }
                 const addrEmail = defaultAddr.email || email;
                 const addrMobile = defaultAddr.phone || defaultAddr.mobile || mobile;
-                const area = defaultAddr.city || "";
-                const building = defaultAddr.address || "";
+                const area = defaultAddr.area || "";
+                const building = defaultAddr.building || "";
+                const road = defaultAddr.road || "";
                 const region = defaultAddr.state || "";
 
                 setFormData((prev) => ({
@@ -156,6 +157,7 @@ export default function Checkout() {
                     mobile: addrMobile || prev.billingAddress.mobile,
                     area,
                     building,
+                    road,
                     region,
                   },
                   shippingAddress: {
@@ -166,6 +168,7 @@ export default function Checkout() {
                     mobile: addrMobile || prev.shippingAddress.mobile,
                     area,
                     building,
+                    road,
                     region,
                   },
                 }));
@@ -358,6 +361,7 @@ export default function Checkout() {
           case "last_name": elementId = "checkout_last_name"; break;
           case "area": elementId = "checkout_street_address"; break;
           case "building": elementId = "checkout_street_address_2"; break;
+          case "road": elementId = "checkout_road"; break;
           case "region": elementId = "checkout_region"; break;
           case "email": elementId = "billingAddress.email"; break;
           case "mobile": elementId = "checkout_otp"; break;
