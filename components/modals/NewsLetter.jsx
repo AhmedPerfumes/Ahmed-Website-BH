@@ -97,7 +97,7 @@ export default function NewsLetter() {
                   height={650}
                   style={{ height: "fit-content" }}
                   loading="lazy"
-                  src="/assets/images/home/demo8/Kawkab-Web-banner.jpg"
+                  src="/assets/images/campaigns/website-banner-home-page-desktop-size.webp"
                   className="h-100 w-100 object-fit-cover d-block"
                   alt="image"                
                   />
@@ -108,10 +108,10 @@ export default function NewsLetter() {
             <div className="col-md-4 p-0 d-flex align-items-center text-center">
               <div className="block-newsletter w-100">
               <h3 className="section-title fw-normal mb-3 pb-2" style={{ color: '#cfa91a' }}>
-                  We’re Experiencing High Traffic!
+                  Prestige Of Cabinet
                 </h3>
                 <p>
-                Due to overwhelming demand, order processing and delivery times may be slightly delayed. Thank you for your patience!
+                Discover Essence of Prestige, featuring perfume sets ideal for travel, gifting, and special occasions.
                   {/* <b className="sub-title">Don't miss out.</b> */}
 
                 </p>
@@ -119,7 +119,7 @@ export default function NewsLetter() {
                   className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
                   href={`/${locale}/shop/perfumes/oriental-fragrance/Kawkab`}
                 >
-                  Shop Now
+                  Discover More
                 </a>
               </div>
             </div>
