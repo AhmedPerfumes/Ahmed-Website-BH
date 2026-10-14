@@ -15,7 +15,9 @@ export default function EditAddress() {
       mobile: "",
       area: "",
       building: "",
+      road: "",
       state: "",
+      city: "",
       isDefault: false,
     },
     {
@@ -25,7 +27,9 @@ export default function EditAddress() {
       mobile: "",
       area: "",
       building: "",
+      road: "",
       state: "",
+      city: "",
       isDefault: false,
     },
   ]);
@@ -35,6 +39,9 @@ export default function EditAddress() {
   const [customerId, setCustomerId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [blocks, setBlocks] = useState([]);
+  const [shippingBlock, setShippingBlock] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -59,9 +66,11 @@ export default function EditAddress() {
           name: addr.name || userInfo.name || "",
           email: addr.email || userInfo.email || "",
           mobile: addr.phone || addr.mobile || userInfo.mobile || "",
-          area: addr.city || "",
-          building: addr.address || "",
+          area: addr.area || "",
+          building: addr.building || "",
+          road: addr.road || "",
           state: addr.state || "",
+          city: addr.city || "",
           isDefault: addr.is_default === 1 || addr.is_default === true,
         }));
 
@@ -77,7 +86,9 @@ export default function EditAddress() {
             ...userInfo,
             area: "",
             building: "",
+            road: "",
             state: "",
+            city: "",
             isDefault: false,
           },
           parsed[1] || {
@@ -85,7 +96,9 @@ export default function EditAddress() {
             ...userInfo,
             area: "",
             building: "",
+            road: "",
             state: "",
+            city: "",
             isDefault: false,
           },
         ]);
@@ -97,7 +110,9 @@ export default function EditAddress() {
             ...userInfo,
             area: "",
             building: "",
+            road: "",
             state: "",
+            city: "",
             isDefault: false,
           },
           {
@@ -105,7 +120,9 @@ export default function EditAddress() {
             ...userInfo,
             area: "",
             building: "",
+            road: "",
             state: "",
+            city: "",
             isDefault: false,
           },
         ]);
@@ -150,6 +167,34 @@ export default function EditAddress() {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchBlocks = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/getBlocks`, {
+          method: "GET"
+        });
+        const resData = await response.json();
+        if (resData?.status && Array.isArray(resData?.data)) {
+          setBlocks(resData.data);
+        }
+      } catch (err) {
+        console.error("Error fetching blocks:", err);
+      }
+    };
+    fetchBlocks();
+  }, []);
+
+  const handleBlockChange = (event, area) => {
+    const { id } = event.target;
+    // console.log(id, area);
+    // if (id.startsWith('shipping') || id.startsWith('billing')) {
+      // const addressField = id.startsWith('shipping') ? 'shippingAddress' : 'billingAddress';
+      // const fieldName = id.split('.')[1]; // Get the specific field (e.g., street, city)
+      setForm((prevData) => {
+        return { ...prevData, [id]:  area };
+      });
+    // }
+  };
 
   const openModal = (idx) => {
     setEditingIndex(idx);
@@ -174,8 +219,9 @@ export default function EditAddress() {
 
     // ✅ Validation inside save
     const newErrors = {};
-    if (!form.area?.trim()) newErrors.area = "Area / Mantaqa is required";
-    if (!form.building?.trim()) newErrors.building = "Building / Villa / Apartment is required";
+    if (!form.area?.trim()) newErrors.area = "Block is required";
+    if (!form.building?.trim()) newErrors.building = "Building / Villa is required";
+    if (!form.road?.trim()) newErrors.road = "Road is required";
     if (!form.state?.trim()) newErrors.state = "State is required";
 
     if (Object.keys(newErrors).length > 0) {
@@ -214,9 +260,12 @@ export default function EditAddress() {
           name: form.name,
           email: form.email,
           mobile: form.mobile,
-          address: form.building,
-          city: form.area,
+          // address: form.address,
+          city: form.city,
           state: form.state,
+          area: form.area,
+          building: form.building,
+          road: form.road,
           is_default: form.isDefault ? 1 : 0,
         }),
       });
@@ -265,8 +314,8 @@ export default function EditAddress() {
                     {addresses[idx].email} {addresses[idx].email && addresses[idx].mobile && '|'} {addresses[idx].mobile}
                   </p>
                   <p className="mb-0 text-dark small">
-                    {addresses[idx].area} {addresses[idx].area && addresses[idx].building && ','} {addresses[idx].building}
-                    {addresses[idx].state && <>, {addresses[idx].state}</>}
+                    {`Block ${addresses[idx].area}`}, {`Road ${addresses[idx].road}`}, {`Building ${addresses[idx].building}`}
+                    {<>, Region {addresses[idx].state}</>}
                   </p>
                 </div>
                 <div className="text-end">
@@ -305,46 +354,107 @@ export default function EditAddress() {
         <Modal.Body className="pt-1">
           <Form>
             <Form.Group className="mb-3">
-  <Form.Label className="text-uppercase text-xs fw-medium text-secondary">
-    Area / Mantaqa
-  </Form.Label>
-  <Form.Control
-    name="area"
-    value={form.area}
-    onChange={handleChange}
-    className="rounded-2 px-2 py-1"
-    isInvalid={!!errors.area}   // <-- added
-  />
-  <Form.Control.Feedback type="invalid">{errors.area}</Form.Control.Feedback>
-</Form.Group>
+              <div className="col-md-6 col-6">
+                <div className="search-field my-3">
+                  <div
+                    className={`form-label-fixed hover-container ${shippingBlock ? "js-content_visible" : ""
+                      }`}
+                  >
+                    <label htmlFor="search-dropdown" className="form-label">
+                      Block *
+                    </label>
+                    <div className="js-hover__open">
+                      <input
+                        type="text"
+                        className="form-control form-control-lg search-field__actor search-field__arrow-down"
+                        id="search-dropdown"
+                        name="area"
+                        value={form.area}
+                        placeholder="Select Block..."
+                        onClick={() => setShippingBlock((pre) => !pre)}
+                        required
+                      />
+                    </div>
+                    <div className="filters-container js-hidden-content mt-2">
+                      <div className="search-field__input-wrapper">
+                        <input
+                          type="text"
+                          className="search-field__input form-control form-control-sm bg-lighter border-lighter"
+                          placeholder="Search"
+                          onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                          }}
+                        />
+                      </div>
+                      <ul className="search-suggestion list-unstyled" style={{ height: "400px", overflowY: "scroll" }}>
+                        {blocks
+                          .map((item) => (item.code && item.name ? `${item.code} - ${item.name}` : (item.code || item.name || "")))
+                          .filter((elm) =>
+                            elm
+                              .toLowerCase()
+                              .includes(searchQuery.toLowerCase())
+                          )
+                          .map((elm, i) => (
+                            <li
+                              id="area"
+                              onClick={(e) => {
+                                handleBlockChange(e, elm);
+                                setShippingBlock(false);
+                              }}
+                              key={i}
+                              className="search-suggestion__item js-search-select"
+                            >
+                              {elm}
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <Form.Control.Feedback type="invalid">{errors.area}</Form.Control.Feedback>
+            </Form.Group>
 
-<Form.Group className="mb-3">
-  <Form.Label className="text-uppercase text-xs fw-medium text-secondary">
-    Building / Villa 
-  </Form.Label>
-  <Form.Control
-    name="building"
-    value={form.building}
-    onChange={handleChange}
-    className="rounded-2 px-2 py-1"
-    isInvalid={!!errors.building}   // <-- added
-  />
-  <Form.Control.Feedback type="invalid">{errors.building}</Form.Control.Feedback>
-</Form.Group>
             <Form.Group className="mb-3">
-            <Form.Label className="text-uppercase text-xs fw-medium text-secondary">
-              Region
-            </Form.Label>
-            <Form.Control
-              name="state"
-              value={form.state}
-              onChange={handleChange}
-              className="rounded-2 px-2 py-1"
-              isInvalid={!!errors.state}
-              placeholder="Enter state"
-            />
-            <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
-          </Form.Group>
+              <Form.Label className="text-uppercase text-xs fw-medium text-secondary">
+                Building / Villa *
+              </Form.Label>
+              <Form.Control
+                name="building"
+                value={form.building}
+                onChange={handleChange}
+                className="rounded-2 px-2 py-1"
+                isInvalid={!!errors.building}   // <-- added
+              />
+              <Form.Control.Feedback type="invalid">{errors.building}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="text-uppercase text-xs fw-medium text-secondary">
+                Road *
+              </Form.Label>
+              <Form.Control
+                name="road"
+                value={form.road}
+                onChange={handleChange}
+                className="rounded-2 px-2 py-1"
+                isInvalid={!!errors.road}   // <-- added
+              />
+              <Form.Control.Feedback type="invalid">{errors.building}</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="text-uppercase text-xs fw-medium text-secondary">
+                Region *
+              </Form.Label>
+              <Form.Control
+                name="state"
+                value={form.state}
+                onChange={handleChange}
+                className="rounded-2 px-2 py-1"
+                isInvalid={!!errors.state}
+                placeholder="Enter state"
+              />
+              <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
+            </Form.Group>
             <Form.Group className="mb-4">
               <Form.Check
                 type="checkbox"
