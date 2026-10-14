@@ -23,7 +23,7 @@ export default createMiddleware(routing, {
 export const config = {
   matcher: [
     '/',
-    '/(ar|en)/:path*',
-    '/((?!api/|_next/static|_next/image|favicon.ico|assets).*)'
+    '/(ar|en)/((?!maplibre|assets|.*\\..*).*)',
+    '/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|assets|maplibre|.*\\..*).*)'
   ]
 };
