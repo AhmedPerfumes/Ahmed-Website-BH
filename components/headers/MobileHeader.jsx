@@ -10,17 +10,34 @@ import MobileNav from "./components/MobileNav";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "../../i18n/routing";
+import { IoLocationOutline } from "react-icons/io5";
 export default function MobileHeader() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations();
 
   const [scrollDirection, setScrollDirection] = useState("down");
+  const [currentCountryLink, setCurrentCountryLink] = useState("");
 
-    const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const headerRef = React.useRef(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentOrigin = window.location.origin;
+      const matchedOption = currencyOptions.find(option =>
+        option.link && (currentOrigin.includes(option.link) || option.link.includes(currentOrigin))
+      );
+      if (matchedOption) {
+        setCurrentCountryLink(matchedOption.link);
+      } else {
+        setCurrentCountryLink(currencyOptions[0].link);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (headerRef.current) {
@@ -261,6 +278,83 @@ export default function MobileHeader() {
             </select>
           </div>
           </div>
+
+          <div className="container mt-2 mb-2 pb-3 border-bottom">
+              <div className="d-flex align-items-center justify-content-between gap-2">
+                {/* Find a Store Button */}
+                <Link
+                  href={`/${locale}/store-locator`}
+                  className="d-flex align-items-center justify-content-center p-2 rounded text-decoration-none border"
+                  style={{
+                    backgroundColor: '#fcfcfc',
+                    color: '#111',
+                    borderColor: '#f0f0f0',
+                    height: '42px',
+                    flex: '1 1 0px',
+                    minWidth: '0'
+                  }}
+                >
+                  <IoLocationOutline size={16} className="me-1 flex-shrink-0" />
+                  <span className="text-uppercase fw-bold text-truncate" style={{ fontSize: '10px', letterSpacing: '0.5px' }}>
+                    {t("Find a store")}
+                  </span>
+                </Link>
+
+                {/* Language Selector */}
+                <div
+                  className="d-flex flex-column justify-content-center px-2 py-1 border rounded"
+                  style={{ borderColor: '#f0f0f0', backgroundColor: '#fcfcfc', height: '42px', flex: '1 1 0px', minWidth: '0' }}
+                >
+                  <span
+                    className="text-uppercase fw-semibold text-muted text-start"
+                    style={{ fontSize: '8px', letterSpacing: '0.5px', display: 'block', lineHeight: '1', marginBottom: '2px' }}
+                  >
+                    {t("Language")}
+                  </span>
+                  <select
+                    className="form-select form-select-sm border-0 bg-transparent p-0 shadow-none fw-semibold text-dark text-start"
+                    aria-label="Language selector"
+                    name="store-language"
+                    value={locale}
+                    onChange={handleLangChange}
+                    style={{ fontSize: '11px', cursor: 'pointer', outline: 'none', width: '100%', maxWidth: '100%', textOverflow: 'ellipsis', overflow: 'hidden' }}
+                  >
+                    {languageOptions.map((option, index) => (
+                      <option key={index} className="text-dark bg-white" value={option.value}>
+                        {option.text}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Country Selector */}
+                <div
+                  className="d-flex flex-column justify-content-center px-2 py-1 border rounded"
+                  style={{ borderColor: '#f0f0f0', backgroundColor: '#fcfcfc', height: '42px', flex: '1 1 0px', minWidth: '0' }}
+                >
+                  <span
+                    className="text-uppercase fw-semibold text-muted text-start"
+                    style={{ fontSize: '8px', letterSpacing: '0.5px', display: 'block', lineHeight: '1', marginBottom: '2px' }}
+                  >
+                    {t("Country")}
+                  </span>
+                  <select
+                    className="form-select form-select-sm border-0 bg-transparent p-0 shadow-none fw-semibold text-dark text-start"
+                    aria-label="Country selector"
+                    name="store-country"
+                    value={currentCountryLink}
+                    onChange={(e) => window.open(e.target.value, "_self")}
+                    style={{ fontSize: '11px', cursor: 'pointer', outline: 'none', width: '100%', maxWidth: '100%', textOverflow: 'ellipsis', overflow: 'hidden' }}
+                  >
+                    {currencyOptions.map((option, index) => (
+                      <option key={index} className="text-dark bg-white" value={option.link}>
+                        {t(option.text)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
 
           <ul className="container social-links list-unstyled d-flex flex-wrap mb-0">
             {socialLinks.map((link, index) => (

@@ -12,7 +12,6 @@ export const metadata = {
 export default function StoreLocationPage() {
   return (
     <>
-      <Header1 />
       <main className="page-wrapper">
         <StoreLocator />
       </main>
