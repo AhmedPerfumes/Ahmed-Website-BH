@@ -236,48 +236,6 @@ export default function MobileHeader() {
               My Account
             </span>
           </div> */}
-      <div className="d-flex">
-          <div className="container d-flex align-items-center">
-            <label className="me-2 text-secondary">Language</label>
-            <select
-              className="form-select form-select-sm bg-transparent border-0"
-              aria-label="Default select example"
-              name="store-language"
-              value={locale}
-              onChange={handleLangChange}
-            >
-              {languageOptions.map((option, index) => (
-                <option
-                  key={index}
-                  className="footer-select__option"
-                  value={option.value}
-                >
-                  {option.text}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="container d-flex align-items-center">
-            <label className="me-2 text-secondary">Country</label>
-            <select
-              className="form-select form-select-sm bg-transparent border-0"
-              aria-label="Default select example"
-              name="store-language"
-              onChange={(e) => window.open(e.target.value,"_self")}
-            >
-              {currencyOptions.map((option, index) => (
-                <option
-                  key={index}
-                  className="footer-select__option"
-                  value={option.link}
-                >
-                  {option.text}
-                </option>
-              ))}
-            </select>
-          </div>
-          </div>
 
           <div className="container mt-2 mb-2 pb-3 border-bottom">
               <div className="d-flex align-items-center justify-content-between gap-2">
