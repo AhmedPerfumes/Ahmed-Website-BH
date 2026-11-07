@@ -7,3 +7,4 @@ User-agent: *
 Disallow: 
 
 Sitemap: https://bh.ahmedalmaghribi.com/assets/sitemap.xml
+Sitemap: https://bh.ahmedalmaghribi.com/assets/sitemap-ar.xml
