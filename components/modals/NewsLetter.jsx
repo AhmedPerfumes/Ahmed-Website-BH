@@ -91,7 +91,7 @@ export default function NewsLetter() {
           <div className="row p-0 m-0">
             <div className="col-md-8 p-0">
               <div className="newsletter-popup__bg h-100 w-100">
-              <a href={`/${locale}/shop/perfumes/oriental-fragrance/kawkab`}>
+              <a href={`/${locale}/product-category/prestige-of-cabinet`}>
                 <Image
                   width={550}
                   height={650}
@@ -117,7 +117,7 @@ export default function NewsLetter() {
                 </p>
                 <a
                   className="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                  href={`/${locale}/shop/perfumes/oriental-fragrance/Kawkab`}
+                  href={`/${locale}/product-category/prestige-of-cabinet`}
                 >
                   Discover More
                 </a>
