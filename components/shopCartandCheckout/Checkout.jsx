@@ -29,11 +29,11 @@ export default function Checkout() {
   const [isDisabled, setIsDisabled] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [OTPError, setOTPError] = useState(null);
-  const [OTPSuccess, setOTPSuccess] = useState(null);
-  const [isSendOTPLoading, setIsSendOTPLoading] = useState(false);
-  const [isOTPButton, setIsOTPButton] = useState(true);
-  const [isOTPVerified, setIsOTPVerified] = useState(false);
+  // const [OTPError, setOTPError] = useState(null);
+  // const [OTPSuccess, setOTPSuccess] = useState(null);
+  // const [isSendOTPLoading, setIsSendOTPLoading] = useState(false);
+  // const [isOTPButton, setIsOTPButton] = useState(true);
+  // const [isOTPVerified, setIsOTPVerified] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponError, setCouponError] = useState(null);
   const [couponSuccess, setCouponSuccess] = useState(null);
@@ -47,7 +47,7 @@ export default function Checkout() {
     shippingAdd: false,
     note: '',
     password: '',
-    otp: ''
+    // otp: ''
   });
 
   const { cartProducts, totalPrice, freeShippingFlag, setOrderDetails, setCouponDataContext, setCartProducts, promotionsContext } = useContextElement();
@@ -343,7 +343,7 @@ export default function Checkout() {
     if (!billing.region.trim()) newErrors.region = "Region is required";
     if (!billing.email.trim()) newErrors.email = "Email is required";
     if (!billing.mobile.trim()) newErrors.mobile = "Mobile Number is required";
-    if (!isLoggedIn && !isOTPVerified) newErrors.otp = "OTP must be verified";
+    // if (!isLoggedIn && !isOTPVerified) newErrors.otp = "OTP must be verified";
 
     if (Object.keys(newErrors).length > 0) {
       setFieldErrors(newErrors);
@@ -361,7 +361,7 @@ export default function Checkout() {
           case "region": elementId = "checkout_region"; break;
           case "email": elementId = "billingAddress.email"; break;
           case "mobile": elementId = "checkout_otp"; break;
-          case "otp": elementId = "billing_otp"; break;
+          // case "otp": elementId = "billing_otp"; break;
         }
 
         const el = document.getElementById(elementId);
@@ -391,7 +391,7 @@ export default function Checkout() {
       shippingAdd,
       note,
       password,
-      otp,
+      // otp,
       ...cleanFormData
     } = formData;
 
@@ -494,6 +494,7 @@ export default function Checkout() {
     }
   }
 
+  /*
   async function sendOTP(e) {
     e.preventDefault();
 
@@ -616,6 +617,7 @@ export default function Checkout() {
       setIsSendOTPLoading(false);
     }
   }
+  */
 
   const handleCouponChange = (e) => {
     setCouponCode(e.target.value);
@@ -651,11 +653,11 @@ export default function Checkout() {
       setCouponCode('');
       return;
     }
-    else if (!isOTPVerified) {
-      setCouponError('Verify Mobile Number First');
-      setCouponSuccess(null);
-      return;
-    }
+    // else if (!isOTPVerified) {
+    //   setCouponError('Verify Mobile Number First');
+    //   setCouponSuccess(null);
+    //   return;
+    // }
     try {
       // Call your backend API or validation logic for the coupon code
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/validateCoupon`, {
@@ -950,10 +952,10 @@ export default function Checkout() {
                     <input type="text" pattern="^\d{8}$" title="Only positive integers allowed" className="form-control" id="checkout_otp" placeholder="Eg. 50000000 *" name="billingAddress.mobile" readOnly={isLoggedIn} value={formData.billingAddress.mobile} onChange={handleChange} />
                     <label htmlFor="checkout_phone">Mobile Number (Eg. 50000000)*</label>
                     {fieldErrors.mobile && (<div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.mobile} </div>)}
-                    {fieldErrors.otp && (<div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.otp} </div>)}
+                    {/* {fieldErrors.otp && (<div style={{ color: "red", fontSize: "0.85rem" }}> {fieldErrors.otp} </div>)} */}
                   </div>
 
-                  {!isLoggedIn && (
+                  {/* {!isLoggedIn && (
                     <div className="col-md-12">
                       {OTPError ? (<div style={{ color: "red" }}>{OTPError}</div>) : (<div style={{ color: "green" }}>{OTPSuccess}</div>)}
                       {isOTPButton ? (<button className="btn btn-primary w-100 text-uppercase" type="button" disabled={isSendOTPLoading} onClick={sendOTP} > {isSendOTPLoading ? "Loading..." : "Send OTP"} </button>) : (
@@ -972,7 +974,7 @@ export default function Checkout() {
                         </>
                       )}
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div className="col-md-12">
                   {!isLoggedIn && <div className="form-check mt-3">
